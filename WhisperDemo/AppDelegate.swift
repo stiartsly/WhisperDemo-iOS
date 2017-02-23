@@ -75,5 +75,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         return false
     }
+    
+    func splitViewController(_ splitViewController: UISplitViewController, separateSecondaryFrom primaryViewController: UIViewController) -> UIViewController? {
+        var detailVC = primaryViewController.separateSecondaryViewController(for: splitViewController)
+        
+        if detailVC == nil {
+            guard let primaryNavController = primaryViewController as? UINavigationController else { return nil }
+            guard let primaryTableController = primaryNavController.topViewController as? UITableViewController else { return nil }
+            primaryTableController.tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: .none)
+            
+            detailVC = splitViewController.storyboard!.instantiateViewController(withIdentifier: "detailVC")
+        }
+        
+        return detailVC
+    }
 }
 

@@ -25,9 +25,9 @@ class DeviceListViewController: UITableViewController {
             let navigationController = self.splitViewController!.isCollapsed ?
             (self.splitViewController!.viewControllers[0] as! UINavigationController).topViewController as? UINavigationController
             : self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.count-1] as? UINavigationController
-            let deviceViewController = navigationController?.topViewController as? DeviceViewController
+            let deviceViewController = navigationController?.viewControllers[0] as? DeviceViewController
             if let selectedDevice = deviceViewController?.device {
-                let index = DeviceManager.sharedInstance.devices.index(of: selectedDevice)
+                let index = DeviceManager.sharedInstance.devices.index(where: { $0.userInfo!.userId == selectedDevice.userInfo!.userId })
                 if DeviceManager.sharedInstance.status == .Connected && index != nil {
                     self.tableView.selectRow(at: IndexPath(row: index!+1, section: 0), animated: false, scrollPosition: .none)
                 }
@@ -83,19 +83,6 @@ class DeviceListViewController: UITableViewController {
             }
             else {
                 controller.device = nil
-            }
-        }
-    }
-    
-    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.willTransition(to: newCollection, with: coordinator)
-        if newCollection.horizontalSizeClass == .regular {
-            if self.tableView.indexPathForSelectedRow == nil {
-                DispatchQueue.main.async {
-                    let indexPath = IndexPath(row: 0, section: 0)
-                    self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-                    self.performSegue(withIdentifier: "showDetail", sender: self.tableView.cellForRow(at: indexPath))
-                }
             }
         }
     }

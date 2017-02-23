@@ -13,6 +13,7 @@ import ManagedWhisper
 
 class DeviceManager : NSObject, WhisperHandler {
     static let sharedInstance = DeviceManager()
+    static let SelfInfoChanged = NSNotification.Name("kNotificationSelfInfoChanged")
     static let DeviceListChanged = NSNotification.Name("kNotificationDeviceListChanged")
     static let DeviceStatusChanged = NSNotification.Name("kNotificationDeviceStatusChanged")
     
@@ -24,6 +25,10 @@ class DeviceManager : NSObject, WhisperHandler {
     var captureDevice: AVCaptureDevice?
     var audioPlayer : AVAudioPlayer?
     var audioVolume : Float = 1.0
+    
+    override init() {
+        Whisper.setLogLevel(level: 4)
+    }
     
     func start() {
         if whisperInst == nil {
@@ -53,7 +58,7 @@ class DeviceManager : NSObject, WhisperHandler {
                 options.connectTimeout = 5
                 
 //                try? FileManager.default.removeItem(atPath: whisperDirectory + "/.whisper")
-                try whisperInst = Whisper.getInstance(options: options, handler: self, object: nil)
+                try whisperInst = Whisper.getInstance(with: options, handler: self, context: nil)
                 print("Whisper instance created")
                 
                 try whisperInst.start(iterateInterval: 1000)
@@ -310,7 +315,7 @@ class DeviceManager : NSObject, WhisperHandler {
     public func onReady(w whisper: ManagedWhisper.Whisper, _ context: AnyObject?) {
         print("onReady")
         let myInfo = try! whisper.getSelfInfo()
-        if myInfo.name != UIDevice.current.name {
+        if myInfo.name?.isEmpty ?? true {
             myInfo.name = UIDevice.current.name
             try? whisper.setSelfInfo(with: myInfo)
         }
@@ -320,7 +325,8 @@ class DeviceManager : NSObject, WhisperHandler {
     }
     
     public func onSelfInfoChanged(w whisper: ManagedWhisper.Whisper, with info: ManagedWhisper.WhisperUserInfo, _ context: AnyObject?) {
-        print("onSelfInfoChanged")
+        print("onSelfInfoChanged : \(info)")
+        NotificationCenter.default.post(name: DeviceManager.SelfInfoChanged, object: nil)
     }
     
     public func onFriendIterated(w whisper: ManagedWhisper.Whisper, with info: ManagedWhisper.WhisperFriendInfo?, _ context: AnyObject?) -> Bool {

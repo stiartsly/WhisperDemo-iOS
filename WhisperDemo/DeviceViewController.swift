@@ -14,6 +14,8 @@ class DeviceViewController: UITableViewController {
     var device : WhisperFriendInfo?
     var hud : MBProgressHUD?
     
+    private var _observer : NSObjectProtocol?
+    
     @IBOutlet weak var bulbStatus: UIButton!
     @IBOutlet weak var bulbSwitch: UISwitch!
     @IBOutlet weak var torchSwitch: UISwitch!
@@ -21,34 +23,42 @@ class DeviceViewController: UITableViewController {
     @IBOutlet weak var audioPlayButton: UIButton!
     @IBOutlet weak var volumeSlider: UISlider!
     
+    deinit {
+        if let observer = _observer {
+            NotificationCenter.default.removeObserver(observer)
+        }
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.leftItemsSupplementBackButton = true
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "setting"), style: .plain, target: self, action: #selector(configDeviceInfo))
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "返回", style: .plain, target: self, action: nil)
         
         self.tableView.tableFooterView = UIView(frame: CGRect.zero)
         self.tableView.layoutMargins = UIEdgeInsets.zero
+        
+        self.setNavigationTitle()
+        
+        if let deviceInfo = self.device {
+            _observer = NotificationCenter.default.addObserver(forName: DeviceManager.DeviceListChanged, object: nil, queue: OperationQueue.main, using: {
+                [unowned self] _ in
+                if DeviceManager.sharedInstance.status == .Connected {
+                    if let newDevice = DeviceManager.sharedInstance.devices.first(where: { $0.userInfo!.userId == deviceInfo.userInfo!.userId }) {
+                        self.device = newDevice
+                        self.setNavigationTitle()
+                    }
+                }
+            })
+        }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(onReceivedStatus), name: DeviceManager.DeviceStatusChanged, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.tableView.separatorStyle = splitViewController!.isCollapsed ? .singleLine : .none
-        
-        NotificationCenter.default.addObserver(forName: DeviceManager.DeviceStatusChanged, object: nil, queue: nil, using: onReceivedStatus)
-        
-        if let deviceInfo = self.device {
-            if !(deviceInfo.label!.isEmpty) {
-                navigationItem.title =  deviceInfo.label
-            }
-            else if !(deviceInfo.userInfo!.name!.isEmpty) {
-                navigationItem.title = deviceInfo.userInfo!.name
-            }
-            else {
-                navigationItem.title = deviceInfo.userInfo!.userId
-            }
-        }
-        else {
-            navigationItem.title = "本机"
-        }
         
         if self.device != nil {
             hud = MBProgressHUD(view: self.view)
@@ -84,7 +94,23 @@ class DeviceViewController: UITableViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self)
+    }
+    
+    func setNavigationTitle() {
+        if let deviceInfo = self.device {
+            if !(deviceInfo.label!.isEmpty) {
+                navigationItem.title =  deviceInfo.label
+            }
+            else if !(deviceInfo.userInfo!.name!.isEmpty) {
+                navigationItem.title = deviceInfo.userInfo!.name
+            }
+            else {
+                navigationItem.title = deviceInfo.userInfo!.userId
+            }
+        }
+        else {
+            navigationItem.title = "本机"
+        }
     }
 
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -219,7 +245,7 @@ class DeviceViewController: UITableViewController {
         }
     }
     
-    func onReceivedStatus(_ notification: Notification) {
+    @objc private func onReceivedStatus(_ notification: Notification) {
         guard device?.userInfo?.userId == (notification.object as? String) else {
             return
         }
@@ -260,5 +286,11 @@ class DeviceViewController: UITableViewController {
                 self.hud?.hide(animated: true)
             }
         }
+    }
+    
+    @objc private func configDeviceInfo() {
+        let deviceInfoVC = DeviceInfoViewController()
+        deviceInfoVC.device = self.device
+        navigationController?.show(deviceInfoVC, sender: nil)
     }
 }

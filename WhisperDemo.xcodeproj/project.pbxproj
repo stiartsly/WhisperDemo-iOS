@@ -21,6 +21,7 @@
 		17C508611E1B84C80068A76A /* ManagedWhisper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 17C5085F1E1B84BA0068A76A /* ManagedWhisper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		17C508631E1BAA7D0068A76A /* MyInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C508621E1BAA7D0068A76A /* MyInfoViewController.swift */; };
 		17C508671E1CDF140068A76A /* whisper.pem in Resources */ = {isa = PBXBuildFile; fileRef = 17C508661E1CDF140068A76A /* whisper.pem */; };
+		17FBAD981E543DD000289C1E /* DeviceInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FBAD971E543DD000289C1E /* DeviceInfoViewController.swift */; };
 		BE24952B0AB103879E3028FC /* Pods_WhisperDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E62D6DD14EFA86FCA9C079D /* Pods_WhisperDemo.framework */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +57,7 @@
 		17C5085F1E1B84BA0068A76A /* ManagedWhisper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ManagedWhisper.framework; sourceTree = "<group>"; };
 		17C508621E1BAA7D0068A76A /* MyInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyInfoViewController.swift; sourceTree = "<group>"; };
 		17C508661E1CDF140068A76A /* whisper.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = whisper.pem; sourceTree = "<group>"; };
+		17FBAD971E543DD000289C1E /* DeviceInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceInfoViewController.swift; sourceTree = "<group>"; };
 		3E62D6DD14EFA86FCA9C079D /* Pods_WhisperDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WhisperDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		83BA379AEDC5DE0C0C5309AA /* Pods-WhisperDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhisperDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WhisperDemo/Pods-WhisperDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		8503E4E4167EFE9BAA2B542C /* Pods-WhisperDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhisperDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-WhisperDemo/Pods-WhisperDemo.release.xcconfig"; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 				17C5081A1E139F990068A76A /* AppDelegate.swift */,
 				17C5081C1E139F990068A76A /* DeviceListViewController.swift */,
 				170101BE1E236F3B001507AD /* DeviceViewController.swift */,
+				17FBAD971E543DD000289C1E /* DeviceInfoViewController.swift */,
 				17C508621E1BAA7D0068A76A /* MyInfoViewController.swift */,
 				17C5082D1E13C2AB0068A76A /* ScanViewController.h */,
 				17C5082E1E13C2AB0068A76A /* ScanViewController.m */,
@@ -277,6 +280,7 @@
 				17C5081D1E139F990068A76A /* DeviceListViewController.swift in Sources */,
 				173AB0C41E275D4300542B1B /* DeviceManager.swift in Sources */,
 				17C5082F1E13C2AB0068A76A /* ScanViewController.m in Sources */,
+				17FBAD981E543DD000289C1E /* DeviceInfoViewController.swift in Sources */,
 				170101BF1E236F3B001507AD /* DeviceViewController.swift in Sources */,
 				17C508631E1BAA7D0068A76A /* MyInfoViewController.swift in Sources */,
 				17C5081B1E139F990068A76A /* AppDelegate.swift in Sources */,
