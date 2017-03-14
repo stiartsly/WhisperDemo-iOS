@@ -11,7 +11,7 @@ import ManagedWhisper
 import MBProgressHUD
 
 class DeviceInfoViewController : UITableViewController {
-    var device : WhisperFriendInfo?
+    var device : Device?
     private var _observer : NSObjectProtocol?
     
     convenience init() {
@@ -27,15 +27,14 @@ class DeviceInfoViewController : UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setNavigationTitle()
-        
         if let deviceInfo = device {
+            navigationItem.title = device?.deviceName
+            
             _observer = NotificationCenter.default.addObserver(forName: DeviceManager.DeviceListChanged, object: nil, queue: OperationQueue.main, using: {
                 [unowned self] _ in
                 if DeviceManager.sharedInstance.status == .Connected {
-                    if let newDevice = DeviceManager.sharedInstance.devices.first(where: { $0.userInfo!.userId == deviceInfo.userInfo!.userId }) {
-                        self.device = newDevice
-                        self.setNavigationTitle()
+                    if DeviceManager.sharedInstance.devices.contains(deviceInfo) {
+                        self.navigationItem.title = self.device?.deviceName
                         self.tableView.reloadData()
                         MBProgressHUD.hide(for: self.view, animated: true)
                     }
@@ -43,28 +42,13 @@ class DeviceInfoViewController : UITableViewController {
             })
         }
         else {
+            navigationItem.title = "本机"
+            
             _observer = NotificationCenter.default.addObserver(forName: DeviceManager.SelfInfoChanged, object: nil, queue: OperationQueue.main, using: {
                 [unowned self] _ in
                 self.tableView.reloadData()
                 MBProgressHUD.hide(for: self.view, animated: true)
             })
-        }
-    }
-    
-    func setNavigationTitle() {
-        if let deviceInfo = device {
-            if !(deviceInfo.label!.isEmpty) {
-                navigationItem.title =  deviceInfo.label
-            }
-            else if !(deviceInfo.userInfo!.name!.isEmpty) {
-                navigationItem.title = deviceInfo.userInfo!.name
-            }
-            else {
-                navigationItem.title = deviceInfo.userInfo!.userId
-            }
-        }
-        else {
-            navigationItem.title = "本机"
         }
     }
 }
@@ -89,11 +73,11 @@ extension DeviceInfoViewController {
         if indexPath.section == 0 {
             var userInfo : WhisperUserInfo?
             if device == nil {
-                userInfo = try? DeviceManager.sharedInstance.whisperInst.getSelfInfo()
+                userInfo = try? DeviceManager.sharedInstance.whisperInst.getSelfUserInfo()
                 cell.accessoryType = .disclosureIndicator
             }
             else {
-                userInfo = device?.userInfo
+                userInfo = device!.deviceInfo.userInfo
                 cell.accessoryType = .none
             }
             
@@ -122,7 +106,7 @@ extension DeviceInfoViewController {
         }
         else {
             cell.textLabel?.text = "备注名"
-            cell.detailTextLabel?.text = device?.label
+            cell.detailTextLabel?.text = device?.deviceInfo.label
             cell.accessoryType = .disclosureIndicator
         }
         
@@ -167,7 +151,7 @@ extension DeviceInfoViewController {
         var selector : Selector
         
         if indexPath.section == 0 {
-            let userInfo = try? DeviceManager.sharedInstance.whisperInst.getSelfInfo()
+            let userInfo = try? DeviceManager.sharedInstance.whisperInst.getSelfUserInfo()
             
             switch indexPath.row {
             case 0:
@@ -242,10 +226,10 @@ extension DeviceInfoViewController {
     func setSelfName(_ name: String) {
         do {
             let whisper = DeviceManager.sharedInstance.whisperInst!
-            let myInfo = try whisper.getSelfInfo()
+            let myInfo = try whisper.getSelfUserInfo()
             if myInfo.name != name {
                 myInfo.name = name
-                try whisper.setSelfInfo(with: myInfo)
+                try whisper.setSelfUserInfo(myInfo)
                 MBProgressHUD.showAdded(to: self.view, animated: true)
                 //self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
             }
@@ -257,10 +241,10 @@ extension DeviceInfoViewController {
     func setSelfPhone(_ phone: String) {
         do {
             let whisper = DeviceManager.sharedInstance.whisperInst!
-            let myInfo = try whisper.getSelfInfo()
+            let myInfo = try whisper.getSelfUserInfo()
             if myInfo.phone != phone {
                 myInfo.phone = phone
-                try whisper.setSelfInfo(with: myInfo)
+                try whisper.setSelfUserInfo(myInfo)
                 MBProgressHUD.showAdded(to: self.view, animated: true)
                 //tableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .automatic)
             }
@@ -272,10 +256,10 @@ extension DeviceInfoViewController {
     func setSelfEmail(_ email: String) {
         do {
             let whisper = DeviceManager.sharedInstance.whisperInst!
-            let myInfo = try whisper.getSelfInfo()
+            let myInfo = try whisper.getSelfUserInfo()
             if myInfo.email != email {
                 myInfo.email = email
-                try whisper.setSelfInfo(with: myInfo)
+                try whisper.setSelfUserInfo(myInfo)
                 MBProgressHUD.showAdded(to: self.view, animated: true)
                 //tableView.reloadRows(at: [IndexPath(row: 2, section: 0)], with: .automatic)
             }
@@ -287,10 +271,10 @@ extension DeviceInfoViewController {
     func setSelfGender(_ gender: String) {
         do {
             let whisper = DeviceManager.sharedInstance.whisperInst!
-            let myInfo = try whisper.getSelfInfo()
+            let myInfo = try whisper.getSelfUserInfo()
             if myInfo.gender != gender {
                 myInfo.gender = gender
-                try whisper.setSelfInfo(with: myInfo)
+                try whisper.setSelfUserInfo(myInfo)
                 MBProgressHUD.showAdded(to: self.view, animated: true)
                 //tableView.reloadRows(at: [IndexPath(row: 3, section: 0)], with: .automatic)
             }
@@ -302,10 +286,10 @@ extension DeviceInfoViewController {
     func setSelfRegion(_ region: String) {
         do {
             let whisper = DeviceManager.sharedInstance.whisperInst!
-            let myInfo = try whisper.getSelfInfo()
+            let myInfo = try whisper.getSelfUserInfo()
             if myInfo.region != region {
                 myInfo.region = region
-                try whisper.setSelfInfo(with: myInfo)
+                try whisper.setSelfUserInfo(myInfo)
                 MBProgressHUD.showAdded(to: self.view, animated: true)
                 //tableView.reloadRows(at: [IndexPath(row: 4, section: 0)], with: .automatic)
             }
@@ -317,10 +301,10 @@ extension DeviceInfoViewController {
     func setSelfDescription(_ description: String) {
         do {
             let whisper = DeviceManager.sharedInstance.whisperInst!
-            let myInfo = try whisper.getSelfInfo()
+            let myInfo = try whisper.getSelfUserInfo()
             if myInfo.briefDescription != description {
                 myInfo.briefDescription = description
-                try whisper.setSelfInfo(with: myInfo)
+                try whisper.setSelfUserInfo(myInfo)
                 MBProgressHUD.showAdded(to: self.view, animated: true)
                 //tableView.reloadRows(at: [IndexPath(row: 5, section: 0)], with: .automatic)
             }
@@ -331,12 +315,12 @@ extension DeviceInfoViewController {
     
     func setDeviceLabel(_ label: String) {
         do {
-            if device!.label != label {
+            if device!.deviceInfo.label != label {
                 let whisper = DeviceManager.sharedInstance.whisperInst!
-                try whisper.setFriendLabel(at: device!.userInfo!.userId!, with: label)
+                try whisper.setFriendLabel(forFriend: device!.deviceId, newLabel: label)
                 
-                device!.label = label
                 MBProgressHUD.showAdded(to: self.view, animated: true)
+                //device!.deviceInfo.label = label
                 //self.tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .automatic)
             }
         } catch  {

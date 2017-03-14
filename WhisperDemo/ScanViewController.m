@@ -44,7 +44,6 @@
 {
     [super viewDidLoad];
     self.navigationItem.title = NSLocalizedString(@"添加设备", nil);
-    
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -247,7 +246,7 @@
     __weak __typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0), ^{
         NSError *error = nil;
-        BOOL result = [[[DeviceManager sharedInstance] whisperInst] friendRequestTo:deviceID with:@"password" error:&error];
+        BOOL result = [[[DeviceManager sharedInstance] whisperInst] sendFriendRequestTo:deviceID withGreeting:@"password" error:&error];
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong __typeof(weakSelf) strongSelf = weakSelf;
             if (strongSelf == nil) {

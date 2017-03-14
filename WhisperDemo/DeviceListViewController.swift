@@ -27,7 +27,7 @@ class DeviceListViewController: UITableViewController {
             : self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.count-1] as? UINavigationController
             let deviceViewController = navigationController?.viewControllers[0] as? DeviceViewController
             if let selectedDevice = deviceViewController?.device {
-                let index = DeviceManager.sharedInstance.devices.index(where: { $0.userInfo!.userId == selectedDevice.userInfo!.userId })
+                let index = DeviceManager.sharedInstance.devices.index(of: selectedDevice)
                 if DeviceManager.sharedInstance.status == .Connected && index != nil {
                     self.tableView.selectRow(at: IndexPath(row: index!+1, section: 0), animated: false, scrollPosition: .none)
                 }
@@ -134,20 +134,11 @@ extension DeviceListViewController {
         else if indexPath.row <= DeviceManager.sharedInstance.devices.count {
             cell.imageView?.image = UIImage(named: "remote")
             
-            let deviceInfo = DeviceManager.sharedInstance.devices[indexPath.row-1]
+            let device = DeviceManager.sharedInstance.devices[indexPath.row-1]
             
-            if !(deviceInfo.label!.isEmpty) {
-                cell.textLabel?.text =  deviceInfo.label
-            }
-            else if !(deviceInfo.userInfo!.name!.isEmpty) {
-                cell.textLabel?.text = deviceInfo.userInfo!.name
-            }
-            else {
-                cell.textLabel?.text = deviceInfo.userInfo!.userId
-            }
-            
+            cell.textLabel?.text = device.deviceName
             cell.detailTextLabel?.text = nil
-            cell.accessoryView?.isHidden = deviceInfo.presence != "online"
+            cell.accessoryView?.isHidden = device.deviceInfo.presence != "online"
         }
         
         return cell
@@ -171,7 +162,7 @@ extension DeviceListViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             if indexPath.row <= DeviceManager.sharedInstance.devices.count {
-                let deviceInfo = DeviceManager.sharedInstance.devices[indexPath.row-1]
+                let device = DeviceManager.sharedInstance.devices[indexPath.row-1]
                 
                 let hud = MBProgressHUD(view: self.view)
                 hud.mode = .text;
@@ -180,7 +171,7 @@ extension DeviceListViewController {
                 hud.show(animated: true);
                 
                 do {
-                    try DeviceManager.sharedInstance.whisperInst?.friendRemove(with: deviceInfo.userInfo!.userId!)
+                    try DeviceManager.sharedInstance.whisperInst?.removeFriend(device.deviceId)
                     hud.label.text = "正在处理";
                 } catch {
                     NSLog("friendRemove error : \(error)")
@@ -202,7 +193,7 @@ extension DeviceListViewController {
             }
             
             let device = DeviceManager.sharedInstance.devices[indexPath.row-1]
-            guard device.presence == "online" else {
+            guard device.deviceInfo.presence == "online" else {
                 return false
             }
         }

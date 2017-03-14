@@ -11,7 +11,16 @@ import AVFoundation
 import MediaPlayer
 import ManagedWhisper
 
-class DeviceManager : NSObject, WhisperHandler {
+class DeviceManager : NSObject, WhisperDelegate {
+    private static let appId = "7sRQjDsniyuHdZ9zsQU9DZbMLtQGLBWZ78yHWgjPpTKm"
+    private static let appKey = "6tzPPAgSACJdScX79wuzMNPQTWkRLZ4qEdhLcZU6q4B9"
+    private static let apiServer = "https://whisper.freeddns.org:8443/web/api"
+    private static let mqttServer = "ssl://whisper.freeddns.org:8883"
+//    private static let apiServerUrl = "https://192.168.3.182:8443/web/api"
+//    private static let mqttServerUri = "ssl://192.168.3.182:8883"
+//    private static let apiServerUrl = "http://192.168.3.182:8080/web/api"
+//    private static let mqttServerUri = "tcp://192.168.3.182:1883"
+    
     static let sharedInstance = DeviceManager()
     static let SelfInfoChanged = NSNotification.Name("kNotificationSelfInfoChanged")
     static let DeviceListChanged = NSNotification.Name("kNotificationDeviceListChanged")
@@ -19,7 +28,7 @@ class DeviceManager : NSObject, WhisperHandler {
     
     var status = WhisperConnectionStatus.Disconnected;
     var whisperInst: Whisper!
-    var devices = [WhisperFriendInfo]()
+    var devices = [Device]()
     
     var bulbStatus = false
     var captureDevice: AVCaptureDevice?
@@ -27,7 +36,7 @@ class DeviceManager : NSObject, WhisperHandler {
     var audioVolume : Float = 1.0
     
     override init() {
-        Whisper.setLogLevel(level: 4)
+        Whisper.setLogLevel(.Debug)
     }
     
     func start() {
@@ -44,21 +53,16 @@ class DeviceManager : NSObject, WhisperHandler {
                 }
                 
                 let options = WhisperOptions()
-                options.appId = "7sRQjDsniyuHdZ9zsQU9DZbMLtQGLBWZ78yHWgjPpTKm"
-                options.appKey = "6tzPPAgSACJdScX79wuzMNPQTWkRLZ4qEdhLcZU6q4B9"
-//                options.apiServerUrl = "http://192.168.3.182:8080/web/api"
-//                options.mqttServerUri = "tcp://192.168.3.182:1883"
-//                options.apiServerUrl = "https://192.168.3.182:8080:8443/web/api"
-//                options.mqttServerUri = "ssl://192.168.3.182:8883"
-                options.apiServerUrl = "https://whisper.freeddns.org:8443/web/api"
-                options.mqttServerUri = "ssl://whisper.freeddns.org:8883"
+                options.setAppId(DeviceManager.appId, andKey: DeviceManager.appKey)
+                options.apiServerUrl = DeviceManager.apiServer
+                options.mqttServerUri = DeviceManager.mqttServer
                 options.trustStore = Bundle.main.path(forResource: "whisper", ofType: "pem")
                 options.persistentLocation = whisperDirectory
                 options.deviceId = UIDevice.current.identifierForVendor!.uuidString
                 options.connectTimeout = 5
                 
 //                try? FileManager.default.removeItem(atPath: whisperDirectory + "/.whisper")
-                try whisperInst = Whisper.getInstance(with: options, handler: self, context: nil)
+                try whisperInst = Whisper.getInstance(options: options, delegate: self, nil)
                 print("Whisper instance created")
                 
                 try whisperInst.start(iterateInterval: 1000)
@@ -73,7 +77,7 @@ class DeviceManager : NSObject, WhisperHandler {
         }
     }
     
-    func getDeviceStatus(_ device: WhisperFriendInfo? = nil) throws -> [String: Any]? {
+    func getDeviceStatus(_ device: Device? = nil) throws -> [String: Any]? {
         if let deviceInfo = device {
             let messageDic = ["type":"query"]
             try sendMessage(messageDic, toDevice: deviceInfo)
@@ -110,7 +114,7 @@ class DeviceManager : NSObject, WhisperHandler {
     }
     
     
-    func setBulbStatus(_ on: Bool, device: WhisperFriendInfo? = nil) throws {
+    func setBulbStatus(_ on: Bool, device: Device? = nil) throws {
         if let deviceInfo = device {
             let messageDic = ["type":"modify", "bulb":on] as [String : Any]
             try sendMessage(messageDic, toDevice: deviceInfo)
@@ -128,7 +132,7 @@ class DeviceManager : NSObject, WhisperHandler {
         }
     }
     
-    func setTorchStatus(_ on: Bool, device: WhisperFriendInfo? = nil) throws {
+    func setTorchStatus(_ on: Bool, device: Device? = nil) throws {
         if let deviceInfo = device {
             let messageDic = ["type":"modify", "torch":on ? "on" : "off"] as [String : Any]
             try sendMessage(messageDic, toDevice: deviceInfo)
@@ -160,7 +164,7 @@ class DeviceManager : NSObject, WhisperHandler {
         }
     }
     
-    func setBrightness(_ brightness: Float, device: WhisperFriendInfo? = nil) throws {
+    func setBrightness(_ brightness: Float, device: Device? = nil) throws {
         if let deviceInfo = device {
             let messageDic = ["type":"modify", "brightness":brightness] as [String : Any]
             try sendMessage(messageDic, toDevice: deviceInfo)
@@ -192,7 +196,7 @@ class DeviceManager : NSObject, WhisperHandler {
         }
     }
     
-    func startPlayAudio(_ device: WhisperFriendInfo? = nil) throws {
+    func startAudioPlay(_ device: Device? = nil) throws {
         if let deviceInfo = device {
             let messageDic = ["type":"modify", "audioPlay":true] as [String : Any]
             try sendMessage(messageDic, toDevice: deviceInfo)
@@ -225,7 +229,7 @@ class DeviceManager : NSObject, WhisperHandler {
         }
     }
     
-    func stopPlayAudio(_ device: WhisperFriendInfo? = nil) throws {
+    func stopAudioPlay(_ device: Device? = nil) throws {
         if let deviceInfo = device {
             let messageDic = ["type":"modify", "audioPlay":false] as [String : Any]
             try sendMessage(messageDic, toDevice: deviceInfo)
@@ -261,7 +265,7 @@ class DeviceManager : NSObject, WhisperHandler {
         }
     }
     
-    func setVolume(_ volume: Float, device: WhisperFriendInfo? = nil) throws {
+    func setVolume(_ volume: Float, device: Device? = nil) throws {
         if let deviceInfo = device {
             let messageDic = ["type":"modify", "volume":volume] as [String : Any]
             try sendMessage(messageDic, toDevice: deviceInfo)
@@ -281,9 +285,9 @@ class DeviceManager : NSObject, WhisperHandler {
         }
     }
     
-    private func sendMessage(_ message: [String: Any], toDevice device: WhisperFriendInfo) throws {
-        if device.presence == "online" {
-            try sendMessage(message, toDeviceId: device.userInfo!.userId!)
+    private func sendMessage(_ message: [String: Any], toDevice device: Device) throws {
+        if device.deviceInfo.presence == "online" {
+            try sendMessage(message, toDeviceId: device.deviceId)
         }
         else {
             throw WhisperError.InternalError(errno:1)
@@ -293,18 +297,20 @@ class DeviceManager : NSObject, WhisperHandler {
     private func sendMessage(_ message: [String: Any], toDeviceId deviceId: String) throws {
         let jsonData = try JSONSerialization.data(withJSONObject: message, options: .prettyPrinted)
         let jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
-        try whisperInst.sendFriendMessage(to: deviceId, with: jsonString)
+        try whisperInst.sendFriendMessage(to: deviceId, withMessage: jsonString)
     }
 
 // MARK: - WhisperHandler
 
-//    func onIdle(w whisper: ManagedWhisper.Whisper, _ context: AnyObject?) {
+//    func willBecomeIdle(_ whisper: Whisper, _ context: AnyObject?) {
 //        print("onIdle")
 //    }
     
-    public func onConnection(w whisper: ManagedWhisper.Whisper, with status: ManagedWhisper.WhisperConnectionStatus, _ context: AnyObject?) {
+    func connectionStatusDidChange(_ whisper: Whisper,
+                                   _ newStatus: WhisperConnectionStatus,
+                                   _ context: AnyObject?) {
         print("onConnection status : \(status)")
-        self.status = status
+        self.status = newStatus
         if status == .Disconnected {
             self.devices.removeAll()
         }
@@ -312,27 +318,31 @@ class DeviceManager : NSObject, WhisperHandler {
         NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
     }
     
-    public func onReady(w whisper: ManagedWhisper.Whisper, _ context: AnyObject?) {
+    public func didBecomeReady(_ whisper: Whisper, _ context: AnyObject?) {
         print("onReady")
-        let myInfo = try! whisper.getSelfInfo()
+        let myInfo = try! whisper.getSelfUserInfo()
         if myInfo.name?.isEmpty ?? true {
             myInfo.name = UIDevice.current.name
-            try? whisper.setSelfInfo(with: myInfo)
+            try? whisper.setSelfUserInfo(myInfo)
         }
         
         //self.devices = try! whisper.getFriends()
         //NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
     }
     
-    public func onSelfInfoChanged(w whisper: ManagedWhisper.Whisper, with info: ManagedWhisper.WhisperUserInfo, _ context: AnyObject?) {
-        print("onSelfInfoChanged : \(info)")
+    public func selfUserInfoDidChange(_ whisper: Whisper,
+                                      _ newInfo: WhisperUserInfo,
+                                      _ context: AnyObject?) {
+        print("onSelfInfoChanged : \(newInfo)")
         NotificationCenter.default.post(name: DeviceManager.SelfInfoChanged, object: nil)
     }
     
-    public func onFriendIterated(w whisper: ManagedWhisper.Whisper, with info: ManagedWhisper.WhisperFriendInfo?, _ context: AnyObject?) -> Bool {
-        print("onFriendIterated : \(info)")
-        if let deviceInfo = info {
-            self.devices.append(deviceInfo)
+    public func iterateFriend(_ whisper: Whisper,
+                              _ friendInfo: WhisperFriendInfo?,
+                              _ context: AnyObject?) ->Bool {
+        print("onFriendIterated : \(friendInfo)")
+        if let friend = friendInfo {
+            self.devices.append(Device(friend))
         }
         else {
             NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
@@ -340,12 +350,15 @@ class DeviceManager : NSObject, WhisperHandler {
         return true;
     }
     
-    public func onFriendInfoChanged(w whisper: ManagedWhisper.Whisper, at friendId: String, with info: ManagedWhisper.WhisperFriendInfo, _ context: AnyObject?) {
+    public func friendInfoDidChange(_ whisper: Whisper,
+                                    _ friendId: String,
+                                    _ newInfo: WhisperFriendInfo,
+                                    _ context: AnyObject?) {
         print("onFriendInfoChanged")
         for index in 0..<self.devices.count {
             let device = self.devices[index]
-            if device.userInfo?.userId == friendId {
-                self.devices.replaceSubrange(index...index, with: [info])
+            if device.deviceId == friendId {
+                device.deviceInfo = newInfo
                 
                 NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
                 break
@@ -353,11 +366,14 @@ class DeviceManager : NSObject, WhisperHandler {
         }
     }
     
-    public func onFriendPresence(w whisper: ManagedWhisper.Whisper, at friendId: String, with presence: String, _ context: AnyObject?) {
+    public func friendPresenceDidChange(_ whisper: Whisper,
+                                        _ friendId: String,
+                                        _ newPresence: String,
+                                        _ context: AnyObject?) {
         print("onFriendPresence")
         for device in self.devices {
-            if device.userInfo?.userId == friendId {
-                device.presence = presence
+            if device.deviceId == friendId {
+                device.deviceInfo.presence = newPresence
                 
                 NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
                 break
@@ -365,11 +381,15 @@ class DeviceManager : NSObject, WhisperHandler {
         }
     }
     
-    public func onFriendRequest(w whisper: ManagedWhisper.Whisper, from userId: String, with info: ManagedWhisper.WhisperUserInfo, hello: String, _ context: AnyObject?) -> Bool {
-        print("onFriendRequest, userId : \(userId), name : \(info.name), hello : \(hello)")
+    public func didReceiveFriendRequest(_ whisper: Whisper,
+                                        _ userId: String,
+                                        _ userInfo: WhisperUserInfo,
+                                        _ hello: String,
+                                        _ context: AnyObject?) -> Bool {
+        print("onFriendRequest, userId : \(userId), name : \(userInfo.name), hello : \(hello)")
         var result = false
         do {
-            try whisper.replyFriendRequest(from: userId, on: 0, with: nil, entrusted: 0, expire: nil)
+            try whisper.replyFriendRequest(to: userId, withStatus: 0, reason: nil, entrusted: true, expire: nil)
             result = true
         } catch {
             NSLog("replyFriendRequest error : \(error)")
@@ -377,22 +397,32 @@ class DeviceManager : NSObject, WhisperHandler {
         return result;
     }
     
-    public func onFriendResponse(w whisper: ManagedWhisper.Whisper, from userId: String, on status: Int, with reason: String?, entrusted: Int, expire: String?, _ context: AnyObject?) -> Bool {
+    public func didReceiveFriendResponse(_ whisper: Whisper,
+                                         _ userId: String,
+                                         _ status: Int,
+                                         _ reason: String?,
+                                         _ entrusted: Bool,
+                                         _ expire: String?,
+                                         _ context: AnyObject?) -> Bool {
         print("onFriendResponse, userId : \(userId)")
         return true;
     }
     
-    public func onFriendAdded(w whisper: ManagedWhisper.Whisper, with info: ManagedWhisper.WhisperFriendInfo, _ context: AnyObject?) {
+    public func newFriendAdded(_ whisper: Whisper,
+                               _ newFriend: WhisperFriendInfo,
+                               _ context: AnyObject?) {
         print("onFriendAdded")
-        self.devices.append(info)
+        self.devices.append(Device(newFriend))
         NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
     }
     
-    public func onFriendRemoved(w whisper: ManagedWhisper.Whisper, at friendId: String, _ context: AnyObject?) {
+    public func friendRemoved(_ whisper: Whisper,
+                              _ friendId: String,
+                              _ context: AnyObject?) {
         print("onFriendRemoved")
         for index in 0..<self.devices.count {
             let device = self.devices[index]
-            if device.userInfo?.userId == friendId {
+            if device.deviceId == friendId {
                 self.devices.remove(at: index)
                 
                 NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
@@ -401,7 +431,10 @@ class DeviceManager : NSObject, WhisperHandler {
         }
     }
     
-    public func onFriendMessage(w whisper: ManagedWhisper.Whisper, from: String, with message: String, _ context: AnyObject?) -> Bool {
+    public func didReceiveFriendMessage(_ whisper: Whisper,
+                                        _ from: String,
+                                        _ message: String,
+                                        _ context: AnyObject?) -> Bool {
         print("onFriendMessage: \(message)")
         do {
             let data = message.data(using: .utf8)
@@ -429,10 +462,10 @@ class DeviceManager : NSObject, WhisperHandler {
                 }
                 if let audioPlay = dict["audioPlay"] as? Bool {
                     if audioPlay {
-                        try! startPlayAudio()
+                        try! startAudioPlay()
                     }
                     else {
-                        try! stopPlayAudio()
+                        try! stopAudioPlay()
                     }
                 }
                 if let volume = dict["volume"] as? Float {
@@ -447,7 +480,10 @@ class DeviceManager : NSObject, WhisperHandler {
         return true;
     }
     
-    public func onFriendInvite(w whisper: ManagedWhisper.Whisper, from: String, with data: String, _ context: AnyObject?) -> Bool {
+    public func didReceiveFriendInviteRequest(_ whisper: Whisper,
+                                              _ from: String,
+                                              _ data: String,
+                                              _ context: AnyObject?) -> Bool {
         print("onFriendInvite")
         return false;
     }

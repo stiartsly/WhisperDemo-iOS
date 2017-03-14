@@ -7,7 +7,14 @@ FOUNDATION_EXPORT double ManagedWhisperVersionNumber;
 //! Project version string for ManagedWhisper.
 FOUNDATION_EXPORT const unsigned char ManagedWhisperVersionString[];
 
-// In this header, you should import all the public headers of your framework using statements like #import <ManagedWhisper/PublicHeader.h>
+// In this header, you should import all the public headers of your framework
+// using statements like #import <ManagedWhisper/PublicHeader.h>
 
 
+typedef NS_OPTIONS (int, WhisperStreamOptions) {
+    WhisperStreamOptionEncrypt          = 1 << 0,
+    WhisperStreamOptionReliable         = 1 << 1,
+    WhisperStreamOptionMultiplexing     = 1 << 2,
+    WhisperStreamOptionPortForwarding   = 1 << 3,
+};
 

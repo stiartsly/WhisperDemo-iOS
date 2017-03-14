@@ -21,7 +21,7 @@ class MyInfoController: UIViewController {
         navigationItem.title = "我"
         
         if let whisper = Whisper.getInstance() {
-            let myInfo = try! whisper.getSelfInfo()
+            let myInfo = try! whisper.getSelfUserInfo()
             nameLabel.text = myInfo.name;
             
             let qrCodeWidth = qrCodeImageView.bounds.size.width * UIScreen.main.scale;

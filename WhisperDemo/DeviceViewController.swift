@@ -11,7 +11,7 @@ import MBProgressHUD
 import ManagedWhisper
 
 class DeviceViewController: UITableViewController {
-    var device : WhisperFriendInfo?
+    var device : Device?
     var hud : MBProgressHUD?
     
     private var _observer : NSObjectProtocol?
@@ -39,18 +39,20 @@ class DeviceViewController: UITableViewController {
         self.tableView.tableFooterView = UIView(frame: CGRect.zero)
         self.tableView.layoutMargins = UIEdgeInsets.zero
         
-        self.setNavigationTitle()
-        
         if let deviceInfo = self.device {
+            navigationItem.title = device?.deviceName
+            
             _observer = NotificationCenter.default.addObserver(forName: DeviceManager.DeviceListChanged, object: nil, queue: OperationQueue.main, using: {
                 [unowned self] _ in
                 if DeviceManager.sharedInstance.status == .Connected {
-                    if let newDevice = DeviceManager.sharedInstance.devices.first(where: { $0.userInfo!.userId == deviceInfo.userInfo!.userId }) {
-                        self.device = newDevice
-                        self.setNavigationTitle()
+                    if DeviceManager.sharedInstance.devices.contains(deviceInfo) {
+                        self.navigationItem.title = self.device?.deviceName
                     }
                 }
             })
+        }
+        else {
+            navigationItem.title = "本机"
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(onReceivedStatus), name: DeviceManager.DeviceStatusChanged, object: nil)
@@ -94,23 +96,6 @@ class DeviceViewController: UITableViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-    }
-    
-    func setNavigationTitle() {
-        if let deviceInfo = self.device {
-            if !(deviceInfo.label!.isEmpty) {
-                navigationItem.title =  deviceInfo.label
-            }
-            else if !(deviceInfo.userInfo!.name!.isEmpty) {
-                navigationItem.title = deviceInfo.userInfo!.name
-            }
-            else {
-                navigationItem.title = deviceInfo.userInfo!.userId
-            }
-        }
-        else {
-            navigationItem.title = "本机"
-        }
     }
 
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -220,10 +205,10 @@ class DeviceViewController: UITableViewController {
     @IBAction func audioPlayButtonClicked(_ sender: UIButton) {
         do {
             if sender.isSelected {
-                try DeviceManager.sharedInstance.stopPlayAudio(self.device)
+                try DeviceManager.sharedInstance.stopAudioPlay(self.device)
                 sender.isSelected = false
             } else {
-                try DeviceManager.sharedInstance.startPlayAudio(self.device)
+                try DeviceManager.sharedInstance.startAudioPlay(self.device)
                 sender.isSelected = true
             }
             
@@ -246,7 +231,7 @@ class DeviceViewController: UITableViewController {
     }
     
     @objc private func onReceivedStatus(_ notification: Notification) {
-        guard device?.userInfo?.userId == (notification.object as? String) else {
+        guard device?.deviceId == (notification.object as? String) else {
             return
         }
         

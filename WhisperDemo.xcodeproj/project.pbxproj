@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		170101BF1E236F3B001507AD /* DeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170101BE1E236F3B001507AD /* DeviceViewController.swift */; };
+		17383DF71E71305A00777AC6 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17383DF61E71305A00777AC6 /* Device.swift */; };
 		173AB0C41E275D4300542B1B /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173AB0C31E275D4300542B1B /* DeviceManager.swift */; };
 		1797298D1E31AF62004F262D /* audio.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 1797298C1E31AF62004F262D /* audio.m4a */; };
 		17A004B61E4C0DFA0088E076 /* ScanViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 17A004B51E4C0DFA0088E076 /* ScanViewController.xib */; };
@@ -41,6 +42,7 @@
 
 /* Begin PBXFileReference section */
 		170101BE1E236F3B001507AD /* DeviceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceViewController.swift; sourceTree = "<group>"; };
+		17383DF61E71305A00777AC6 /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		173AB0C31E275D4300542B1B /* DeviceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceManager.swift; sourceTree = "<group>"; };
 		1797298C1E31AF62004F262D /* audio.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = audio.m4a; sourceTree = "<group>"; };
 		17A004B51E4C0DFA0088E076 /* ScanViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScanViewController.xib; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 			children = (
 				17C508651E1CDEFC0068A76A /* Support Files */,
 				173AB0C31E275D4300542B1B /* DeviceManager.swift */,
+				17383DF61E71305A00777AC6 /* Device.swift */,
 				17C5081A1E139F990068A76A /* AppDelegate.swift */,
 				17C5081C1E139F990068A76A /* DeviceListViewController.swift */,
 				170101BE1E236F3B001507AD /* DeviceViewController.swift */,
@@ -280,6 +283,7 @@
 				17C5081D1E139F990068A76A /* DeviceListViewController.swift in Sources */,
 				173AB0C41E275D4300542B1B /* DeviceManager.swift in Sources */,
 				17C5082F1E13C2AB0068A76A /* ScanViewController.m in Sources */,
+				17383DF71E71305A00777AC6 /* Device.swift in Sources */,
 				17FBAD981E543DD000289C1E /* DeviceInfoViewController.swift in Sources */,
 				170101BF1E236F3B001507AD /* DeviceViewController.swift in Sources */,
 				17C508631E1BAA7D0068A76A /* MyInfoViewController.swift in Sources */,
