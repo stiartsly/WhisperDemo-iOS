@@ -11,6 +11,15 @@ FOUNDATION_EXPORT const unsigned char ManagedWhisperVersionString[];
 // using statements like #import <ManagedWhisper/PublicHeader.h>
 
 
+
+/**
+ The stream mode options.
+
+ - WhisperStreamOptionEncrypt: Enctypted mode
+ - WhisperStreamOptionReliable: Reliable mode
+ - WhisperStreamOptionMultiplexing: Multiplexing mode
+ - WhisperStreamOptionPortForwarding: Support portforwarding over multiplexing
+ */
 typedef NS_OPTIONS (int, WhisperStreamOptions) {
     WhisperStreamOptionEncrypt          = 1 << 0,
     WhisperStreamOptionReliable         = 1 << 1,

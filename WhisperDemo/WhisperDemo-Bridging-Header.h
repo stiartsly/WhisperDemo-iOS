@@ -4,3 +4,5 @@
 
 
 #import "ScanViewController.h"
+#import "VideoEncoder.h"
+#import "VideoDecoder.h"

@@ -188,7 +188,7 @@ enum WMWhisperLogLevel : NSInteger;
   The class representing Whisper client.
 */
 SWIFT_CLASS_NAMED("Whisper")
-@interface NSWhisper : NSObject
+@interface WMWhisper : NSObject
 /**
   Whisper managed App message max length.
 */
@@ -238,14 +238,14 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_APP_ME
   returns:
   The client whisper instance
 */
-+ (NSWhisper * _Nullable)getInstanceWithOptions:(WMWhisperOptions * _Nonnull)options delegate:(id <WMWhisperDelegate> _Nonnull)delegate :(id _Nullable)context error:(NSError * _Nullable * _Nullable)error;
++ (WMWhisper * _Nullable)getInstanceWithOptions:(WMWhisperOptions * _Nonnull)options delegate:(id <WMWhisperDelegate> _Nonnull)delegate :(id _Nullable)context error:(NSError * _Nullable * _Nullable)error;
 /**
   Get a whisper client singleton instance.
 
   returns:
   The whisper client instance or ni
 */
-+ (NSWhisper * _Nullable)getInstance;
++ (WMWhisper * _Nullable)getInstance;
 /**
   Start whisper client asynchronously to connect to remote server.
   If the connection to server is successful, whisper client starts
@@ -456,7 +456,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_APP_ME
   throws:
   WhisperError
 */
-- (BOOL)sendInviteFriendRequestTo:(NSString * _Nonnull)target withData:(NSString * _Nonnull)data responseHandler:(void (^ _Nonnull)(NSWhisper * _Nonnull, NSString * _Nonnull, NSInteger, NSString * _Nullable, NSString * _Nullable, id _Nullable))responseHandler :(id _Nullable)context error:(NSError * _Nullable * _Nullable)error;
+- (BOOL)sendInviteFriendRequestTo:(NSString * _Nonnull)target withData:(NSString * _Nonnull)data responseHandler:(void (^ _Nonnull)(WMWhisper * _Nonnull, NSString * _Nonnull, NSInteger, NSString * _Nullable, NSString * _Nullable, id _Nullable))responseHandler :(id _Nullable)context error:(NSError * _Nullable * _Nullable)error;
 /**
   Reply the friend invite request.
   This function will send a invite response to friend.
@@ -517,7 +517,7 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
   returns:
   Void
 */
-- (void)willBecomeIdle:(NSWhisper * _Nonnull)whisper :(id _Nullable)context;
+- (void)willBecomeIdle:(WMWhisper * _Nonnull)whisper :(id _Nullable)context;
 /**
   Tell the delegate that the self connection status changed.
   \param whisper Whisper client instance
@@ -533,7 +533,7 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
   returns:
   Void
 */
-- (void)connectionStatusDidChange:(NSWhisper * _Nonnull)whisper newStatus:(enum WMWhisperConnectionStatus)newStatus :(id _Nullable)context;
+- (void)connectionStatusDidChange:(WMWhisper * _Nonnull)whisper newStatus:(enum WMWhisperConnectionStatus)newStatus :(id _Nullable)context;
 @required
 /**
   Tell the delegate that Whisper client is being ready.
@@ -547,7 +547,7 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
   returns:
   Void
 */
-- (void)didBecomeReady:(NSWhisper * _Nonnull)whisper :(id _Nullable)context;
+- (void)didBecomeReady:(WMWhisper * _Nonnull)whisper :(id _Nullable)context;
 @optional
 /**
   Tell the delegate that current self user info has been changed.
@@ -561,7 +561,7 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
   returns:
   Void
 */
-- (void)selfUserInfoDidChange:(NSWhisper * _Nonnull)whisper newInfo:(WMWhisperUserInfo * _Nonnull)newInfo :(id _Nullable)context;
+- (void)selfUserInfoDidChange:(WMWhisper * _Nonnull)whisper newInfo:(WMWhisperUserInfo * _Nonnull)newInfo :(id _Nullable)context;
 /**
   Tell the delegate to iterate each friend item in friend list.
   \param whisper Whisper client instance
@@ -576,7 +576,7 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
   True to continue iterating next friend user info,
   false to stop iteration.
 */
-- (BOOL)iterateFriend:(NSWhisper * _Nonnull)whisper withFriendInfo:(WMWhisperFriendInfo * _Nullable)friendInfo :(id _Nullable)context;
+- (BOOL)iterateFriend:(WMWhisper * _Nonnull)whisper withFriendInfo:(WMWhisperFriendInfo * _Nullable)friendInfo :(id _Nullable)context;
 /**
   Tell the delegate that friend information has been changed.
   \param whisper Whisper client instance
@@ -591,7 +591,7 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
   returns:
   Void
 */
-- (void)friendInfoDidChange:(NSWhisper * _Nonnull)whisper forFriend:(NSString * _Nonnull)friendId newInfo:(WMWhisperFriendInfo * _Nonnull)newInfo :(id _Nullable)context;
+- (void)friendInfoDidChange:(WMWhisper * _Nonnull)whisper forFriend:(NSString * _Nonnull)friendId newInfo:(WMWhisperFriendInfo * _Nonnull)newInfo :(id _Nullable)context;
 /**
   Tell the delegate that friend presence has been changed.
   \param whisper Whisper client instance
@@ -606,7 +606,7 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
   returns:
   Void
 */
-- (void)friendPresenceDidChange:(NSWhisper * _Nonnull)whisper forFriend:(NSString * _Nonnull)friendId newPresence:(NSString * _Nonnull)newPresence :(id _Nullable)context;
+- (void)friendPresenceDidChange:(WMWhisper * _Nonnull)whisper forFriend:(NSString * _Nonnull)friendId newPresence:(NSString * _Nonnull)newPresence :(id _Nullable)context;
 /**
   Tell the delegate that an friend request message has been received.
   \param whisper Whisper client instance
@@ -627,7 +627,7 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
   True if current callback consume this event, otherwise
   return false
 */
-- (BOOL)didReceiveFriendRequest:(NSWhisper * _Nonnull)whisper fromUser:(NSString * _Nonnull)userId withUserInfo:(WMWhisperUserInfo * _Nonnull)userInfo hello:(NSString * _Nonnull)hello :(id _Nullable)context;
+- (BOOL)didReceiveFriendRequest:(WMWhisper * _Nonnull)whisper fromUser:(NSString * _Nonnull)userId withUserInfo:(WMWhisperUserInfo * _Nonnull)userInfo hello:(NSString * _Nonnull)hello :(id _Nullable)context;
 /**
   Tell the delegate that an friend response to previous friend request
   has been received.
@@ -652,7 +652,7 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
   true if current callback consume this event, otherwise
   return false
 */
-- (BOOL)didReceiveFriendResponse:(NSWhisper * _Nonnull)whisper fromUser:(NSString * _Nonnull)userId withStatus:(NSInteger)status reason:(NSString * _Nullable)reason entrusted:(BOOL)entrusted expire:(NSString * _Nullable)expire :(id _Nullable)context;
+- (BOOL)didReceiveFriendResponse:(WMWhisper * _Nonnull)whisper fromUser:(NSString * _Nonnull)userId withStatus:(NSInteger)status reason:(NSString * _Nullable)reason entrusted:(BOOL)entrusted expire:(NSString * _Nullable)expire :(id _Nullable)context;
 /**
   Tell the delegate that an new friend has been added to current
   user’s friend list.
@@ -666,7 +666,7 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
   returns:
   Void
 */
-- (void)newFriendAdded:(NSWhisper * _Nonnull)whisper withFriendInfo:(WMWhisperFriendInfo * _Nonnull)newFriend :(id _Nullable)context;
+- (void)newFriendAdded:(WMWhisper * _Nonnull)whisper withFriendInfo:(WMWhisperFriendInfo * _Nonnull)newFriend :(id _Nullable)context;
 /**
   Tell the delegate that an friend has been removed from current user’s
   friend list.
@@ -680,7 +680,7 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
   returns:
   Void
 */
-- (void)friendRemoved:(NSWhisper * _Nonnull)whisper forFriend:(NSString * _Nonnull)friendId :(id _Nullable)context;
+- (void)friendRemoved:(WMWhisper * _Nonnull)whisper forFriend:(NSString * _Nonnull)friendId :(id _Nullable)context;
 /**
   Tell the delegate that an friend message has been received.
   \param whisper Whisper client instance
@@ -696,7 +696,7 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
   True if current callback consume this event, otherwise
   return false
 */
-- (BOOL)didReceiveFriendMessage:(NSWhisper * _Nonnull)whisper from:(NSString * _Nonnull)from withMessage:(NSString * _Nonnull)message :(id _Nullable)context;
+- (BOOL)didReceiveFriendMessage:(WMWhisper * _Nonnull)whisper from:(NSString * _Nonnull)from withMessage:(NSString * _Nonnull)message :(id _Nullable)context;
 /**
   Tell the delegate that an friend invite request has been received.
   \param whisper Whisper client instance
@@ -712,7 +712,7 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
   True if current callback consume this event, otherwise
   return false
 */
-- (BOOL)didReceiveFriendInviteRequest:(NSWhisper * _Nonnull)whisper from:(NSString * _Nonnull)from withData:(NSString * _Nonnull)data :(id _Nullable)context;
+- (BOOL)didReceiveFriendInviteRequest:(WMWhisper * _Nonnull)whisper from:(NSString * _Nonnull)from withData:(NSString * _Nonnull)data :(id _Nullable)context;
 @end
 
 /**
@@ -966,7 +966,7 @@ SWIFT_CLASS_NAMED("WhisperPortForwarding")
   returns:
   The client portforwarding manager
 */
-+ (WMWhisperPortForwarding * _Nullable)getInstance:(NSWhisper * _Nonnull)whisper error:(NSError * _Nullable * _Nullable)error;
++ (WMWhisperPortForwarding * _Nullable)getInstance:(WMWhisper * _Nonnull)whisper error:(NSError * _Nullable * _Nullable)error;
 /**
   Get port forwarding manager instance with server mode.
   This function should be used in the case that the server bearing port
@@ -990,7 +990,7 @@ SWIFT_CLASS_NAMED("WhisperPortForwarding")
   returns:
   The server port forwarding manager
 */
-+ (WMWhisperPortForwarding * _Nullable)getInstance:(NSWhisper * _Nonnull)whisper :(NSString * _Nonnull)host :(NSString * _Nonnull)port :(NSString * _Nullable)listeningHost :(NSString * _Nullable)listeningPort :(NSArray<WMRemoteService *> * _Nonnull)services error:(NSError * _Nullable * _Nullable)error;
++ (WMWhisperPortForwarding * _Nullable)getInstance:(WMWhisper * _Nonnull)whisper :(NSString * _Nonnull)host :(NSString * _Nonnull)port :(NSString * _Nullable)listeningHost :(NSString * _Nullable)listeningPort :(NSArray<WMRemoteService *> * _Nonnull)services error:(NSError * _Nullable * _Nullable)error;
 /**
   Get current port forwarding manager or nil
 
@@ -1185,7 +1185,7 @@ SWIFT_CLASS_NAMED("WhisperSessionManager")
   returns:
   A whisper session manager
 */
-+ (WMWhisperSessionManager * _Nullable)getInstance:(NSWhisper * _Nonnull)whisper withOptions:(WMWhisperSessionManagerOptions * _Nonnull)options error:(NSError * _Nullable * _Nullable)error;
++ (WMWhisperSessionManager * _Nullable)getInstance:(WMWhisper * _Nonnull)whisper withOptions:(WMWhisperSessionManagerOptions * _Nonnull)options error:(NSError * _Nullable * _Nullable)error;
 /**
   Get a whisper session manager instance.
   \param whisper Whisper client instance
@@ -1206,7 +1206,7 @@ SWIFT_CLASS_NAMED("WhisperSessionManager")
   returns:
   A whisper session manager
 */
-+ (WMWhisperSessionManager * _Nullable)getInstance:(NSWhisper * _Nonnull)whisper withOptions:(WMWhisperSessionManagerOptions * _Nonnull)options usingHandler:(BOOL (^ _Nonnull)(NSWhisper * _Nonnull, NSString * _Nonnull, NSString * _Nonnull, id _Nullable))handler :(id _Nullable)context error:(NSError * _Nullable * _Nullable)error;
++ (WMWhisperSessionManager * _Nullable)getInstance:(WMWhisper * _Nonnull)whisper withOptions:(WMWhisperSessionManagerOptions * _Nonnull)options usingHandler:(BOOL (^ _Nonnull)(WMWhisper * _Nonnull, NSString * _Nonnull, NSString * _Nonnull, id _Nullable))handler :(id _Nullable)context error:(NSError * _Nullable * _Nullable)error;
 /**
   Get a whisper session manager instance.
 
@@ -1223,12 +1223,6 @@ SWIFT_CLASS_NAMED("WhisperSessionManager")
   The session object represent a conversation handle to a friend.
   \param target The target id(userid or userid@nodeid).
 
-  \param offerer The role in current conversation.
-  If offer is true, current client will act as Controlling
-  Agent, otherwise current client will act as Controlled
-  Agent. Reference:
-  https://tools.ietf.org/html/rfc5245#section-7.1.2.2
-
 
   throws:
   WhisperError
@@ -1236,7 +1230,7 @@ SWIFT_CLASS_NAMED("WhisperSessionManager")
   returns:
   The new WhisperSession
 */
-- (WMWhisperSession * _Nullable)newSessionTo:(NSString * _Nonnull)target asOfferer:(BOOL)offerer error:(NSError * _Nullable * _Nullable)error;
+- (WMWhisperSession * _Nullable)newSessionTo:(NSString * _Nonnull)target error:(NSError * _Nullable * _Nullable)error;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 @end
 

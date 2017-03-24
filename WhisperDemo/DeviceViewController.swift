@@ -60,6 +60,7 @@ class DeviceViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.splitViewController?.navigationController?.isNavigationBarHidden = true
         self.tableView.separatorStyle = splitViewController!.isCollapsed ? .singleLine : .none
         
         if self.device != nil {
@@ -69,33 +70,39 @@ class DeviceViewController: UITableViewController {
             hud!.show(animated: true)
         }
         
-        if let status = try! DeviceManager.sharedInstance.getDeviceStatus(device) {
-            let bulbStatus = status["bulb"] as! Bool
-            self.bulbStatus.isSelected = bulbStatus
-            self.bulbSwitch.setOn(bulbStatus, animated: false)
-            
-            let torchStatus = status["torch"] as! String
-            switch torchStatus {
-            case "on":
-                self.torchSwitch.setOn(true, animated: false)
-                self.torchSwitch.isEnabled = true
-            case "off":
-                self.torchSwitch.setOn(false, animated: false)
-                self.torchSwitch.isEnabled = true
-            default:
-                self.torchSwitch.thumbTintColor = UIColor.lightGray
-                self.torchSwitch.setOn(false, animated: false)
-                self.torchSwitch.isEnabled = false
+        do {
+            if let status = try DeviceManager.sharedInstance.getDeviceStatus(device)  {
+                let bulbStatus = status["bulb"] as! Bool
+                self.bulbStatus.isSelected = bulbStatus
+                self.bulbSwitch.setOn(bulbStatus, animated: false)
+                
+                let torchStatus = status["torch"] as! String
+                switch torchStatus {
+                case "on":
+                    self.torchSwitch.setOn(true, animated: false)
+                    self.torchSwitch.isEnabled = true
+                case "off":
+                    self.torchSwitch.setOn(false, animated: false)
+                    self.torchSwitch.isEnabled = true
+                default:
+                    self.torchSwitch.thumbTintColor = UIColor.lightGray
+                    self.torchSwitch.setOn(false, animated: false)
+                    self.torchSwitch.isEnabled = false
+                }
+                
+                self.brightnessSlider.value = status["brightness"] as! Float
+                self.audioPlayButton.isSelected = status["audioPlay"] as! Bool
+                self.volumeSlider.value = status["volume"] as! Float
             }
-            
-            self.brightnessSlider.value = status["brightness"] as! Float
-            self.audioPlayButton.isSelected = status["audioPlay"] as! Bool
-            self.volumeSlider.value = status["volume"] as! Float
+        }
+        catch {
+            NSLog("getDeviceStatus failed")
         }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        self.splitViewController?.navigationController?.isNavigationBarHidden = splitViewController?.navigationController?.topViewController == splitViewController
     }
 
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -146,6 +153,15 @@ class DeviceViewController: UITableViewController {
             testView.layer.insertSublayer(layer, at: 0)
             testView.backgroundColor = UIColor.clear
             cell.backgroundView = testView
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        if indexPath.section == 4 {
+            let videoVC = VideoPlayViewController()
+            videoVC.device = self.device
+            self.splitViewController?.navigationController?.show(videoVC, sender: nil)
         }
     }
     

@@ -11,29 +11,58 @@ import AVFoundation
 import MediaPlayer
 import ManagedWhisper
 
-class DeviceManager : NSObject, WhisperDelegate {
-    private static let appId = "7sRQjDsniyuHdZ9zsQU9DZbMLtQGLBWZ78yHWgjPpTKm"
-    private static let appKey = "6tzPPAgSACJdScX79wuzMNPQTWkRLZ4qEdhLcZU6q4B9"
-    private static let apiServer = "https://whisper.freeddns.org:8443/web/api"
-    private static let mqttServer = "ssl://whisper.freeddns.org:8883"
-//    private static let apiServerUrl = "https://192.168.3.182:8443/web/api"
-//    private static let mqttServerUri = "ssl://192.168.3.182:8883"
-//    private static let apiServerUrl = "http://192.168.3.182:8080/web/api"
-//    private static let mqttServerUri = "tcp://192.168.3.182:1883"
+class DeviceManager : NSObject {
     
-    static let sharedInstance = DeviceManager()
+// MARK: Constants
+    
+    fileprivate static let appId = "7sRQjDsniyuHdZ9zsQU9DZbMLtQGLBWZ78yHWgjPpTKm"
+    fileprivate static let appKey = "6tzPPAgSACJdScX79wuzMNPQTWkRLZ4qEdhLcZU6q4B9"
+    fileprivate static let apiServer = "https://whisper.freeddns.org:8443/web/api"
+    fileprivate static let mqttServer = "ssl://whisper.freeddns.org:8883"
+//    fileprivate static let stunServer = "whisper.freeddns.org"
+//    fileprivate static let turnServer = "whisper.freeddns.org"
+//    fileprivate static let turnUsername = "whisper"
+//    fileprivate static let turnPassword = "io2016whisper"
+    
+//    fileprivate static let apiServerUrl = "https://192.168.3.182:8443/web/api"
+//    fileprivate static let mqttServerUri = "ssl://192.168.3.182:8883"
+//    fileprivate static let apiServerUrl = "http://192.168.3.182:8080/web/api"
+//    fileprivate static let mqttServerUri = "tcp://192.168.3.182:1883"
+    fileprivate static let stunServer = "27.115.62.114"
+    fileprivate static let turnServer = "27.115.62.114"
+    fileprivate static let turnUsername = "demo"
+    fileprivate static let turnPassword = "secret"
+    
+    fileprivate static let videoFramesPreSecond : CMTimeScale = 20
+    
+// MARK: - Notifications
+    
     static let SelfInfoChanged = NSNotification.Name("kNotificationSelfInfoChanged")
     static let DeviceListChanged = NSNotification.Name("kNotificationDeviceListChanged")
     static let DeviceStatusChanged = NSNotification.Name("kNotificationDeviceStatusChanged")
+    
+// MARK: - Singleton
+    static let sharedInstance = DeviceManager()
+    
+// MARK: - Variables
     
     var status = WhisperConnectionStatus.Disconnected;
     var whisperInst: Whisper!
     var devices = [Device]()
     
-    var bulbStatus = false
-    var captureDevice: AVCaptureDevice?
-    var audioPlayer : AVAudioPlayer?
-    var audioVolume : Float = 1.0
+// MARK: - Private variables
+    
+    fileprivate var bulbStatus = false
+    fileprivate var captureDevice: AVCaptureDevice?
+    fileprivate var audioPlayer : AVAudioPlayer?
+    fileprivate var audioVolume : Float = 1.0
+    
+    fileprivate var captureSession : AVCaptureSession?
+    fileprivate var videoPlayLayer : AVSampleBufferDisplayLayer?
+    fileprivate var remotePlayingDevices = Set<Device>()
+    fileprivate var encoder : VideoEncoder?
+    
+// MARK: - Methods
     
     override init() {
         Whisper.setLogLevel(.Debug)
@@ -285,7 +314,7 @@ class DeviceManager : NSObject, WhisperDelegate {
         }
     }
     
-    private func sendMessage(_ message: [String: Any], toDevice device: Device) throws {
+    func sendMessage(_ message: [String: Any], toDevice device: Device) throws {
         if device.deviceInfo.presence == "online" {
             try sendMessage(message, toDeviceId: device.deviceId)
         }
@@ -294,14 +323,16 @@ class DeviceManager : NSObject, WhisperDelegate {
         }
     }
     
-    private func sendMessage(_ message: [String: Any], toDeviceId deviceId: String) throws {
+    fileprivate func sendMessage(_ message: [String: Any], toDeviceId deviceId: String) throws {
         let jsonData = try JSONSerialization.data(withJSONObject: message, options: .prettyPrinted)
         let jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
         try whisperInst.sendFriendMessage(to: deviceId, withMessage: jsonString)
     }
+}
 
-// MARK: - WhisperHandler
-
+// MARK: - WhisperDelegate
+extension DeviceManager : WhisperDelegate
+{
 //    func willBecomeIdle(_ whisper: Whisper, _ context: AnyObject?) {
 //        print("onIdle")
 //    }
@@ -313,6 +344,7 @@ class DeviceManager : NSObject, WhisperDelegate {
         self.status = newStatus
         if status == .Disconnected {
             self.devices.removeAll()
+            self.remotePlayingDevices.removeAll()
         }
         
         NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
@@ -328,6 +360,12 @@ class DeviceManager : NSObject, WhisperDelegate {
         
         //self.devices = try! whisper.getFriends()
         //NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
+        
+        let options = WhisperSessionManagerOptions(stunServer: DeviceManager.stunServer,
+                                                   turnServer: DeviceManager.turnServer,
+                                                   turnUsername: DeviceManager.turnUsername,
+                                                   turnPassword: DeviceManager.turnPassword)
+        try! _ = WhisperSessionManager.getInstance(whisper: whisper, options: options, handler: didReceiveSessionRequest, nil)
     }
     
     public func selfUserInfoDidChange(_ whisper: Whisper,
@@ -374,6 +412,16 @@ class DeviceManager : NSObject, WhisperDelegate {
         for device in self.devices {
             if device.deviceId == friendId {
                 device.deviceInfo.presence = newPresence
+                if newPresence == "online" {
+                    if let layer = device.videoPlayLayer {
+                        _ = device.startVideoPlay(layer)
+                    }
+                }
+                else {
+                    device.remotePlaying = false
+                    device.closeSession()
+                    self.remotePlayingDevices.remove(device)
+                }
                 
                 NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
                 break
@@ -423,6 +471,7 @@ class DeviceManager : NSObject, WhisperDelegate {
         for index in 0..<self.devices.count {
             let device = self.devices[index]
             if device.deviceId == friendId {
+                self.remotePlayingDevices.remove(device)
                 self.devices.remove(at: index)
                 
                 NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
@@ -471,6 +520,20 @@ class DeviceManager : NSObject, WhisperDelegate {
                 if let volume = dict["volume"] as? Float {
                     try! setVolume(volume)
                 }
+                if let videoPlay = dict["videoPlay"] as? Bool {
+                    let deviceId = from.components(separatedBy: "@")[0]
+                    if let device = devices.first(where: {$0.deviceId == deviceId}) {
+                        device.remotePlaying = videoPlay
+                        if videoPlay {
+                            remotePlayingDevices.insert(device)
+                            startVideoCapture()
+                        }
+                        else {
+                            remotePlayingDevices.remove(device)
+                            checkAndStopVideoCapture()
+                        }
+                    }
+                }
             default:
                 print("unsupported message")
             }
@@ -486,5 +549,149 @@ class DeviceManager : NSObject, WhisperDelegate {
                                               _ context: AnyObject?) -> Bool {
         print("onFriendInvite")
         return false;
+    }
+    
+    public func didReceiveSessionRequest(whisper: Whisper, from: String, sdp: String, context: AnyObject?) -> Bool {
+        let deviceId = from.components(separatedBy: "@")[0]
+        let device = self.devices.first(where: {$0.deviceId == deviceId})
+        return device!.didReceiveSessionInviteRequest(whisper: whisper, sdp: sdp)
+    }
+}
+
+// MARK: - Video methods
+extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEncoderDelegate
+{
+    func startVideoPlay(_ layer : AVSampleBufferDisplayLayer, device: Device? = nil) {
+        if let selectedDevice = device {
+            _ = selectedDevice.startVideoPlay(layer)
+        }
+        else {
+            videoPlayLayer = layer
+            startVideoCapture()
+        }
+    }
+    
+    func stopVideoPlay(_ device: Device? = nil) {
+        if let selectedDevice = device {
+            selectedDevice.stopVideoPlay()
+        }
+        else {
+            videoPlayLayer = nil
+            checkAndStopVideoCapture()
+        }
+    }
+    
+    func startVideoCapture() {
+        if captureSession == nil {
+            captureSession = AVCaptureSession()
+            
+            if captureDevice == nil {
+                captureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
+            }
+            
+            do {
+                try captureDevice!.lockForConfiguration()
+                if captureDevice!.activeFormat.videoSupportedFrameRateRanges != nil {
+                    captureDevice!.activeVideoMinFrameDuration = CMTime(value: 1, timescale: DeviceManager.videoFramesPreSecond)
+                    captureDevice!.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: DeviceManager.videoFramesPreSecond)
+                }
+                captureDevice!.unlockForConfiguration()
+            }
+            catch {
+                print("set frame rate failed");
+            }
+            
+            let videoInput = try! AVCaptureDeviceInput(device: captureDevice)
+            captureSession!.addInput(videoInput)
+            
+            let output = AVCaptureVideoDataOutput()
+            let videoDataOutputQueue = DispatchQueue(label: "videoDataOutputQueue")
+            output.setSampleBufferDelegate(self, queue: videoDataOutputQueue)
+            output.videoSettings = [kCVPixelBufferPixelFormatTypeKey as AnyHashable : kCVPixelFormatType_32BGRA]
+            captureSession!.addOutput(output)
+            
+            captureSession!.beginConfiguration()
+            let preset = AVCaptureSessionPreset352x288
+            if captureSession!.canSetSessionPreset(preset) {
+                captureSession?.sessionPreset = preset
+            }
+            else {
+                captureSession?.sessionPreset = AVCaptureSessionPresetMedium
+            }
+            
+            if let videoConnection = output.connection(withMediaType: AVMediaTypeVideo) {
+                if videoConnection.isVideoOrientationSupported {
+                    videoConnection.videoOrientation = .landscapeRight
+                }
+            }
+            captureSession!.commitConfiguration()
+        }
+        
+        if !captureSession!.isRunning {
+            captureSession!.startRunning()
+        }
+    }
+    
+    func checkAndStopVideoCapture() {
+        if videoPlayLayer == nil && remotePlayingDevices.count == 0 {
+            if let captureSession = captureSession {
+                if captureSession.isRunning {
+                    captureSession.stopRunning()
+                }
+            }
+            if let encoder = encoder {
+                encoder.end()
+            }
+        }
+    }
+
+// MARK: AVCaptureVideoDataOutputSampleBufferDelegate
+    
+    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
+        if let playLayer = videoPlayLayer {
+            if playLayer.isReadyForMoreMediaData {
+                DispatchQueue.main.sync {
+                    playLayer.enqueue(sampleBuffer)
+                    if playLayer.status == .failed {
+                        playLayer.flush()
+                    }
+                    else {
+                        playLayer.setNeedsDisplay()
+                    }
+                }
+            }
+        }
+        
+        if self.remotePlayingDevices.count > 0 {
+            if encoder == nil {
+                encoder = VideoEncoder()
+                encoder?.delegate = self
+            }
+            encoder?.encode(sampleBuffer)
+        }
+    }
+
+// MARK: VideoEncoderDelegate
+    
+    func videoEncoder(_ encoder: VideoEncoder!, appendBytes bytes: UnsafeRawPointer!, length: Int) {
+        //let data = Data(bytesNoCopy: UnsafeMutableRawPointer(mutating: bytes), count: length, deallocator: .none)
+        let data = Data(bytes: bytes, count: length)
+        for device in self.remotePlayingDevices {
+            if device.state == .Connected {
+                do {
+                    let result = try device.stream!.writeData(component: 1, data: data)
+                    if result.intValue != length {
+                        NSLog("writeData result: \(result), total length: \(length)")
+                    }
+                }
+                catch {
+                    NSLog("writeData error: \(error)")
+                }
+            }
+        }
+    }
+    
+    func videoEncoder(_ encoder: VideoEncoder!, error: String!) {
+        
     }
 }
