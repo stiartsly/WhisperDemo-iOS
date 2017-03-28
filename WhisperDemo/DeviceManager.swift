@@ -33,7 +33,7 @@ class DeviceManager : NSObject {
     fileprivate static let turnUsername = "demo"
     fileprivate static let turnPassword = "secret"
     
-    fileprivate static let videoFramesPreSecond : CMTimeScale = 20
+//    fileprivate static let videoFramesPreSecond : CMTimeScale = 2
     
 // MARK: - Notifications
     
@@ -523,7 +523,6 @@ extension DeviceManager : WhisperDelegate
                 if let videoPlay = dict["videoPlay"] as? Bool {
                     let deviceId = from.components(separatedBy: "@")[0]
                     if let device = devices.first(where: {$0.deviceId == deviceId}) {
-                        device.remotePlaying = videoPlay
                         if videoPlay {
                             remotePlayingDevices.insert(device)
                             startVideoCapture()
@@ -532,6 +531,7 @@ extension DeviceManager : WhisperDelegate
                             remotePlayingDevices.remove(device)
                             checkAndStopVideoCapture()
                         }
+                        device.remotePlaying = videoPlay
                     }
                 }
             default:
@@ -589,17 +589,17 @@ extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEnc
                 captureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
             }
             
-            do {
-                try captureDevice!.lockForConfiguration()
-                if captureDevice!.activeFormat.videoSupportedFrameRateRanges != nil {
-                    captureDevice!.activeVideoMinFrameDuration = CMTime(value: 1, timescale: DeviceManager.videoFramesPreSecond)
-                    captureDevice!.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: DeviceManager.videoFramesPreSecond)
-                }
-                captureDevice!.unlockForConfiguration()
-            }
-            catch {
-                print("set frame rate failed");
-            }
+//            do {
+//                try captureDevice!.lockForConfiguration()
+//                if captureDevice!.activeFormat.videoSupportedFrameRateRanges != nil {
+//                    captureDevice!.activeVideoMinFrameDuration = CMTime(value: 1, timescale: DeviceManager.videoFramesPreSecond)
+//                    captureDevice!.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: DeviceManager.videoFramesPreSecond)
+//                }
+//                captureDevice!.unlockForConfiguration()
+//            }
+//            catch {
+//                print("set frame rate failed");
+//            }
             
             let videoInput = try! AVCaptureDeviceInput(device: captureDevice)
             captureSession!.addInput(videoInput)
@@ -607,7 +607,7 @@ extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEnc
             let output = AVCaptureVideoDataOutput()
             let videoDataOutputQueue = DispatchQueue(label: "videoDataOutputQueue")
             output.setSampleBufferDelegate(self, queue: videoDataOutputQueue)
-            output.videoSettings = [kCVPixelBufferPixelFormatTypeKey as AnyHashable : kCVPixelFormatType_32BGRA]
+            output.videoSettings = [kCVPixelBufferPixelFormatTypeKey as AnyHashable : kCVPixelFormatType_420YpCbCr8BiPlanarFullRange]
             captureSession!.addOutput(output)
             
             captureSession!.beginConfiguration()
@@ -621,7 +621,7 @@ extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEnc
             
             if let videoConnection = output.connection(withMediaType: AVMediaTypeVideo) {
                 if videoConnection.isVideoOrientationSupported {
-                    videoConnection.videoOrientation = .landscapeRight
+                    videoConnection.videoOrientation = .portrait
                 }
             }
             captureSession!.commitConfiguration()

@@ -10,6 +10,8 @@
 #import "VideoEncoder.h"
 #include "CRtpStream.h"
 
+static const int fps = 20;
+
 @implementation VideoEncoder
 {
     dispatch_queue_t queue;
@@ -147,7 +149,14 @@ void didCompressH264(void *outputCallbackRefCon, void *sourceFrameRefCon, OSStat
             
             // Set the properties
             VTSessionSetProperty(encodingSession, kVTCompressionPropertyKey_RealTime, kCFBooleanTrue);
-            VTSessionSetProperty(encodingSession, kVTCompressionPropertyKey_ProfileLevel, kVTProfileLevel_H264_Main_AutoLevel);
+            // ProfileLevel，h264的协议等级，不同的清晰度使用不同的ProfileLevel
+            VTSessionSetProperty(encodingSession, kVTCompressionPropertyKey_ProfileLevel, kVTProfileLevel_H264_Baseline_AutoLevel);
+            // 关闭重排Frame，因为有了B帧（双向预测帧，根据前后的图像计算出本帧）后，编码顺序可能跟显示顺序不同
+            VTSessionSetProperty(encodingSession, kVTCompressionPropertyKey_AllowFrameReordering, kCFBooleanFalse);
+            // 视频帧率
+            VTSessionSetProperty(encodingSession, kVTCompressionPropertyKey_ExpectedFrameRate, (__bridge CFTypeRef)@(fps));
+            // 关键帧最大间隔，1为每个都是关键帧，数值越大压缩率越高。此处表示关键帧最大间隔为1s
+            VTSessionSetProperty(encodingSession, kVTCompressionPropertyKey_MaxKeyFrameInterval, (__bridge CFTypeRef)@(fps));
             
             // Tell the encoder to start encoding
             VTCompressionSessionPrepareToEncodeFrames(encodingSession);
@@ -157,14 +166,14 @@ void didCompressH264(void *outputCallbackRefCon, void *sourceFrameRefCon, OSStat
         
         // Create properties
         CMTime presentationTimeStamp = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
-        //CMTime duration = CMTimeMake(1, DURATION);
+        CMTime duration = CMSampleBufferGetDuration(sampleBuffer);
         VTEncodeInfoFlags flags;
         
         // Pass it to the encoder
         OSStatus statusCode = VTCompressionSessionEncodeFrame(encodingSession,
                                                               imageBuffer,
                                                               presentationTimeStamp,
-                                                              kCMTimeInvalid,
+                                                              duration,
                                                               NULL, NULL, &flags);
         // Check for error
         if (statusCode != noErr) {

@@ -189,6 +189,10 @@ extension Device : VideoDecoderDelegate
             else if state == .IceReady {
                 try session!.sendInviteRequest(handler: didReceiveSessionInviteResponse, nil)
             }
+            else if state == .Connected {
+                let messageDic = ["type":"modify", "videoPlay":true] as [String : Any]
+                try! DeviceManager.sharedInstance.sendMessage(messageDic, toDevice: self)
+            }
             
             videoPlayLayer = layer
             return true
