@@ -770,10 +770,6 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_USER_P
 @property (nonatomic, readonly, copy) NSString * _Nonnull description;
 @end
 
-
-@interface WMWhisperFriendInfo (SWIFT_EXTENSION(ManagedWhisper))
-@end
-
 /**
   Whisper log level to control or filter log output
 */
@@ -841,10 +837,6 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_NODE_D
 */
 @property (nonatomic, copy) NSString * _Nullable briefDescription;
 @property (nonatomic, readonly, copy) NSString * _Nonnull description;
-@end
-
-
-@interface WMWhisperNodeInfo (SWIFT_EXTENSION(ManagedWhisper))
 @end
 
 
@@ -940,10 +932,6 @@ SWIFT_CLASS_NAMED("WhisperOptions")
 */
 @property (nonatomic) NSInteger retryInterval;
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
-@end
-
-
-@interface WMWhisperOptions (SWIFT_EXTENSION(ManagedWhisper))
 @end
 
 @class NSNumber;
@@ -1262,10 +1250,6 @@ SWIFT_CLASS_NAMED("WhisperSessionManagerOptions")
 */
 @property (nonatomic, copy) NSString * _Nonnull turnPassword;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
-@end
-
-
-@interface WMWhisperSessionManagerOptions (SWIFT_EXTENSION(ManagedWhisper))
 @end
 
 
@@ -1693,10 +1677,6 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_REGION
 */
 @property (nonatomic, copy) NSString * _Nullable region;
 @property (nonatomic, readonly, copy) NSString * _Nonnull description;
-@end
-
-
-@interface WMWhisperUserInfo (SWIFT_EXTENSION(ManagedWhisper))
 @end
 
 #pragma clang diagnostic pop
