@@ -91,7 +91,7 @@ class DeviceManager : NSObject {
                 options.connectTimeout = 5
                 
 //                try? FileManager.default.removeItem(atPath: whisperDirectory + "/.whisper")
-                try whisperInst = Whisper.getInstance(options: options, delegate: self, nil)
+                try whisperInst = Whisper.getInstance(options: options, delegate: self)
                 print("Whisper instance created")
                 
                 try whisperInst.start(iterateInterval: 1000)
@@ -333,13 +333,12 @@ class DeviceManager : NSObject {
 // MARK: - WhisperDelegate
 extension DeviceManager : WhisperDelegate
 {
-//    func willBecomeIdle(_ whisper: Whisper, _ context: AnyObject?) {
+//    func willBecomeIdle(_ whisper: Whisper) {
 //        print("onIdle")
 //    }
     
     func connectionStatusDidChange(_ whisper: Whisper,
-                                   _ newStatus: WhisperConnectionStatus,
-                                   _ context: AnyObject?) {
+                                   _ newStatus: WhisperConnectionStatus) {
         print("onConnection status : \(status)")
         self.status = newStatus
         if status == .Disconnected {
@@ -350,8 +349,8 @@ extension DeviceManager : WhisperDelegate
         NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
     }
     
-    public func didBecomeReady(_ whisper: Whisper, _ context: AnyObject?) {
-        print("onReady")
+    public func didBecomeReady(_ whisper: Whisper) {
+        print("didBecomeReady")
         let myInfo = try! whisper.getSelfUserInfo()
         if myInfo.name?.isEmpty ?? true {
             myInfo.name = UIDevice.current.name
@@ -365,34 +364,28 @@ extension DeviceManager : WhisperDelegate
                                                    turnServer: DeviceManager.turnServer,
                                                    turnUsername: DeviceManager.turnUsername,
                                                    turnPassword: DeviceManager.turnPassword)
-        try! _ = WhisperSessionManager.getInstance(whisper: whisper, options: options, handler: didReceiveSessionRequest, nil)
+        try! _ = WhisperSessionManager.getInstance(whisper: whisper, options: options, handler: didReceiveSessionRequest)
     }
     
     public func selfUserInfoDidChange(_ whisper: Whisper,
-                                      _ newInfo: WhisperUserInfo,
-                                      _ context: AnyObject?) {
-        print("onSelfInfoChanged : \(newInfo)")
+                                      _ newInfo: WhisperUserInfo) {
+        print("selfUserInfoDidChange : \(newInfo)")
         NotificationCenter.default.post(name: DeviceManager.SelfInfoChanged, object: nil)
     }
     
-    public func iterateFriend(_ whisper: Whisper,
-                              _ friendInfo: WhisperFriendInfo?,
-                              _ context: AnyObject?) ->Bool {
-        print("onFriendIterated : \(friendInfo)")
-        if let friend = friendInfo {
+    public func didReceiveFriendsList(_ whisper: Whisper,
+                               _ friends: [WhisperFriendInfo]) {
+        print("didReceiveFriendsList : \(friends)")
+        for friend in friends {
             self.devices.append(Device(friend))
         }
-        else {
-            NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
-        }
-        return true;
+        NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
     }
     
     public func friendInfoDidChange(_ whisper: Whisper,
                                     _ friendId: String,
-                                    _ newInfo: WhisperFriendInfo,
-                                    _ context: AnyObject?) {
-        print("onFriendInfoChanged")
+                                    _ newInfo: WhisperFriendInfo) {
+        print("friendInfoDidChange : \(newInfo)")
         for index in 0..<self.devices.count {
             let device = self.devices[index]
             if device.deviceId == friendId {
@@ -406,9 +399,8 @@ extension DeviceManager : WhisperDelegate
     
     public func friendPresenceDidChange(_ whisper: Whisper,
                                         _ friendId: String,
-                                        _ newPresence: String,
-                                        _ context: AnyObject?) {
-        print("onFriendPresence")
+                                        _ newPresence: String) {
+        print("friendPresenceDidChange")
         for device in self.devices {
             if device.deviceId == friendId {
                 device.deviceInfo.presence = newPresence
@@ -432,9 +424,8 @@ extension DeviceManager : WhisperDelegate
     public func didReceiveFriendRequest(_ whisper: Whisper,
                                         _ userId: String,
                                         _ userInfo: WhisperUserInfo,
-                                        _ hello: String,
-                                        _ context: AnyObject?) -> Bool {
-        print("onFriendRequest, userId : \(userId), name : \(userInfo.name), hello : \(hello)")
+                                        _ hello: String) -> Bool {
+        print("didReceiveFriendRequest, userId : \(userId), name : \(userInfo.name), hello : \(hello)")
         var result = false
         do {
             try whisper.replyFriendRequest(to: userId, withStatus: 0, reason: nil, entrusted: true, expire: nil)
@@ -450,24 +441,21 @@ extension DeviceManager : WhisperDelegate
                                          _ status: Int,
                                          _ reason: String?,
                                          _ entrusted: Bool,
-                                         _ expire: String?,
-                                         _ context: AnyObject?) -> Bool {
-        print("onFriendResponse, userId : \(userId)")
+                                         _ expire: String?) -> Bool {
+        print("didReceiveFriendResponse, userId : \(userId)")
         return true;
     }
     
     public func newFriendAdded(_ whisper: Whisper,
-                               _ newFriend: WhisperFriendInfo,
-                               _ context: AnyObject?) {
-        print("onFriendAdded")
+                               _ newFriend: WhisperFriendInfo) {
+        print("newFriendAdded : \(newFriend)")
         self.devices.append(Device(newFriend))
         NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
     }
     
     public func friendRemoved(_ whisper: Whisper,
-                              _ friendId: String,
-                              _ context: AnyObject?) {
-        print("onFriendRemoved")
+                              _ friendId: String) {
+        print("friendRemoved, userId : \(friendId)")
         for index in 0..<self.devices.count {
             let device = self.devices[index]
             if device.deviceId == friendId {
@@ -482,9 +470,8 @@ extension DeviceManager : WhisperDelegate
     
     public func didReceiveFriendMessage(_ whisper: Whisper,
                                         _ from: String,
-                                        _ message: String,
-                                        _ context: AnyObject?) -> Bool {
-        print("onFriendMessage: \(message)")
+                                        _ message: String) -> Bool {
+        print("didReceiveFriendMessage : \(message)")
         do {
             let data = message.data(using: .utf8)
             let decoded = try JSONSerialization.jsonObject(with: data!, options: [])
@@ -545,13 +532,12 @@ extension DeviceManager : WhisperDelegate
     
     public func didReceiveFriendInviteRequest(_ whisper: Whisper,
                                               _ from: String,
-                                              _ data: String,
-                                              _ context: AnyObject?) -> Bool {
-        print("onFriendInvite")
+                                              _ data: String) -> Bool {
+        print("didReceiveFriendInviteRequest")
         return false;
     }
     
-    public func didReceiveSessionRequest(whisper: Whisper, from: String, sdp: String, context: AnyObject?) -> Bool {
+    public func didReceiveSessionRequest(whisper: Whisper, from: String, sdp: String) -> Bool {
         let deviceId = from.components(separatedBy: "@")[0]
         let device = self.devices.first(where: {$0.deviceId == deviceId})
         return device!.didReceiveSessionInviteRequest(whisper: whisper, sdp: sdp)

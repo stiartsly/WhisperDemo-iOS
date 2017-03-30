@@ -12,10 +12,11 @@ import ManagedWhisper
 
 class Device {
     var deviceInfo : WhisperFriendInfo
+    fileprivate var semaphore : DispatchSemaphore?
     
     var deviceId : String {
         get {
-            return deviceInfo.userInfo!.userId!
+            return deviceInfo.userId!
         }
     }
     
@@ -24,11 +25,11 @@ class Device {
             if !(deviceInfo.label!.isEmpty) {
                 return deviceInfo.label!
             }
-            else if !(deviceInfo.userInfo!.name!.isEmpty) {
-                return deviceInfo.userInfo!.name!
+            else if !(deviceInfo.name!.isEmpty) {
+                return deviceInfo.name!
             }
             else {
-                return deviceInfo.userInfo!.userId!
+                return deviceInfo.userId!
             }
         }
     }
@@ -81,7 +82,7 @@ class Device {
 // MARK: - WhisperStreamDelegate
 extension Device : WhisperStreamDelegate
 {
-    func streamStateDidChange(_ stream: WhisperStream, _ newState: WhisperStreamState, _ context: AnyObject?) {
+    func streamStateDidChange(_ stream: WhisperStream, _ newState: WhisperStreamState) {
         guard stream == self.stream else {
             return
         }
@@ -99,12 +100,10 @@ extension Device : WhisperStreamDelegate
             closeSession()
         }
         
-        if let semaphore = context as? DispatchSemaphore {
-            semaphore.signal()
-        }
+        self.semaphore?.signal()
     }
     
-    func didReceiveStreamData(_ stream: WhisperStream, _ component: Int, _ data: Data, _ context: AnyObject?) {
+    func didReceiveStreamData(_ stream: WhisperStream, _ component: Int, _ data: Data) {
         if decoder == nil {
             decoder = VideoDecoder()
             decoder?.delegate = self
@@ -124,15 +123,19 @@ extension Device : WhisperStreamDelegate
                     session = try WhisperSessionManager.getInstance()!.newSession(to: self.deviceId+"@"+self.deviceId)
                 }
                 
-                let semaphore = DispatchSemaphore(value: 0)
-                stream = try session!.addStream(type: WhisperStreamType.Video, options: [], components: 1, delegate: self, semaphore) // sdp as AnyObject?)
-                semaphore.wait()
+                semaphore = DispatchSemaphore(value: 0)
+                defer {
+                    semaphore = nil
+                }
+                
+                stream = try session!.addStream(type: WhisperStreamType.Video, options: [], components: 1, delegate: self)
+                semaphore?.wait()
                 guard state == .CandidateGathered else {
                     return false
                 }
                 
                 try session!.replyInviteRequest(with: 0, reason: nil)
-                semaphore.wait()
+                semaphore?.wait()
                 guard state == .IceReady else {
                     return false
                 }
@@ -173,21 +176,25 @@ extension Device : VideoDecoderDelegate
                     session = try WhisperSessionManager.getInstance()!.newSession(to: self.deviceId+"@"+self.deviceId)
                 }
                 
-                let semaphore = DispatchSemaphore(value: 0)
-                stream = try session!.addStream(type: WhisperStreamType.Video, options: [], components: 1, delegate: self, semaphore)
-                semaphore.wait()
+                semaphore = DispatchSemaphore(value: 0)
+                defer {
+                    semaphore = nil
+                }
+                
+                stream = try session!.addStream(type: WhisperStreamType.Video, options: [], components: 1, delegate: self)
+                semaphore?.wait()
                 guard state == .CandidateGathered else {
                     return false
                 }
                 
-                try session!.sendInviteRequest(handler: didReceiveSessionInviteResponse, nil)
-                semaphore.wait()
+                try session!.sendInviteRequest(handler: didReceiveSessionInviteResponse)
+                semaphore?.wait()
                 guard state == .IceReady else {
                     return false
                 }
             }
             else if state == .IceReady {
-                try session!.sendInviteRequest(handler: didReceiveSessionInviteResponse, nil)
+                try session!.sendInviteRequest(handler: didReceiveSessionInviteResponse)
             }
             else if state == .Connected {
                 let messageDic = ["type":"modify", "videoPlay":true] as [String : Any]
@@ -203,7 +210,7 @@ extension Device : VideoDecoderDelegate
         }
     }
     
-    private func didReceiveSessionInviteResponse(session: WhisperSession, status: Int, reason: String?, sdp: String?, context: AnyObject?) {
+    private func didReceiveSessionInviteResponse(session: WhisperSession, status: Int, reason: String?, sdp: String?) {
         guard state == .IceReady else {
             return
         }

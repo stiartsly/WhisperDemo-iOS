@@ -77,7 +77,7 @@ extension DeviceInfoViewController {
                 cell.accessoryType = .disclosureIndicator
             }
             else {
-                userInfo = device!.deviceInfo.userInfo
+                userInfo = device!.deviceInfo
                 cell.accessoryType = .none
             }
             

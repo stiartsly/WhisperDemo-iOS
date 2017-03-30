@@ -11,7 +11,6 @@ FOUNDATION_EXPORT const unsigned char ManagedWhisperVersionString[];
 // using statements like #import <ManagedWhisper/PublicHeader.h>
 
 
-
 /**
  The stream mode options.
 

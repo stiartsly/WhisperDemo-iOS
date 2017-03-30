@@ -203,13 +203,22 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_APP_ME
 + (NSString * _Nonnull)getVersion;
 /**
   Check if the whisper ID is valid.
-  \param whisperId The whisper id to be check
+  \param id The whisper id to be check
 
 
   returns:
   True if whisper id is valid, otherwise false
 */
-+ (BOOL)isValidWhisperId:(NSString * _Nonnull)whisperId;
++ (BOOL)isValidId:(NSString * _Nonnull)id;
+/**
+  Check if the whisper Key is valid.
+  \param key The whisper key to be check
+
+
+  returns:
+  True if whisper key is valid, otherwise false
+*/
++ (BOOL)isValidKey:(NSString * _Nonnull)key;
 /**
   Set log level for whisper client.
   Default level to control log output is \code
@@ -227,10 +236,6 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_APP_ME
 
   \param delegate The delegate for whisper client to comply with
 
-  \param context The context to the \code
-  handler
-  \endcode perameter
-
 
   throws:
   WhisperError
@@ -238,7 +243,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_APP_ME
   returns:
   The client whisper instance
 */
-+ (WMWhisper * _Nullable)getInstanceWithOptions:(WMWhisperOptions * _Nonnull)options delegate:(id <WMWhisperDelegate> _Nonnull)delegate :(id _Nullable)context error:(NSError * _Nullable * _Nullable)error;
++ (WMWhisper * _Nullable)getInstanceWithOptions:(WMWhisperOptions * _Nonnull)options delegate:(id <WMWhisperDelegate> _Nonnull)delegate error:(NSError * _Nullable * _Nullable)error;
 /**
   Get a whisper client singleton instance.
 
@@ -450,13 +455,11 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_APP_ME
 
   \param responseHandler The callback to receive invite reponse
 
-  \param context The application defined context data
-
 
   throws:
   WhisperError
 */
-- (BOOL)sendInviteFriendRequestTo:(NSString * _Nonnull)target withData:(NSString * _Nonnull)data responseHandler:(void (^ _Nonnull)(WMWhisper * _Nonnull, NSString * _Nonnull, NSInteger, NSString * _Nullable, NSString * _Nullable, id _Nullable))responseHandler :(id _Nullable)context error:(NSError * _Nullable * _Nullable)error;
+- (BOOL)sendInviteFriendRequestTo:(NSString * _Nonnull)target withData:(NSString * _Nonnull)data error:(NSError * _Nullable * _Nullable)error responseHandler:(void (^ _Nonnull)(WMWhisper * _Nonnull, NSString * _Nonnull, NSInteger, NSString * _Nullable, NSString * _Nullable))responseHandler;
 /**
   Reply the friend invite request.
   This function will send a invite response to friend.
@@ -511,13 +514,11 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
   during which application can perform instant idle work.
   \param whisper Whisper client instance
 
-  \param context The application defined context data
-
 
   returns:
   Void
 */
-- (void)willBecomeIdle:(WMWhisper * _Nonnull)whisper :(id _Nullable)context;
+- (void)willBecomeIdle:(WMWhisper * _Nonnull)whisper;
 /**
   Tell the delegate that the self connection status changed.
   \param whisper Whisper client instance
@@ -527,13 +528,11 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
   WhisperConnectionStatus
   \endcode
 
-  \param context The application defined context data
-
 
   returns:
   Void
 */
-- (void)connectionStatusDidChange:(WMWhisper * _Nonnull)whisper newStatus:(enum WMWhisperConnectionStatus)newStatus :(id _Nullable)context;
+- (void)connectionStatusDidChange:(WMWhisper * _Nonnull)whisper newStatus:(enum WMWhisperConnectionStatus)newStatus;
 @required
 /**
   Tell the delegate that Whisper client is being ready.
@@ -541,13 +540,11 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
   whisper function to interact with friends.
   \param whisper Whisper client instance
 
-  \param context The application defined context data
-
 
   returns:
   Void
 */
-- (void)didBecomeReady:(WMWhisper * _Nonnull)whisper :(id _Nullable)context;
+- (void)didBecomeReady:(WMWhisper * _Nonnull)whisper;
 @optional
 /**
   Tell the delegate that current self user info has been changed.
@@ -555,28 +552,19 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
 
   \param newInfo The newly updated user information
 
-  \param context The application defined context data
-
 
   returns:
   Void
 */
-- (void)selfUserInfoDidChange:(WMWhisper * _Nonnull)whisper newInfo:(WMWhisperUserInfo * _Nonnull)newInfo :(id _Nullable)context;
+- (void)selfUserInfoDidChange:(WMWhisper * _Nonnull)whisper newInfo:(WMWhisperUserInfo * _Nonnull)newInfo;
 /**
   Tell the delegate to iterate each friend item in friend list.
   \param whisper Whisper client instance
 
-  \param friendInfo The iterated user information. If nil, means the
-  iteration shall be end
+  \param friends The friends list.
 
-  \param context The application defined context data
-
-
-  returns:
-  True to continue iterating next friend user info,
-  false to stop iteration.
 */
-- (BOOL)iterateFriend:(WMWhisper * _Nonnull)whisper withFriendInfo:(WMWhisperFriendInfo * _Nullable)friendInfo :(id _Nullable)context;
+- (void)didReceiveFriendsList:(WMWhisper * _Nonnull)whisper friends:(NSArray<WMWhisperFriendInfo *> * _Nonnull)friends;
 /**
   Tell the delegate that friend information has been changed.
   \param whisper Whisper client instance
@@ -585,13 +573,11 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
 
   \param newInfo The updated friend information
 
-  \param context The application defined context data
-
 
   returns:
   Void
 */
-- (void)friendInfoDidChange:(WMWhisper * _Nonnull)whisper forFriend:(NSString * _Nonnull)friendId newInfo:(WMWhisperFriendInfo * _Nonnull)newInfo :(id _Nullable)context;
+- (void)friendInfoDidChange:(WMWhisper * _Nonnull)whisper forFriend:(NSString * _Nonnull)friendId newInfo:(WMWhisperFriendInfo * _Nonnull)newInfo;
 /**
   Tell the delegate that friend presence has been changed.
   \param whisper Whisper client instance
@@ -600,13 +586,11 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
 
   \param newPresence The updated presence status of the friend
 
-  \param context The application defined context data
-
 
   returns:
   Void
 */
-- (void)friendPresenceDidChange:(WMWhisper * _Nonnull)whisper forFriend:(NSString * _Nonnull)friendId newPresence:(NSString * _Nonnull)newPresence :(id _Nullable)context;
+- (void)friendPresenceDidChange:(WMWhisper * _Nonnull)whisper forFriend:(NSString * _Nonnull)friendId newPresence:(NSString * _Nonnull)newPresence;
 /**
   Tell the delegate that an friend request message has been received.
   \param whisper Whisper client instance
@@ -620,14 +604,12 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
   \param hello The PIN for target user, or any application defined
   content
 
-  \param context The application defined context data
-
 
   returns:
   True if current callback consume this event, otherwise
   return false
 */
-- (BOOL)didReceiveFriendRequest:(WMWhisper * _Nonnull)whisper fromUser:(NSString * _Nonnull)userId withUserInfo:(WMWhisperUserInfo * _Nonnull)userInfo hello:(NSString * _Nonnull)hello :(id _Nullable)context;
+- (BOOL)didReceiveFriendRequest:(WMWhisper * _Nonnull)whisper fromUser:(NSString * _Nonnull)userId withUserInfo:(WMWhisperUserInfo * _Nonnull)userInfo hello:(NSString * _Nonnull)hello;
 /**
   Tell the delegate that an friend response to previous friend request
   has been received.
@@ -645,14 +627,12 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
 
   \param expire The expire time, or nil if never expire
 
-  \param context The application defined context data
-
 
   returns:
   true if current callback consume this event, otherwise
   return false
 */
-- (BOOL)didReceiveFriendResponse:(WMWhisper * _Nonnull)whisper fromUser:(NSString * _Nonnull)userId withStatus:(NSInteger)status reason:(NSString * _Nullable)reason entrusted:(BOOL)entrusted expire:(NSString * _Nullable)expire :(id _Nullable)context;
+- (BOOL)didReceiveFriendResponse:(WMWhisper * _Nonnull)whisper fromUser:(NSString * _Nonnull)userId withStatus:(NSInteger)status reason:(NSString * _Nullable)reason entrusted:(BOOL)entrusted expire:(NSString * _Nullable)expire;
 /**
   Tell the delegate that an new friend has been added to current
   user’s friend list.
@@ -660,13 +640,11 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
 
   \param newFriend The added friend’s information
 
-  \param context The application defined context data
-
 
   returns:
   Void
 */
-- (void)newFriendAdded:(WMWhisper * _Nonnull)whisper withFriendInfo:(WMWhisperFriendInfo * _Nonnull)newFriend :(id _Nullable)context;
+- (void)newFriendAdded:(WMWhisper * _Nonnull)whisper withFriendInfo:(WMWhisperFriendInfo * _Nonnull)newFriend;
 /**
   Tell the delegate that an friend has been removed from current user’s
   friend list.
@@ -674,13 +652,11 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
 
   \param friendId The friend’s user id
 
-  \param context The application defined context data
-
 
   returns:
   Void
 */
-- (void)friendRemoved:(WMWhisper * _Nonnull)whisper forFriend:(NSString * _Nonnull)friendId :(id _Nullable)context;
+- (void)friendRemoved:(WMWhisper * _Nonnull)whisper forFriend:(NSString * _Nonnull)friendId;
 /**
   Tell the delegate that an friend message has been received.
   \param whisper Whisper client instance
@@ -689,14 +665,12 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
 
   \param message The message content
 
-  \param context The application defined context data
-
 
   returns:
   True if current callback consume this event, otherwise
   return false
 */
-- (BOOL)didReceiveFriendMessage:(WMWhisper * _Nonnull)whisper from:(NSString * _Nonnull)from withMessage:(NSString * _Nonnull)message :(id _Nullable)context;
+- (BOOL)didReceiveFriendMessage:(WMWhisper * _Nonnull)whisper from:(NSString * _Nonnull)from withMessage:(NSString * _Nonnull)message;
 /**
   Tell the delegate that an friend invite request has been received.
   \param whisper Whisper client instance
@@ -705,14 +679,12 @@ SWIFT_PROTOCOL_NAMED("WhisperDelegate")
 
   \param data The application defined data sent from friend
 
-  \param context The application defined context data
-
 
   returns:
   True if current callback consume this event, otherwise
   return false
 */
-- (BOOL)didReceiveFriendInviteRequest:(WMWhisper * _Nonnull)whisper from:(NSString * _Nonnull)from withData:(NSString * _Nonnull)data :(id _Nullable)context;
+- (BOOL)didReceiveFriendInviteRequest:(WMWhisper * _Nonnull)whisper from:(NSString * _Nonnull)from withData:(NSString * _Nonnull)data;
 @end
 
 /**
@@ -735,26 +707,100 @@ typedef SWIFT_ENUM_NAMED(NSInteger, WMWhisperEntrustmentType, "WhisperEntrustmen
 
 
 /**
+  A class representing the Whisper user information.
+  In whisper managed SDK, self and all friends are Whisper user, and have
+  same user attributes.
+*/
+SWIFT_CLASS_NAMED("WhisperUserInfo")
+@interface WMWhisperUserInfo : NSObject
+/**
+  Whisper managed User ID max length.
+*/
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_ID_LEN;)
++ (NSInteger)MAX_ID_LEN;
+/**
+  Whisper managed user name max length.
+*/
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_USER_NAME_LEN;)
++ (NSInteger)MAX_USER_NAME_LEN;
+/**
+  Whisper managed user description max length.
+*/
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_USER_DESCRIPTION_LEN;)
++ (NSInteger)MAX_USER_DESCRIPTION_LEN;
+/**
+  Whisper managed user gender max length.
+*/
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_GENDER_LEN;)
++ (NSInteger)MAX_GENDER_LEN;
+/**
+  Whisper managed user phone number max length.
+*/
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_PHONE_LEN;)
++ (NSInteger)MAX_PHONE_LEN;
+/**
+  Whisper managed user email address max length.
+*/
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_EMAIL_LEN;)
++ (NSInteger)MAX_EMAIL_LEN;
+/**
+  Whisper managed user region max length.
+*/
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_REGION_LEN;)
++ (NSInteger)MAX_REGION_LEN;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
+/**
+  User ID.
+*/
+@property (nonatomic, readonly, copy) NSString * _Nullable userId;
+/**
+  Nickname, also as display name.
+*/
+@property (nonatomic, copy) NSString * _Nullable name;
+/**
+  User’s brief description, also as what’s up.
+*/
+@property (nonatomic, copy) NSString * _Nullable briefDescription;
+/**
+  If user has avatar.
+*/
+@property (nonatomic) BOOL hasAvatar;
+/**
+  User’s gender.
+*/
+@property (nonatomic, copy) NSString * _Nullable gender;
+/**
+  User’s phone number.
+*/
+@property (nonatomic, copy) NSString * _Nullable phone;
+/**
+  User’s email address.
+*/
+@property (nonatomic, copy) NSString * _Nullable email;
+/**
+  User’s region information.
+*/
+@property (nonatomic, copy) NSString * _Nullable region;
+@property (nonatomic, readonly, copy) NSString * _Nonnull description;
+@end
+
+
+/**
   A class representing the Whisper friend information.
   Include the basic user information and the extra friend information.
 */
 SWIFT_CLASS_NAMED("WhisperFriendInfo")
-@interface WMWhisperFriendInfo : NSObject
+@interface WMWhisperFriendInfo : WMWhisperUserInfo
 /**
-  Whispe label name max length.
+  Whisper friend label max length.
 */
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_USER_NAME_LEN;)
-+ (NSInteger)MAX_USER_NAME_LEN;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_LABEL_LEN;)
++ (NSInteger)MAX_LABEL_LEN;
 /**
   Whisper managed user presence max length.
 */
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_USER_PRESENCE_LEN;)
 + (NSInteger)MAX_USER_PRESENCE_LEN;
-- (nonnull instancetype)init SWIFT_UNAVAILABLE;
-/**
-  Friend’s user information.
-*/
-@property (nonatomic, readonly, strong) WMWhisperUserInfo * _Nullable userInfo;
 /**
   Friend’s entrustment type.
 */
@@ -1040,13 +1086,11 @@ SWIFT_CLASS_NAMED("WhisperSession")
   Send session request to the friend.
   \param handler A handler to receive the session response
 
-  \param context The application defined context data
-
 
   throws:
   WhisperError
 */
-- (BOOL)sendInviteRequestWithResponseHandler:(void (^ _Nonnull)(WMWhisperSession * _Nonnull, NSInteger, NSString * _Nullable, NSString * _Nullable, id _Nullable))handler :(id _Nullable)context error:(NSError * _Nullable * _Nullable)error;
+- (BOOL)sendInviteRequestWithResponseHandler:(void (^ _Nonnull)(WMWhisperSession * _Nonnull, NSInteger, NSString * _Nullable, NSString * _Nullable))handler error:(NSError * _Nullable * _Nullable)error;
 /**
   Reply the session request from friend.
   This function will send a session response to friend.
@@ -1105,8 +1149,6 @@ SWIFT_CLASS_NAMED("WhisperSession")
   WhisperStreamDelegate
   \endcode
 
-  \param context The application defined context data
-
 
   throws:
   WhisperError
@@ -1114,7 +1156,7 @@ SWIFT_CLASS_NAMED("WhisperSession")
   returns:
   The new added Whisper stream
 */
-- (WMWhisperStream * _Nullable)addStreamWithType:(enum WMWhisperStreamType)type options:(WhisperStreamOptions)options components:(NSInteger)components delegate:(id <WMWhisperStreamDelegate> _Nonnull)delegate :(id _Nullable)context error:(NSError * _Nullable * _Nullable)error;
+- (WMWhisperStream * _Nullable)addStreamWithType:(enum WMWhisperStreamType)type options:(WhisperStreamOptions)options components:(NSInteger)components delegate:(id <WMWhisperStreamDelegate> _Nonnull)delegate error:(NSError * _Nullable * _Nullable)error;
 /**
   Remove a stream from session
   \param stream The whisper stream to be removed
@@ -1183,10 +1225,6 @@ SWIFT_CLASS_NAMED("WhisperSessionManager")
   \param handler The handler for whisper session manager to process session
   request from friends.
 
-  \param context The context to the \code
-  handler
-  \endcode parameter.
-
 
   throws:
   WhisperError
@@ -1194,7 +1232,7 @@ SWIFT_CLASS_NAMED("WhisperSessionManager")
   returns:
   A whisper session manager
 */
-+ (WMWhisperSessionManager * _Nullable)getInstance:(WMWhisper * _Nonnull)whisper withOptions:(WMWhisperSessionManagerOptions * _Nonnull)options usingHandler:(BOOL (^ _Nonnull)(WMWhisper * _Nonnull, NSString * _Nonnull, NSString * _Nonnull, id _Nullable))handler :(id _Nullable)context error:(NSError * _Nullable * _Nullable)error;
++ (WMWhisperSessionManager * _Nullable)getInstance:(WMWhisper * _Nonnull)whisper withOptions:(WMWhisperSessionManagerOptions * _Nonnull)options usingHandler:(BOOL (^ _Nonnull)(WMWhisper * _Nonnull, NSString * _Nonnull, NSString * _Nonnull))handler error:(NSError * _Nullable * _Nullable)error;
 /**
   Get a whisper session manager instance.
 
@@ -1425,10 +1463,8 @@ SWIFT_PROTOCOL_NAMED("WhisperStreamDelegate")
   WhisperStreamState
   \endcode
 
-  \param context The application defined context data
-
 */
-- (void)streamStateDidChange:(WMWhisperStream * _Nonnull)stream newState:(enum WMWhisperStreamState)newState :(id _Nullable)context;
+- (void)streamStateDidChange:(WMWhisperStream * _Nonnull)stream newState:(enum WMWhisperStreamState)newState;
 /**
   Tell the delegate that the current stream received an incomping
   packet.
@@ -1441,10 +1477,8 @@ SWIFT_PROTOCOL_NAMED("WhisperStreamDelegate")
 
   \param data The received packet data
 
-  \param context The application defined context data
-
 */
-- (void)didReceiveStreamData:(WMWhisperStream * _Nonnull)stream fromComponent:(NSInteger)component withData:(NSData * _Nonnull)data :(id _Nullable)context;
+- (void)didReceiveStreamData:(WMWhisperStream * _Nonnull)stream fromComponent:(NSInteger)component withData:(NSData * _Nonnull)data;
 /**
   Tell the delegate that an new request within sesion to open multiplexing
   channel has been received.
@@ -1456,15 +1490,13 @@ SWIFT_PROTOCOL_NAMED("WhisperStreamDelegate")
 
   \param cookie Application defined string data send from remote peer.
 
-  \param context The application defined context data.
-
 
   returns:
   True on success, or false if an error occurred.
   The channel will continue to open only this callback return true,
   otherwise the channel will be closed.
 */
-- (BOOL)shouldOpenNewChannel:(WMWhisperStream * _Nonnull)stream withinComponent:(NSInteger)component wantChannel:(NSInteger)wantChannel withCookie:(NSString * _Nonnull)cookie :(id _Nullable)context;
+- (BOOL)shouldOpenNewChannel:(WMWhisperStream * _Nonnull)stream withinComponent:(NSInteger)component wantChannel:(NSInteger)wantChannel withCookie:(NSString * _Nonnull)cookie;
 /**
   Tell the delegate that new multiplexing channel has been opened.
   \param stream The whisper stream instance
@@ -1473,10 +1505,8 @@ SWIFT_PROTOCOL_NAMED("WhisperStreamDelegate")
 
   \param newChannel The channel ID
 
-  \param context The application defined context data.
-
 */
-- (void)didOpenNewChannel:(WMWhisperStream * _Nonnull)stream withinComponent:(NSInteger)component newChannel:(NSInteger)newChannel :(id _Nullable)context;
+- (void)didOpenNewChannel:(WMWhisperStream * _Nonnull)stream withinComponent:(NSInteger)component newChannel:(NSInteger)newChannel;
 /**
   Tell the delegate that an multiplexing channel has been closed.
   \param stream The whisper stream instance
@@ -1489,10 +1519,8 @@ SWIFT_PROTOCOL_NAMED("WhisperStreamDelegate")
   CloseReason
   \endcode.
 
-  \param context The application defined context data.
-
 */
-- (void)didCloseChannel:(WMWhisperStream * _Nonnull)stream withinComponent:(NSInteger)component forChannel:(NSInteger)channel withReason:(enum WMCloseReason)reason :(id _Nullable)context;
+- (void)didCloseChannel:(WMWhisperStream * _Nonnull)stream withinComponent:(NSInteger)component forChannel:(NSInteger)channel withReason:(enum WMCloseReason)reason;
 /**
   Tell the delegate that the channel received an incoming packet.
   \param stream The whisper stream instance
@@ -1503,15 +1531,13 @@ SWIFT_PROTOCOL_NAMED("WhisperStreamDelegate")
 
   \param data The received data
 
-  \param context The application defined context data
-
 
   returns:
   True on success, or false if an error occurred.
   If this callback return false, the channel will be closed
   with CloseReason_Error.
 */
-- (BOOL)didReceiveChannelData:(WMWhisperStream * _Nonnull)stream withinComponent:(NSInteger)component fromChannel:(NSInteger)channel withData:(NSData * _Nonnull)data :(id _Nullable)context;
+- (BOOL)didReceiveChannelData:(WMWhisperStream * _Nonnull)stream withinComponent:(NSInteger)component fromChannel:(NSInteger)channel withData:(NSData * _Nonnull)data;
 /**
   Tell the delegate that the channel should pend data sending to remote
   peer.
@@ -1521,10 +1547,8 @@ SWIFT_PROTOCOL_NAMED("WhisperStreamDelegate")
 
   \param channel The channel ID
 
-  \param context The application defined context data
-
 */
-- (void)channelPending:(WMWhisperStream * _Nonnull)stream withinComponent:(NSInteger)component forChannel:(NSInteger)channel :(id _Nullable)context;
+- (void)channelPending:(WMWhisperStream * _Nonnull)stream withinComponent:(NSInteger)component forChannel:(NSInteger)channel;
 /**
   Tell the delegate that the channel should resume data pending to remote
   peer.
@@ -1534,10 +1558,8 @@ SWIFT_PROTOCOL_NAMED("WhisperStreamDelegate")
 
   \param channel The channel ID
 
-  \param context The application defined context data
-
 */
-- (void)channelResumed:(WMWhisperStream * _Nonnull)stream withinComponent:(NSInteger)component forChannel:(NSInteger)channel :(id _Nullable)context;
+- (void)channelResumed:(WMWhisperStream * _Nonnull)stream withinComponent:(NSInteger)component forChannel:(NSInteger)channel;
 @end
 
 /**
@@ -1600,83 +1622,5 @@ typedef SWIFT_ENUM_NAMED(NSInteger, WMWhisperStreamType, "WhisperStreamType") {
   WMWhisperStreamTypeMessage = 4,
 };
 
-
-/**
-  A class representing the Whisper user information.
-  In whisper managed SDK, self and all friends are Whisper user, and have
-  same user attributes.
-*/
-SWIFT_CLASS_NAMED("WhisperUserInfo")
-@interface WMWhisperUserInfo : NSObject
-/**
-  Whisper managed User ID max length.
-*/
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_ID_LEN;)
-+ (NSInteger)MAX_ID_LEN;
-/**
-  Whisper managed user name max length.
-*/
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_USER_NAME_LEN;)
-+ (NSInteger)MAX_USER_NAME_LEN;
-/**
-  Whisper managed user description max length.
-*/
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_USER_DESCRIPTION_LEN;)
-+ (NSInteger)MAX_USER_DESCRIPTION_LEN;
-/**
-  Whisper managed user gender max length.
-*/
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_GENDER_LEN;)
-+ (NSInteger)MAX_GENDER_LEN;
-/**
-  Whisper managed user phone number max length.
-*/
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_PHONE_LEN;)
-+ (NSInteger)MAX_PHONE_LEN;
-/**
-  Whisper managed user email address max length.
-*/
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_EMAIL_LEN;)
-+ (NSInteger)MAX_EMAIL_LEN;
-/**
-  Whisper managed user region max length.
-*/
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_REGION_LEN;)
-+ (NSInteger)MAX_REGION_LEN;
-- (nonnull instancetype)init SWIFT_UNAVAILABLE;
-/**
-  User ID.
-*/
-@property (nonatomic, readonly, copy) NSString * _Nullable userId;
-/**
-  Nickname, also as display name.
-*/
-@property (nonatomic, copy) NSString * _Nullable name;
-/**
-  User’s brief description, also as what’s up.
-*/
-@property (nonatomic, copy) NSString * _Nullable briefDescription;
-/**
-  If user has avatar.
-*/
-@property (nonatomic) BOOL hasAvatar;
-/**
-  User’s gender.
-*/
-@property (nonatomic, copy) NSString * _Nullable gender;
-/**
-  User’s phone number.
-*/
-@property (nonatomic, copy) NSString * _Nullable phone;
-/**
-  User’s email address.
-*/
-@property (nonatomic, copy) NSString * _Nullable email;
-/**
-  User’s region information.
-*/
-@property (nonatomic, copy) NSString * _Nullable region;
-@property (nonatomic, readonly, copy) NSString * _Nonnull description;
-@end
 
 #pragma clang diagnostic pop
