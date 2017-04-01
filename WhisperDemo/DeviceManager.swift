@@ -374,7 +374,7 @@ extension DeviceManager : WhisperDelegate
     }
     
     public func didReceiveFriendsList(_ whisper: Whisper,
-                               _ friends: [WhisperFriendInfo]) {
+                                      _ friends: [WhisperFriendInfo]) {
         print("didReceiveFriendsList : \(friends)")
         for friend in friends {
             self.devices.append(Device(friend))
@@ -425,7 +425,7 @@ extension DeviceManager : WhisperDelegate
                                         _ userId: String,
                                         _ userInfo: WhisperUserInfo,
                                         _ hello: String) -> Bool {
-        print("didReceiveFriendRequest, userId : \(userId), name : \(userInfo.name), hello : \(hello)")
+        print("didReceiveFriendRequest, userId : \(userId), name : \(String(describing: userInfo.name)), hello : \(hello)")
         var result = false
         do {
             try whisper.replyFriendRequest(to: userId, withStatus: 0, reason: nil, entrusted: true, expire: nil)

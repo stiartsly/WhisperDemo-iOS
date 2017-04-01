@@ -220,7 +220,7 @@ extension Device : VideoDecoderDelegate
             try! session.start(remoteSdp: sdp!)
             NSLog("Start session in success")
         } else {
-            NSLog("didReceiveSessionInviteResponse failed with reason: \(reason)")
+            NSLog("didReceiveSessionInviteResponse failed with reason: \(reason!)")
             videoPlayLayer = nil
         }
     }
