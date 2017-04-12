@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		170101BF1E236F3B001507AD /* DeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170101BE1E236F3B001507AD /* DeviceViewController.swift */; };
 		170721081E8281CF0030AAED /* VideoEncoder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 170721071E8281CF0030AAED /* VideoEncoder.mm */; };
+		1720C43B1E9CB37B00F710F4 /* NetworkReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1720C43A1E9CB37B00F710F4 /* NetworkReachabilityManager.swift */; };
 		17383DF41E6D3F9A00777AC6 /* VideoPlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17383DF31E6D3F9A00777AC6 /* VideoPlayViewController.swift */; };
 		17383DF71E71305A00777AC6 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17383DF61E71305A00777AC6 /* Device.swift */; };
 		173AB0C41E275D4300542B1B /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173AB0C31E275D4300542B1B /* DeviceManager.swift */; };
@@ -48,6 +49,7 @@
 		170101BE1E236F3B001507AD /* DeviceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceViewController.swift; sourceTree = "<group>"; };
 		170721061E8281CF0030AAED /* VideoEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoEncoder.h; sourceTree = "<group>"; };
 		170721071E8281CF0030AAED /* VideoEncoder.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VideoEncoder.mm; sourceTree = "<group>"; };
+		1720C43A1E9CB37B00F710F4 /* NetworkReachabilityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkReachabilityManager.swift; sourceTree = "<group>"; };
 		17383DF31E6D3F9A00777AC6 /* VideoPlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayViewController.swift; sourceTree = "<group>"; };
 		17383DF61E71305A00777AC6 /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		173AB0C31E275D4300542B1B /* DeviceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceManager.swift; sourceTree = "<group>"; };
@@ -122,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				17C508651E1CDEFC0068A76A /* Support Files */,
+				1720C43A1E9CB37B00F710F4 /* NetworkReachabilityManager.swift */,
 				173AB0C31E275D4300542B1B /* DeviceManager.swift */,
 				17383DF61E71305A00777AC6 /* Device.swift */,
 				170721061E8281CF0030AAED /* VideoEncoder.h */,
@@ -188,6 +191,7 @@
 				17C508341E13C3310068A76A /* Embed Frameworks */,
 				D84ACD7F31E3BE0CD19AF9D3 /* [CP] Embed Pods Frameworks */,
 				EA56DADC3FE2BAE0BAA9640B /* [CP] Copy Pods Resources */,
+				170E4F061E964CE300CDB706 /* Strip Frameworks */,
 				170720FA1E8116D10030AAED /* Report warning for TODO & FIXME comments */,
 			);
 			buildRules = (
@@ -211,9 +215,9 @@
 				TargetAttributes = {
 					17C508161E139F990068A76A = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 8DXJVY4MWB;
+						DevelopmentTeam = 5935J43UU8;
 						LastSwiftMigration = 0820;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -270,6 +274,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "TAGS=\"TODO:|FIXME:\"\necho \"searching ${SRCROOT} for ${TAGS}\"\nfind \"${SRCROOT}\" \\( -name \"*.cpp\" \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$\" | perl -p -e \"s/($TAGS)/ warning: \\$1/\"";
+		};
+		170E4F061E964CE300CDB706 /* Strip Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Strip Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/ManagedWhisper.framework/strip-frameworks.sh\"";
 		};
 		D84ACD7F31E3BE0CD19AF9D3 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -328,6 +346,7 @@
 				179FC9621E82849D0049C16D /* CRtpStream.cpp in Sources */,
 				17C5082F1E13C2AB0068A76A /* ScanViewController.m in Sources */,
 				179FC9651E8360830049C16D /* VideoDecoder.mm in Sources */,
+				1720C43B1E9CB37B00F710F4 /* NetworkReachabilityManager.swift in Sources */,
 				17383DF71E71305A00777AC6 /* Device.swift in Sources */,
 				17FBAD981E543DD000289C1E /* DeviceInfoViewController.swift in Sources */,
 				17383DF41E6D3F9A00777AC6 /* VideoPlayViewController.swift in Sources */,
@@ -461,7 +480,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 8DXJVY4MWB;
+				DEVELOPMENT_TEAM = 5935J43UU8;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -470,10 +489,10 @@
 				INFOPLIST_FILE = WhisperDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = io.whisper.demo;
+				PRODUCT_BUNDLE_IDENTIFIER = io.whisper.app.twinning;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e3a33300-6c0d-4d60-ac5a-1752aacdde76";
-				PROVISIONING_PROFILE_SPECIFIER = "Test Devices";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "WhisperDemo/WhisperDemo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -488,7 +507,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 8DXJVY4MWB;
+				DEVELOPMENT_TEAM = 5935J43UU8;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -497,10 +516,10 @@
 				INFOPLIST_FILE = WhisperDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = io.whisper.demo;
+				PRODUCT_BUNDLE_IDENTIFIER = io.whisper.app.twinning;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e3a33300-6c0d-4d60-ac5a-1752aacdde76";
-				PROVISIONING_PROFILE_SPECIFIER = "Test Devices";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "WhisperDemo/WhisperDemo-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};

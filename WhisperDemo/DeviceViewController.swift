@@ -15,6 +15,7 @@ class DeviceViewController: UITableViewController {
     var hud : MBProgressHUD?
     
     private var _observer : NSObjectProtocol?
+    private var playLayer : AVSampleBufferDisplayLayer?
     
     @IBOutlet weak var bulbStatus: UIButton!
     @IBOutlet weak var bulbSwitch: UISwitch!
@@ -22,7 +23,9 @@ class DeviceViewController: UITableViewController {
     @IBOutlet weak var brightnessSlider: UISlider!
     @IBOutlet weak var audioPlayButton: UIButton!
     @IBOutlet weak var volumeSlider: UISlider!
-    
+    @IBOutlet weak var videoPlayButton: UIButton!
+    @IBOutlet weak var videoContentView: UIView!
+
     deinit {
         if let observer = _observer {
             NotificationCenter.default.removeObserver(observer)
@@ -103,6 +106,11 @@ class DeviceViewController: UITableViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.splitViewController?.navigationController?.isNavigationBarHidden = splitViewController?.navigationController?.topViewController == splitViewController
+
+        if videoPlayButton.isSelected {
+            DeviceManager.sharedInstance.stopVideoPlay(device)
+            videoPlayButton.isSelected = false
+        }
     }
 
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -156,12 +164,24 @@ class DeviceViewController: UITableViewController {
         }
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.section == 4 {
-            let videoVC = VideoPlayViewController()
-            videoVC.device = self.device
-            self.splitViewController?.navigationController?.show(videoVC, sender: nil)
+//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        tableView.deselectRow(at: indexPath, animated: true)
+//        if indexPath.section == 4 {
+//            let videoVC = VideoPlayViewController()
+//            videoVC.device = self.device
+//            self.splitViewController?.navigationController?.show(videoVC, sender: nil)
+//        }
+//    }
+
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section != 4 {
+            return 60
+        }
+        else {
+            let width = tableView.bounds.size.width;
+            let height = width * 3 / 4
+            playLayer?.frame = CGRect(origin: CGPoint.zero, size: CGSize(width: width, height: height))
+            return height
         }
     }
     
@@ -246,6 +266,24 @@ class DeviceViewController: UITableViewController {
         }
     }
     
+    @IBAction func videoPlayButtonClicked(_ sender: UIButton) {
+        if sender.isSelected {
+            DeviceManager.sharedInstance.stopVideoPlay(device)
+            sender.isSelected = false
+        }
+        else {
+            if playLayer == nil {
+                playLayer = AVSampleBufferDisplayLayer()
+                playLayer!.frame = self.videoContentView.bounds
+                playLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+                self.videoContentView.layer.insertSublayer(playLayer!, at: 0)
+            }
+
+            DeviceManager.sharedInstance.startVideoPlay(playLayer!, device: device)
+            sender.isSelected = true
+        }
+    }
+
     @objc private func onReceivedStatus(_ notification: Notification) {
         guard device?.deviceId == (notification.object as? String) else {
             return

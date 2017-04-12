@@ -245,7 +245,7 @@ extension Device : VideoDecoderDelegate
     
     func videoDecoder(_ encoder: VideoDecoder!, gotSampleBuffer sampleBuffer: CMSampleBuffer!) {
         if let playLayer = videoPlayLayer {
-            if playLayer.isReadyForMoreMediaData {
+            //if playLayer.isReadyForMoreMediaData {
                 DispatchQueue.main.sync {
                     playLayer.enqueue(sampleBuffer)
                     if playLayer.status == .failed {
@@ -255,7 +255,7 @@ extension Device : VideoDecoderDelegate
                         playLayer.setNeedsDisplay()
                     }
                 }
-            }
+            //}
         }
     }
     
@@ -265,7 +265,7 @@ extension Device : VideoDecoderDelegate
 }
 
 // MARK: - Hashable
-extension Device : Hashable, Equatable
+extension Device : Hashable
 {
     var hashValue : Int {
         get {
@@ -275,6 +275,8 @@ extension Device : Hashable, Equatable
 }
 
 // MARK: - Equatable
+extension Device : Equatable {}
+
 func ==(lhs: Device, rhs: Device) -> Bool {
     return lhs.deviceInfo == rhs.deviceInfo
 }

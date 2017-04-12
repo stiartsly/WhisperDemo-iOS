@@ -52,6 +52,8 @@ class DeviceManager : NSObject {
     
 // MARK: - Private variables
     
+    fileprivate var networkManager : NetworkReachabilityManager?
+
     fileprivate var bulbStatus = false
     fileprivate var captureDevice: AVCaptureDevice?
     fileprivate var audioPlayer : AVAudioPlayer?
@@ -71,6 +73,22 @@ class DeviceManager : NSObject {
     func start() {
         if whisperInst == nil {
             do {
+                if networkManager == nil {
+                    let url = URL(string: DeviceManager.apiServer)
+                    networkManager = NetworkReachabilityManager(host: url!.host!)
+                }
+
+                guard networkManager!.isReachable else {
+                    print("network is not reachable")
+                    networkManager?.listener = { [weak self] newStatus in
+                        if newStatus == .reachable(.ethernetOrWiFi) || newStatus == .reachable(.wwan) {
+                            self?.start()
+                        }
+                    }
+                    networkManager?.startListening()
+                    return
+                }
+
                 let whisperDirectory: String = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0] + "/whisper"
                 if !FileManager.default.fileExists(atPath: whisperDirectory) {
                     var url = URL(fileURLWithPath: whisperDirectory)
@@ -94,7 +112,9 @@ class DeviceManager : NSObject {
                 try whisperInst = Whisper.getInstance(options: options, delegate: self)
                 print("Whisper instance created")
                 
-                try whisperInst.start(iterateInterval: 1000)
+                networkManager = nil
+
+                try! whisperInst.start(iterateInterval: 1000)
                 print("Whisper started, waiting for ready")
                 
                 NotificationCenter.default.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: OperationQueue.main, using: didEnterBackground)
@@ -597,14 +617,6 @@ extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEnc
             captureSession!.addOutput(output)
             
             captureSession!.beginConfiguration()
-            let preset = AVCaptureSessionPreset352x288
-            if captureSession!.canSetSessionPreset(preset) {
-                captureSession?.sessionPreset = preset
-            }
-            else {
-                captureSession?.sessionPreset = AVCaptureSessionPresetMedium
-            }
-            
             if let videoConnection = output.connection(withMediaType: AVMediaTypeVideo) {
                 if videoConnection.isVideoOrientationSupported {
                     videoConnection.videoOrientation = .portrait
@@ -614,6 +626,14 @@ extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEnc
         }
         
         if !captureSession!.isRunning {
+            let preset = AVCaptureSessionPreset352x288
+            if captureSession!.canSetSessionPreset(preset) {
+                captureSession?.sessionPreset = preset
+            }
+            else {
+                captureSession?.sessionPreset = AVCaptureSessionPresetMedium
+            }
+
             captureSession!.startRunning()
         }
     }
@@ -635,7 +655,7 @@ extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEnc
     
     func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
         if let playLayer = videoPlayLayer {
-            if playLayer.isReadyForMoreMediaData {
+            //if playLayer.isReadyForMoreMediaData {
                 DispatchQueue.main.sync {
                     playLayer.enqueue(sampleBuffer)
                     if playLayer.status == .failed {
@@ -645,7 +665,7 @@ extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEnc
                         playLayer.setNeedsDisplay()
                     }
                 }
-            }
+            //}
         }
         
         if self.remotePlayingDevices.count > 0 {
