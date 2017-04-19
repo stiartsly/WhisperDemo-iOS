@@ -96,7 +96,7 @@ extension Device : WhisperStreamDelegate
                 try! DeviceManager.sharedInstance.sendMessage(messageDic, toDevice: self)
             }
         }
-        else if newState == .Error {
+        else if newState == .Closed || newState == .Deactivated || newState == .Error {
             closeSession()
         }
         
@@ -275,8 +275,8 @@ extension Device : Hashable
 }
 
 // MARK: - Equatable
-extension Device : Equatable {}
-
-func ==(lhs: Device, rhs: Device) -> Bool {
-    return lhs.deviceInfo == rhs.deviceInfo
+extension Device : Equatable {
+    static func ==(lhs: Device, rhs: Device) -> Bool {
+        return lhs.deviceInfo == rhs.deviceInfo
+    }
 }

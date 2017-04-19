@@ -12,7 +12,7 @@
 #import "MBProgressHUD.h"
 #import "WhisperDemo-Swift.h"
 
-@interface ScanViewController () <AVCaptureMetadataOutputObjectsDelegate>
+@interface ScanViewController () <AVCaptureMetadataOutputObjectsDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 {
     BOOL upOrdown;
     NSTimer * timer;
@@ -44,13 +44,16 @@
 {
     [super viewDidLoad];
     self.navigationItem.title = NSLocalizedString(@"添加设备", nil);
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(choicePhoto)];
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self setupCamera];
-    [self startScan];
+    if (self.isMovingToParentViewController) {
+        [self setupCamera];
+        [self startScan];
+    }
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -60,6 +63,7 @@
     [_session stopRunning];
     [timer invalidate];
     timer = nil;
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     [super viewWillDisappear:animated];
 }
 
@@ -74,6 +78,55 @@
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     [self rotateLayer];
     _preview.frame = CGRectMake(0, 0, size.width, size.height);
+}
+
+- (void)choicePhoto
+{
+    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+    imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    imagePicker.delegate = self;
+    [self presentViewController:imagePicker animated:YES completion:nil];
+}
+
+-(void)imagePickerController:(UIImagePickerController*)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.view];
+    hud.removeFromSuperViewOnHide = YES;
+    hud.label.text = NSLocalizedString(@"正在处理",nil);
+    [self.view addSubview:hud];
+    [hud showAnimated:YES];
+
+    [self dismissViewControllerAnimated:YES completion:^(){
+        //取出选中的图片
+        UIImage *pickImage = info[UIImagePickerControllerOriginalImage];
+        NSData *imageData = UIImagePNGRepresentation(pickImage);
+        CIImage *ciImage = [CIImage imageWithData:imageData];
+
+        //创建探测器
+        CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeQRCode context:nil options:@{CIDetectorAccuracy: CIDetectorAccuracyLow}];
+        NSArray *feature = [detector featuresInImage:ciImage];
+
+        //取出探测到的数据
+        if (feature.count > 0) {
+            CIQRCodeFeature *result = feature[0];
+            [self scanComplete:result.messageString];
+        }
+        else {
+            hud.minSize = CGSizeZero;
+            hud.mode = MBProgressHUDModeText;
+            hud.label.text = NSLocalizedString(@"未发现二维码", nil);
+            [hud hideAnimated:YES afterDelay:1];
+            
+            [self startScan];
+        }
+    }];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [self dismissViewControllerAnimated:YES completion:^(){
+        [self startScan];
+    }];
 }
 
 - (void)setupCamera
@@ -195,7 +248,7 @@
         timer = nil;
         
         AVMetadataMachineReadableCodeObject *metadataObject = [metadataObjects objectAtIndex:0];
-        [self scanComplete :metadataObject.stringValue];
+        [self scanComplete:metadataObject.stringValue];
     }
 }
 

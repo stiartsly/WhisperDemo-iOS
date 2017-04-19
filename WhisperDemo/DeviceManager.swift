@@ -60,6 +60,7 @@ class DeviceManager : NSObject {
     fileprivate var audioVolume : Float = 1.0
     
     fileprivate var captureSession : AVCaptureSession?
+    fileprivate var captureConnection : AVCaptureConnection?
     fileprivate var videoPlayLayer : AVSampleBufferDisplayLayer?
     fileprivate var remotePlayingDevices = Set<Device>()
     fileprivate var encoder : VideoEncoder?
@@ -433,6 +434,7 @@ extension DeviceManager : WhisperDelegate
                     device.remotePlaying = false
                     device.closeSession()
                     self.remotePlayingDevices.remove(device)
+                    self.checkAndStopVideoCapture()
                 }
                 
                 NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
@@ -595,18 +597,18 @@ extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEnc
                 captureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
             }
             
-//            do {
-//                try captureDevice!.lockForConfiguration()
-//                if captureDevice!.activeFormat.videoSupportedFrameRateRanges != nil {
-//                    captureDevice!.activeVideoMinFrameDuration = CMTime(value: 1, timescale: DeviceManager.videoFramesPreSecond)
-//                    captureDevice!.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: DeviceManager.videoFramesPreSecond)
-//                }
-//                captureDevice!.unlockForConfiguration()
-//            }
-//            catch {
-//                print("set frame rate failed");
-//            }
-            
+            do {
+                try captureDevice!.lockForConfiguration()
+                if captureDevice!.activeFormat.videoSupportedFrameRateRanges != nil {
+                    captureDevice!.activeVideoMinFrameDuration = CMTime(value: 1, timescale: 30)
+                    captureDevice!.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: 15)
+                }
+                captureDevice!.unlockForConfiguration()
+            }
+            catch {
+                print("set frame rate failed");
+            }
+
             let videoInput = try! AVCaptureDeviceInput(device: captureDevice)
             captureSession!.addInput(videoInput)
             
@@ -615,38 +617,51 @@ extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEnc
             output.setSampleBufferDelegate(self, queue: videoDataOutputQueue)
             output.videoSettings = [kCVPixelBufferPixelFormatTypeKey as AnyHashable : kCVPixelFormatType_420YpCbCr8BiPlanarFullRange]
             captureSession!.addOutput(output)
-            
-            captureSession!.beginConfiguration()
-            if let videoConnection = output.connection(withMediaType: AVMediaTypeVideo) {
-                if videoConnection.isVideoOrientationSupported {
-                    videoConnection.videoOrientation = .portrait
-                }
-            }
-            captureSession!.commitConfiguration()
+            captureConnection = output.connection(withMediaType: AVMediaTypeVideo)
         }
         
         if !captureSession!.isRunning {
+            captureSession!.beginConfiguration()
+            if captureConnection!.isVideoOrientationSupported {
+                switch UIApplication.shared.statusBarOrientation {
+                case .portrait:
+                    captureConnection!.videoOrientation = .portrait
+                case .portraitUpsideDown:
+                    captureConnection!.videoOrientation = .portraitUpsideDown
+                case .landscapeLeft:
+                    captureConnection!.videoOrientation = .landscapeLeft
+                case .landscapeRight:
+                    captureConnection!.videoOrientation = .landscapeRight
+                default:
+                    captureConnection!.videoOrientation = .portrait
+                }
+            }
+
             let preset = AVCaptureSessionPreset352x288
             if captureSession!.canSetSessionPreset(preset) {
-                captureSession?.sessionPreset = preset
+                captureSession!.sessionPreset = preset
             }
             else {
-                captureSession?.sessionPreset = AVCaptureSessionPresetMedium
+                captureSession!.sessionPreset = AVCaptureSessionPresetMedium
             }
+            captureSession!.commitConfiguration()
 
             captureSession!.startRunning()
         }
     }
     
     func checkAndStopVideoCapture() {
-        if videoPlayLayer == nil && remotePlayingDevices.count == 0 {
-            if let captureSession = captureSession {
-                if captureSession.isRunning {
-                    captureSession.stopRunning()
+        if let captureSession = captureSession {
+            if remotePlayingDevices.count == 0 {
+                if videoPlayLayer == nil {
+                    if captureSession.isRunning {
+                        captureSession.stopRunning()
+                    }
                 }
-            }
-            if let encoder = encoder {
-                encoder.end()
+
+                if let encoder = encoder {
+                    encoder.end()
+                }
             }
         }
     }

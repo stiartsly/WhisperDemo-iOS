@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "VideoEncoder.h"
-#include "CRtpStream.h"
+#import "CRtpStream.h"
 
 static const int fps = 20;
 
@@ -175,6 +175,7 @@ void didCompressH264(void *outputCallbackRefCon, void *sourceFrameRefCon, OSStat
                                                               presentationTimeStamp,
                                                               duration,
                                                               NULL, NULL, &flags);
+
         // Check for error
         if (statusCode != noErr) {
 //            // End the session
@@ -189,7 +190,6 @@ void didCompressH264(void *outputCallbackRefCon, void *sourceFrameRefCon, OSStat
             
             NSLog(@"H264 encode: VTCompressionSessionEncodeFrame error : %d", (int)statusCode);
             [self.delegate videoEncoder:self error:@"VTCompressionSessionEncodeFrame failed"];
-            return;
         }
     });
 }
