@@ -136,11 +136,12 @@ void didCompressH264(void *outputCallbackRefCon, void *sourceFrameRefCon, OSStat
         CVImageBufferRef imageBuffer = (CVImageBufferRef)CMSampleBufferGetImageBuffer(sampleBuffer);
         
         if (encodingSession == NULL) {
-            CGSize size = CVImageBufferGetDisplaySize(imageBuffer);
-            NSLog(@"Video width : %.0f, height : %.0f", size.width, size.height);
+            CGFloat width = CVPixelBufferGetWidth(imageBuffer) * 0.75;
+            CGFloat height = CVPixelBufferGetHeight(imageBuffer) * 0.75;
+            NSLog(@"Video width : %.0f, height : %.0f", width, height);
             
             // Create the compression session
-            OSStatus status = VTCompressionSessionCreate(NULL, size.width, size.height, kCMVideoCodecType_H264, NULL, NULL, NULL, didCompressH264, (__bridge void *)(self),  &encodingSession);
+            OSStatus status = VTCompressionSessionCreate(NULL, width, height, kCMVideoCodecType_H264, NULL, NULL, NULL, didCompressH264, (__bridge void *)(self),  &encodingSession);
             if (status != 0) {
                 NSLog(@"H264 encode: VTCompressionSessionCreate error: %d", (int)status);
                 [self.delegate videoEncoder:self error:@"Unable to create a H264 compression session"];
@@ -157,6 +158,8 @@ void didCompressH264(void *outputCallbackRefCon, void *sourceFrameRefCon, OSStat
             VTSessionSetProperty(encodingSession, kVTCompressionPropertyKey_ExpectedFrameRate, (__bridge CFTypeRef)@(fps));
             // 关键帧最大间隔，1为每个都是关键帧，数值越大压缩率越高。此处表示关键帧最大间隔为1s
             VTSessionSetProperty(encodingSession, kVTCompressionPropertyKey_MaxKeyFrameInterval, (__bridge CFTypeRef)@(fps));
+            // 设置需要的平均编码率
+            VTSessionSetProperty(encodingSession, kVTCompressionPropertyKey_AverageBitRate, (__bridge CFTypeRef)@(width*height*10));
             
             // Tell the encoder to start encoding
             VTCompressionSessionPrepareToEncodeFrames(encodingSession);

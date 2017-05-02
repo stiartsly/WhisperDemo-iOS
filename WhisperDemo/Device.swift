@@ -103,7 +103,7 @@ extension Device : WhisperStreamDelegate
         self.semaphore?.signal()
     }
     
-    func didReceiveStreamData(_ stream: WhisperStream, _ component: Int, _ data: Data) {
+    func didReceiveStreamData(_ stream: WhisperStream, _ data: Data) {
         if decoder == nil {
             decoder = VideoDecoder()
             decoder?.delegate = self
@@ -120,7 +120,7 @@ extension Device : WhisperStreamDelegate
         do {
             if stream == nil {
                 if session == nil {
-                    session = try WhisperSessionManager.getInstance()!.newSession(to: self.deviceId+"@"+self.deviceId)
+                    session = try WhisperSessionManager.getInstance()!.newSession(to: self.deviceId+"@"+self.deviceId, transport: .ICE)
                 }
                 
                 semaphore = DispatchSemaphore(value: 0)
@@ -128,22 +128,22 @@ extension Device : WhisperStreamDelegate
                     semaphore = nil
                 }
                 
-                stream = try session!.addStream(type: WhisperStreamType.Video, options: [], components: 1, delegate: self)
+                stream = try session!.addStream(type: .Application, options: [], delegate: self)
                 semaphore?.wait()
-                guard state == .CandidateGathered else {
+                guard state == .Initialized else {
                     return false
                 }
                 
                 try session!.replyInviteRequest(with: 0, reason: nil)
                 semaphore?.wait()
-                guard state == .IceReady else {
+                guard state == .TransportReady else {
                     return false
                 }
                 
                 try session!.start(remoteSdp: sdp)
                 return true
             }
-            else if state == .IceReady {
+            else if state == .TransportReady {
                 try session!.replyInviteRequest(with: 0, reason: nil)
                 try session!.start(remoteSdp: sdp)
                 return true
@@ -153,7 +153,7 @@ extension Device : WhisperStreamDelegate
             }
         }
         catch {
-            NSLog("didReceiveSessionInviteRequest, start session error: \(error)")
+            NSLog("didReceiveSessionInviteRequest, start session error: \(error.localizedDescription)")
             closeSession()
             return false
         }
@@ -173,7 +173,7 @@ extension Device : VideoDecoderDelegate
         do {
             if stream == nil {
                 if session == nil {
-                    session = try WhisperSessionManager.getInstance()!.newSession(to: self.deviceId+"@"+self.deviceId)
+                    session = try WhisperSessionManager.getInstance()!.newSession(to: self.deviceId+"@"+self.deviceId, transport: .ICE)
                 }
                 
                 semaphore = DispatchSemaphore(value: 0)
@@ -181,19 +181,19 @@ extension Device : VideoDecoderDelegate
                     semaphore = nil
                 }
                 
-                stream = try session!.addStream(type: WhisperStreamType.Video, options: [], components: 1, delegate: self)
+                stream = try session!.addStream(type: .Application, options: [], delegate: self)
                 semaphore?.wait()
-                guard state == .CandidateGathered else {
+                guard state == .Initialized else {
                     return false
                 }
                 
                 try session!.sendInviteRequest(handler: didReceiveSessionInviteResponse)
                 semaphore?.wait()
-                guard state == .IceReady else {
+                guard state == .TransportReady else {
                     return false
                 }
             }
-            else if state == .IceReady {
+            else if state == .TransportReady {
                 try session!.sendInviteRequest(handler: didReceiveSessionInviteResponse)
             }
             else if state == .Connected {
@@ -211,7 +211,7 @@ extension Device : VideoDecoderDelegate
     }
     
     private func didReceiveSessionInviteResponse(session: WhisperSession, status: Int, reason: String?, sdp: String?) {
-        guard state == .IceReady else {
+        guard state == .TransportReady else {
             return
         }
         
@@ -227,6 +227,8 @@ extension Device : VideoDecoderDelegate
     
     /// stop play remote video
     func stopVideoPlay() {
+        videoPlayLayer = nil
+
         if remotePlaying {
             decoder?.end()
         }
@@ -235,7 +237,6 @@ extension Device : VideoDecoderDelegate
         }
         
         decoder = nil
-        videoPlayLayer = nil
         
         let messageDic = ["type":"modify", "videoPlay":false] as [String : Any]
         try? DeviceManager.sharedInstance.sendMessage(messageDic, toDevice: self)

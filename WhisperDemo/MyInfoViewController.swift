@@ -20,8 +20,7 @@ class MyInfoController: UIViewController {
         super.viewDidLoad()
         navigationItem.title = "我"
         
-        if let whisper = Whisper.getInstance() {
-            let myInfo = try! whisper.getSelfUserInfo()
+        if let myInfo = try? DeviceManager.sharedInstance.whisperInst.getSelfUserInfo() {
             nameLabel.text = myInfo.name;
             
             let qrCodeWidth = qrCodeImageView.bounds.size.width * UIScreen.main.scale;
@@ -30,7 +29,7 @@ class MyInfoController: UIViewController {
             qrCodeImageView.image = qrCode?.image
         }
         else {
-            messageLabel.text = "连接服务器失败"
+            messageLabel.text = "尚未成功连接服务器"
         }
     }
 }

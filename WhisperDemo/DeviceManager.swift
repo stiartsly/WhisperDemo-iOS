@@ -24,10 +24,10 @@ class DeviceManager : NSObject {
 //    fileprivate static let turnUsername = "whisper"
 //    fileprivate static let turnPassword = "io2016whisper"
     
-//    fileprivate static let apiServerUrl = "https://192.168.3.182:8443/web/api"
-//    fileprivate static let mqttServerUri = "ssl://192.168.3.182:8883"
-//    fileprivate static let apiServerUrl = "http://192.168.3.182:8080/web/api"
-//    fileprivate static let mqttServerUri = "tcp://192.168.3.182:1883"
+//    fileprivate static let apiServer = "https://192.168.3.182:8443/web/api"
+//    fileprivate static let mqttServer = "ssl://192.168.3.182:8883"
+//    fileprivate static let apiServer = "http://192.168.3.182:8080/web/api"
+//    fileprivate static let mqttServer = "tcp://192.168.3.182:1883"
     fileprivate static let stunServer = "27.115.62.114"
     fileprivate static let turnServer = "27.115.62.114"
     fileprivate static let turnUsername = "demo"
@@ -99,14 +99,22 @@ class DeviceManager : NSObject {
                     resourceValues.isExcludedFromBackup = true
                     try url.setResourceValues(resourceValues)
                 }
-                
+
+                let userDefaults = UserDefaults.standard
+                var deviceId = userDefaults.string(forKey: "deviceId")
+                if deviceId == nil {
+                    deviceId = UIDevice.current.identifierForVendor!.uuidString
+                    userDefaults.set(deviceId, forKey: "deviceId")
+                    userDefaults.synchronize()
+                }
+
                 let options = WhisperOptions()
                 options.setAppId(DeviceManager.appId, andKey: DeviceManager.appKey)
                 options.apiServerUrl = DeviceManager.apiServer
                 options.mqttServerUri = DeviceManager.mqttServer
                 options.trustStore = Bundle.main.path(forResource: "whisper", ofType: "pem")
                 options.persistentLocation = whisperDirectory
-                options.deviceId = UIDevice.current.identifierForVendor!.uuidString
+                options.deviceId = deviceId
                 options.connectTimeout = 5
                 
 //                try? FileManager.default.removeItem(atPath: whisperDirectory + "/.whisper")
@@ -122,7 +130,7 @@ class DeviceManager : NSObject {
                 NotificationCenter.default.addObserver(forName: .UIScreenBrightnessDidChange, object: nil, queue: OperationQueue.main, using: brightnessDidChanged)
             }
             catch {
-                NSLog("Start whisper instance error : \(error)")
+                NSLog("Start whisper instance error : \(error.localizedDescription)")
             }
         }
     }
@@ -378,13 +386,17 @@ extension DeviceManager : WhisperDelegate
             try? whisper.setSelfUserInfo(myInfo)
         }
         
-        //self.devices = try! whisper.getFriends()
-        //NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
-        
-        let options = WhisperSessionManagerOptions(stunServer: DeviceManager.stunServer,
-                                                   turnServer: DeviceManager.turnServer,
-                                                   turnUsername: DeviceManager.turnUsername,
-                                                   turnPassword: DeviceManager.turnPassword)
+//        let friends = try! whisper.getFriends()
+//        for friend in friends {
+//            self.devices.append(Device(friend))
+//        }
+//        NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
+
+        let options = WhisperSessionManagerOptions(transports: [.ICE])
+        options.stunServer = DeviceManager.stunServer
+        options.turnServer = DeviceManager.turnServer
+        options.turnUsername = DeviceManager.turnUsername
+        options.turnPassword = DeviceManager.turnPassword
         try! _ = WhisperSessionManager.getInstance(whisper: whisper, options: options, handler: didReceiveSessionRequest)
     }
     
@@ -446,16 +458,13 @@ extension DeviceManager : WhisperDelegate
     public func didReceiveFriendRequest(_ whisper: Whisper,
                                         _ userId: String,
                                         _ userInfo: WhisperUserInfo,
-                                        _ hello: String) -> Bool {
+                                        _ hello: String) {
         print("didReceiveFriendRequest, userId : \(userId), name : \(String(describing: userInfo.name)), hello : \(hello)")
-        var result = false
         do {
             try whisper.replyFriendRequest(to: userId, withStatus: 0, reason: nil, entrusted: true, expire: nil)
-            result = true
         } catch {
-            NSLog("replyFriendRequest error : \(error)")
+            NSLog("replyFriendRequest error : \(error.localizedDescription)")
         }
-        return result;
     }
     
     public func didReceiveFriendResponse(_ whisper: Whisper,
@@ -463,9 +472,8 @@ extension DeviceManager : WhisperDelegate
                                          _ status: Int,
                                          _ reason: String?,
                                          _ entrusted: Bool,
-                                         _ expire: String?) -> Bool {
+                                         _ expire: String?) {
         print("didReceiveFriendResponse, userId : \(userId)")
-        return true;
     }
     
     public func newFriendAdded(_ whisper: Whisper,
@@ -492,7 +500,7 @@ extension DeviceManager : WhisperDelegate
     
     public func didReceiveFriendMessage(_ whisper: Whisper,
                                         _ from: String,
-                                        _ message: String) -> Bool {
+                                        _ message: String) {
         print("didReceiveFriendMessage : \(message)")
         do {
             let data = message.data(using: .utf8)
@@ -549,20 +557,18 @@ extension DeviceManager : WhisperDelegate
         } catch {
             print(error.localizedDescription)
         }
-        return true;
     }
     
     public func didReceiveFriendInviteRequest(_ whisper: Whisper,
                                               _ from: String,
-                                              _ data: String) -> Bool {
+                                              _ data: String) {
         print("didReceiveFriendInviteRequest")
-        return false;
     }
     
-    public func didReceiveSessionRequest(whisper: Whisper, from: String, sdp: String) -> Bool {
+    public func didReceiveSessionRequest(whisper: Whisper, from: String, sdp: String) {
         let deviceId = from.components(separatedBy: "@")[0]
         let device = self.devices.first(where: {$0.deviceId == deviceId})
-        return device!.didReceiveSessionInviteRequest(whisper: whisper, sdp: sdp)
+        _ = device!.didReceiveSessionInviteRequest(whisper: whisper, sdp: sdp)
     }
 }
 
@@ -637,7 +643,7 @@ extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEnc
                 }
             }
 
-            let preset = AVCaptureSessionPreset352x288
+            let preset = AVCaptureSessionPreset640x480
             if captureSession!.canSetSessionPreset(preset) {
                 captureSession!.sessionPreset = preset
             }
@@ -700,13 +706,13 @@ extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEnc
         for device in self.remotePlayingDevices {
             if device.state == .Connected {
                 do {
-                    let result = try device.stream!.writeData(component: 1, data: data)
+                    let result = try device.stream!.writeData(data)
                     if result.intValue != length {
                         NSLog("writeData result: \(result), total length: \(length)")
                     }
                 }
                 catch {
-                    NSLog("writeData error: \(error)")
+                    NSLog("writeData error: \(error.localizedDescription)")
                 }
             }
         }

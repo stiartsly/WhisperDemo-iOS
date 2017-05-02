@@ -204,7 +204,7 @@ class DeviceViewController: UITableViewController {
             hud?.show(animated: true)
         }
         catch {
-            NSLog("open/close bulb failed : \(error)")
+            NSLog("open/close bulb failed : \(error.localizedDescription)")
             DispatchQueue.main.async {
                 sender.setOn(!newStatus, animated: true)
             }
@@ -220,7 +220,7 @@ class DeviceViewController: UITableViewController {
             hud?.show(animated: true)
         }
         catch {
-            NSLog("open/close torch failed : \(error)")
+            NSLog("open/close torch failed : \(error.localizedDescription)")
             DispatchQueue.main.async {
                 sender.setOn(!newStatus, animated: true)
             }
@@ -234,7 +234,7 @@ class DeviceViewController: UITableViewController {
             hud?.show(animated: true)
         }
         catch {
-            NSLog("set brightness failed : \(error)")
+            NSLog("set brightness failed : \(error.localizedDescription)")
         }
     }
     
@@ -251,7 +251,7 @@ class DeviceViewController: UITableViewController {
             hud?.show(animated: true)
         }
         catch {
-            NSLog("set brightness failed : \(error)")
+            NSLog("set brightness failed : \(error.localizedDescription)")
         }
     }
     
@@ -262,7 +262,7 @@ class DeviceViewController: UITableViewController {
             hud?.show(animated: true)
         }
         catch {
-            NSLog("set volume failed : \(error)")
+            NSLog("set volume failed : \(error.localizedDescription)")
         }
     }
     

@@ -10,6 +10,11 @@ FOUNDATION_EXPORT const unsigned char ManagedWhisperVersionString[];
 // In this header, you should import all the public headers of your framework
 // using statements like #import <ManagedWhisper/PublicHeader.h>
 
+typedef NS_OPTIONS (int, WhisperTransportOptions) {
+    WhisperTransportOptionICE   = 1 << 0,
+    WhisperTransportOptionUDP   = 1 << 1,
+    WhisperTransportOptionTCP   = 1 << 2,
+};
 
 /**
  The stream mode options.

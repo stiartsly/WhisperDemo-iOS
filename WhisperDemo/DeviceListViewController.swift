@@ -174,7 +174,7 @@ extension DeviceListViewController {
                     try DeviceManager.sharedInstance.whisperInst?.removeFriend(device.deviceId)
                     hud.label.text = "正在处理";
                 } catch {
-                    NSLog("friendRemove error : \(error)")
+                    NSLog("friendRemove error : \(error.localizedDescription)")
                     hud.label.text = "删除设备失败";
                     hud.hide(animated: true, afterDelay: 1.0)
                 }
