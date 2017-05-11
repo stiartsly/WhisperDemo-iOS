@@ -19,17 +19,20 @@ class MyInfoController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "我"
-        
-        if let myInfo = try? DeviceManager.sharedInstance.whisperInst.getSelfUserInfo() {
-            nameLabel.text = myInfo.name;
-            
-            let qrCodeWidth = qrCodeImageView.bounds.size.width * UIScreen.main.scale;
-            var qrCode = QRCode(myInfo.userId!)
-            qrCode?.size = CGSize(width: qrCodeWidth, height: qrCodeWidth)
-            qrCodeImageView.image = qrCode?.image
+
+        if let whisperInst = DeviceManager.sharedInstance.whisperInst {
+            if let myInfo = try? whisperInst.getSelfUserInfo() {
+                nameLabel.text = myInfo.name;
+                
+                let qrCodeWidth = qrCodeImageView.bounds.size.width * UIScreen.main.scale;
+                var qrCode = QRCode(myInfo.userId!)
+                qrCode?.size = CGSize(width: qrCodeWidth, height: qrCodeWidth)
+                qrCodeImageView.image = qrCode?.image
+
+                return
+            }
         }
-        else {
-            messageLabel.text = "尚未成功连接服务器"
-        }
+
+        messageLabel.text = "尚未成功连接服务器"
     }
 }

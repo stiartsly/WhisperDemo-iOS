@@ -1,8 +1,8 @@
 framework module ManagedWhisper {
-    umbrella header "ManagedWhisper.h"
-    
-    export *
-    module * { export * }
+  umbrella header "ManagedWhisper.h"
+
+  export *
+  module * { export * }
 }
 
 module ManagedWhisper.Swift {

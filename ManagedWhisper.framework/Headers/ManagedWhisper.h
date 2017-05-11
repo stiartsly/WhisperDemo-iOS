@@ -10,11 +10,11 @@ FOUNDATION_EXPORT const unsigned char ManagedWhisperVersionString[];
 // In this header, you should import all the public headers of your framework
 // using statements like #import <ManagedWhisper/PublicHeader.h>
 
-typedef NS_OPTIONS (int, WhisperTransportOptions) {
-    WhisperTransportOptionICE   = 1 << 0,
-    WhisperTransportOptionUDP   = 1 << 1,
-    WhisperTransportOptionTCP   = 1 << 2,
-};
+typedef NS_OPTIONS (int, WMWhisperTransportOptions) {
+    WMWhisperTransportOptionICE = 1 << 0,
+    WMWhisperTransportOptionUDP = 1 << 1,
+    WMWhisperTransportOptionTCP = 1 << 2,
+} NS_SWIFT_NAME(WhisperTransportOptions);
 
 /**
  The stream mode options.
@@ -24,10 +24,10 @@ typedef NS_OPTIONS (int, WhisperTransportOptions) {
  - WhisperStreamOptionMultiplexing: Multiplexing mode
  - WhisperStreamOptionPortForwarding: Support portforwarding over multiplexing
  */
-typedef NS_OPTIONS (int, WhisperStreamOptions) {
-    WhisperStreamOptionEncrypt          = 1 << 0,
-    WhisperStreamOptionReliable         = 1 << 1,
-    WhisperStreamOptionMultiplexing     = 1 << 2,
-    WhisperStreamOptionPortForwarding   = 1 << 3,
-};
+typedef NS_OPTIONS (int, WMWhisperStreamOptions) {
+    WMWhisperStreamOptionEncrypt        = 1 << 0,
+    WMWhisperStreamOptionReliable       = 1 << 1,
+    WMWhisperStreamOptionMultiplexing   = 1 << 2,
+    WMWhisperStreamOptionPortForwarding = 1 << 3,
+} NS_SWIFT_NAME(WhisperStreamOptions);
 

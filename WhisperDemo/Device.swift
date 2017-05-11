@@ -91,6 +91,8 @@ extension Device : WhisperStreamDelegate
         
         state = newState
         if newState == .Connected {
+            try? _ = stream.getTransportInfo()
+
             if videoPlayLayer != nil {
                 let messageDic = ["type":"modify", "videoPlay":true] as [String : Any]
                 try! DeviceManager.sharedInstance.sendMessage(messageDic, toDevice: self)

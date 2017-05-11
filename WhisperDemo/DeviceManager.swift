@@ -17,22 +17,23 @@ class DeviceManager : NSObject {
     
     fileprivate static let appId = "7sRQjDsniyuHdZ9zsQU9DZbMLtQGLBWZ78yHWgjPpTKm"
     fileprivate static let appKey = "6tzPPAgSACJdScX79wuzMNPQTWkRLZ4qEdhLcZU6q4B9"
+
     fileprivate static let apiServer = "https://whisper.freeddns.org:8443/web/api"
     fileprivate static let mqttServer = "ssl://whisper.freeddns.org:8883"
-//    fileprivate static let stunServer = "whisper.freeddns.org"
-//    fileprivate static let turnServer = "whisper.freeddns.org"
-//    fileprivate static let turnUsername = "whisper"
-//    fileprivate static let turnPassword = "io2016whisper"
-    
+    fileprivate static let stunServer = "whisper.freeddns.org"
+    fileprivate static let turnServer = "whisper.freeddns.org"
+    fileprivate static let turnUsername = "whisper"
+    fileprivate static let turnPassword = "io2016whisper"
+
 //    fileprivate static let apiServer = "https://192.168.3.182:8443/web/api"
 //    fileprivate static let mqttServer = "ssl://192.168.3.182:8883"
 //    fileprivate static let apiServer = "http://192.168.3.182:8080/web/api"
 //    fileprivate static let mqttServer = "tcp://192.168.3.182:1883"
-    fileprivate static let stunServer = "27.115.62.114"
-    fileprivate static let turnServer = "27.115.62.114"
-    fileprivate static let turnUsername = "demo"
-    fileprivate static let turnPassword = "secret"
-    
+//    fileprivate static let stunServer = "27.115.62.114"
+//    fileprivate static let turnServer = "27.115.62.114"
+//    fileprivate static let turnUsername = "demo"
+//    fileprivate static let turnPassword = "secret"
+
 //    fileprivate static let videoFramesPreSecond : CMTimeScale = 2
     
 // MARK: - Notifications

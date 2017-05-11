@@ -158,20 +158,6 @@ typedef SWIFT_ENUM_NAMED(NSInteger, WMPortForwardingProtocol, "PortForwardingPro
   WMPortForwardingProtocolTCP = 1,
 };
 
-
-/// The class representing the remote service, which should be directly
-/// or indirectly inaccessible unless via Whisper port forwarding service.
-SWIFT_CLASS_NAMED("RemoteService")
-@interface WMRemoteService : NSObject
-/// The service name.
-@property (nonatomic, copy) NSString * _Nullable name;
-/// The listening host
-@property (nonatomic, copy) NSString * _Nullable host;
-/// The listening port.
-@property (nonatomic, copy) NSString * _Nullable port;
-- (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
-@end
-
 enum WMWhisperLogLevel : NSInteger;
 @class WMWhisperOptions;
 @protocol WMWhisperDelegate;
@@ -286,6 +272,11 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_APP_ME
 /// throws:
 /// WhisperError
 - (BOOL)setNodeInfo:(WMWhisperNodeInfo * _Nonnull)newNodeInfo error:(NSError * _Nullable * _Nullable)error;
+/// Check if whisper client instance is being ready.
+///
+/// returns:
+/// true if the whisper client instance is ready, or false if not
+- (BOOL)isReady SWIFT_WARN_UNUSED_RESULT;
 /// Get self node information.
 ///
 /// throws:
@@ -411,6 +402,34 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger MAX_APP_ME
 /// throws:
 /// WhisperError
 - (BOOL)replyFriendInviteRequestTo:(NSString * _Nonnull)target withStatus:(NSInteger)status reason:(NSString * _Nullable)reason data:(NSString * _Nullable)data error:(NSError * _Nullable * _Nullable)error;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
+@end
+
+enum WMWhisperCandidateType : NSInteger;
+@class WMWhisperSocketAddress;
+
+SWIFT_CLASS_NAMED("WhisperAddressInfo")
+@interface WMWhisperAddressInfo : NSObject
+@property (nonatomic, readonly) enum WMWhisperCandidateType candidateType;
+@property (nonatomic, readonly, strong) WMWhisperSocketAddress * _Nonnull address;
+@property (nonatomic, readonly, strong) WMWhisperSocketAddress * _Nullable relatedAddress;
+@property (nonatomic, readonly, copy) NSString * _Nonnull description;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
+@end
+
+typedef SWIFT_ENUM_NAMED(NSInteger, WMWhisperCandidateType, "CandidateType") {
+  WMWhisperCandidateTypeHost = 0,
+  WMWhisperCandidateTypeServerReflexive = 1,
+  WMWhisperCandidateTypePeerReflexive = 2,
+  WMWhisperCandidateTypeRelayed = 3,
+};
+
+
+SWIFT_CLASS_NAMED("SocketAddress")
+@interface WMWhisperSocketAddress : NSObject
+@property (nonatomic, readonly, copy) NSString * _Nonnull hostname;
+@property (nonatomic, readonly) NSInteger port;
+@property (nonatomic, readonly, copy) NSString * _Nonnull description;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 @end
 
@@ -672,6 +691,13 @@ typedef SWIFT_ENUM_NAMED(NSInteger, WMWhisperLogLevel, "WhisperLogLevel") {
   WMWhisperLogLevelDebug = 4,
 };
 
+typedef SWIFT_ENUM_NAMED(NSInteger, WMWhisperNetworkTopology, "WhisperNetworkTopology") {
+  WMWhisperNetworkTopologyLAN = 0,
+  WMWhisperNetworkTopologyP2P = 1,
+  WMWhisperNetworkTopologyRelayed = 2,
+  WMWhisperNetworkTopologyCS = 3,
+};
+
 
 /// A class representing the Whisper user information.
 /// In whisper managed SDK, all node have same node attributes.
@@ -763,82 +789,6 @@ SWIFT_CLASS_NAMED("WhisperOptions")
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 @end
 
-@class NSNumber;
-
-/// The class representing directed accessiable port forwarding manager.
-SWIFT_CLASS_NAMED("WhisperPortForwarding")
-@interface WMWhisperPortForwarding : NSObject
-/// Get port forwarding manager instance with client mode.
-/// This function should be used in the case that the server bearing port
-/// forwarding server is directly accessible for port forwarding client.
-/// \param whisper The whisper client instance
-///
-///
-/// throws:
-/// WhisperError
-///
-/// returns:
-/// The client portforwarding manager
-+ (WMWhisperPortForwarding * _Nullable)getInstance:(WMWhisper * _Nonnull)whisper error:(NSError * _Nullable * _Nullable)error SWIFT_WARN_UNUSED_RESULT;
-/// Get port forwarding manager instance with server mode.
-/// This function should be used in the case that the server bearing port
-/// forwarding server is directly accessible for port forwarding client.
-/// \param whisper The whisper client instance
-///
-/// \param host The binding host
-///
-/// \param port The binding port
-///
-/// \param listeningHost The listening host
-///
-/// \param listeningPort The listening port
-///
-/// \param services The services to access viar port forwarding service
-///
-///
-/// throws:
-/// WhisperError
-///
-/// returns:
-/// The server port forwarding manager
-+ (WMWhisperPortForwarding * _Nullable)getInstance:(WMWhisper * _Nonnull)whisper :(NSString * _Nonnull)host :(NSString * _Nonnull)port :(NSString * _Nullable)listeningHost :(NSString * _Nullable)listeningPort :(NSArray<WMRemoteService *> * _Nonnull)services error:(NSError * _Nullable * _Nullable)error SWIFT_WARN_UNUSED_RESULT;
-/// Get current port forwarding manager or nil
-///
-/// returns:
-/// The current port forwarding manager
-+ (WMWhisperPortForwarding * _Nullable)getInstance SWIFT_WARN_UNUSED_RESULT;
-- (void)cleanup;
-/// Open an port forwarding.
-/// \param friendId The friend to have port forwarding relation with
-///
-/// \param service The service to port forwarding
-///
-/// \param host The listening host of remote server
-///
-/// \param port The listening port of remote server
-///
-/// \param handler The handler to handle event when opening port
-/// forwarding completed
-///
-/// \param context The application defined data
-///
-///
-/// throws:
-/// WhisperError
-///
-/// returns:
-/// The port forwarding identifier
-- (NSNumber * _Nullable)open:(NSString * _Nonnull)friendId forService:(NSString * _Nonnull)service :(NSString * _Nonnull)host :(NSString * _Nonnull)port :(SWIFT_NOESCAPE void (^ _Nonnull)(NSInteger, NSInteger, NSString * _Nullable, id _Nullable))handler :(id _Nullable)context error:(NSError * _Nullable * _Nullable)error SWIFT_WARN_UNUSED_RESULT;
-/// Close the specified port forwarding.
-/// \param portForwarding The port forwarding Id
-///
-///
-/// throws:
-/// WhisperError
-- (BOOL)close:(NSInteger)portForwarding :(NSError * _Nullable * _Nullable)error;
-- (nonnull instancetype)init SWIFT_UNAVAILABLE;
-@end
-
 enum WMWhisperStreamType : NSInteger;
 @protocol WMWhisperStreamDelegate;
 @class WMWhisperStream;
@@ -909,7 +859,7 @@ SWIFT_CLASS_NAMED("WhisperSession")
 ///
 /// returns:
 /// The new added Whisper stream
-- (WMWhisperStream * _Nullable)addStreamWithType:(enum WMWhisperStreamType)type options:(WhisperStreamOptions)options delegate:(id <WMWhisperStreamDelegate> _Nonnull)delegate error:(NSError * _Nullable * _Nullable)error SWIFT_WARN_UNUSED_RESULT;
+- (WMWhisperStream * _Nullable)addStreamWithType:(enum WMWhisperStreamType)type options:(WMWhisperStreamOptions)options delegate:(id <WMWhisperStreamDelegate> _Nonnull)delegate error:(NSError * _Nullable * _Nullable)error SWIFT_WARN_UNUSED_RESULT;
 /// Remove a stream from session
 /// \param stream The whisper stream to be removed
 ///
@@ -1003,11 +953,11 @@ SWIFT_CLASS_NAMED("WhisperSessionManager")
 /// The options to whisper session manager.
 SWIFT_CLASS_NAMED("WhisperSessionManagerOptions")
 @interface WMWhisperSessionManagerOptions : NSObject
-- (nonnull instancetype)initWithTransports:(WhisperTransportOptions)transports OBJC_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)initWithTransports:(WMWhisperTransportOptions)transports OBJC_DESIGNATED_INITIALIZER;
 /// Underlying transport options.
 /// Options can be using ICE, UDP or TCP transport protocols, or
 /// combination of the two or all.
-@property (nonatomic) WhisperTransportOptions transports;
+@property (nonatomic) WMWhisperTransportOptions transports;
 /// STUN server.
 /// Format is: server_name_or_ip[:port]
 /// The default port is 3478.
@@ -1031,6 +981,8 @@ SWIFT_CLASS_NAMED("WhisperSessionManagerOptions")
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 @end
 
+@class WMWhisperTransportInfo;
+@class NSNumber;
 
 /// The class representing Whisper stream.
 SWIFT_CLASS_NAMED("WhisperStream")
@@ -1049,6 +1001,7 @@ SWIFT_CLASS_NAMED("WhisperStream")
 /// returns:
 /// The stream type defined in WhisperStreamType
 - (enum WMWhisperStreamType)getType SWIFT_WARN_UNUSED_RESULT;
+- (WMWhisperTransportInfo * _Nullable)getTransportInfoAndReturnError:(NSError * _Nullable * _Nullable)error SWIFT_WARN_UNUSED_RESULT;
 /// Send outgoing data to remote peer.
 /// If the stream is in multiplexing mode, application can not call this
 /// function to send data. If this function is called on multiplexing mode
@@ -1263,6 +1216,17 @@ typedef SWIFT_ENUM_NAMED(NSInteger, WMWhisperStreamType, "WhisperStreamType") {
 /// Message stream
   WMWhisperStreamTypeMessage = 4,
 };
+
+
+SWIFT_CLASS_NAMED("WhisperTransportInfo")
+@interface WMWhisperTransportInfo : NSObject
+@property (nonatomic, readonly) enum WMWhisperTransportType transportType;
+@property (nonatomic, readonly) enum WMWhisperNetworkTopology networkTopology;
+@property (nonatomic, readonly, strong) WMWhisperAddressInfo * _Nonnull localAddressInfo;
+@property (nonatomic, readonly, strong) WMWhisperAddressInfo * _Nonnull remoteAddressInfo;
+@property (nonatomic, readonly, copy) NSString * _Nonnull description;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
+@end
 
 /// Whisper underlying transport types definitions.
 typedef SWIFT_ENUM_NAMED(NSInteger, WMWhisperTransportType, "WhisperTransportType") {
