@@ -151,20 +151,17 @@ class DeviceManager : NSObject {
                 captureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
             }
             if captureDevice!.hasTorch && captureDevice!.isTorchAvailable {
-                selfStstus["torch"] = captureDevice!.torchMode == .on ? "on" : "off"
-            }
-            else {
-                selfStstus["torch"] = "none"
+                selfStstus["torch"] = captureDevice!.torchMode == .on
             }
             
             selfStstus["brightness"] = Float(UIScreen.main.brightness)
             
             if let player = audioPlayer {
-                selfStstus["audioPlay"] = player.isPlaying
+                selfStstus["ring"] = player.isPlaying
                 selfStstus["volume"] = player.volume
             }
             else {
-                selfStstus["audioPlay"] = false
+                selfStstus["ring"] = false
                 selfStstus["volume"] = audioVolume
             }
             
@@ -181,7 +178,7 @@ class DeviceManager : NSObject {
         else {
             bulbStatus = on
             
-            let messageDic = ["type":"status", "bulb":on] as [String : Any]
+            let messageDic = ["type":"sync", "bulb":on] as [String : Any]
             NotificationCenter.default.post(name: DeviceManager.DeviceStatusChanged, object: nil, userInfo: messageDic)
             if (self.status == .Connected) {
                 for dev in devices {
@@ -193,7 +190,7 @@ class DeviceManager : NSObject {
     
     func setTorchStatus(_ on: Bool, device: Device? = nil) throws {
         if let deviceInfo = device {
-            let messageDic = ["type":"modify", "torch":on ? "on" : "off"] as [String : Any]
+            let messageDic = ["type":"modify", "torch":on] as [String : Any]
             try sendMessage(messageDic, toDevice: deviceInfo)
         }
         else {
@@ -205,7 +202,7 @@ class DeviceManager : NSObject {
             captureDevice!.torchMode = on ? .on : .off;
             captureDevice!.unlockForConfiguration()
             
-            let messageDic = ["type":"status", "torch":on ? "on" : "off"] as [String : Any]
+            let messageDic = ["type":"sync", "torch":on] as [String : Any]
             NotificationCenter.default.post(name: DeviceManager.DeviceStatusChanged, object: nil, userInfo: messageDic)
             if (self.status == .Connected) {
                 for dev in devices {
@@ -231,7 +228,7 @@ class DeviceManager : NSObject {
         else {
             UIScreen.main.brightness = CGFloat(brightness)
             
-            let messageDic = ["type":"status", "brightness":brightness] as [String : Any]
+            let messageDic = ["type":"sync", "brightness":brightness] as [String : Any]
             NotificationCenter.default.post(name: DeviceManager.DeviceStatusChanged, object: nil, userInfo: messageDic)
             if (self.status == .Connected) {
                 for dev in devices {
@@ -245,7 +242,7 @@ class DeviceManager : NSObject {
         let brightness = Float((notification.object as! UIScreen).brightness)
         print("UIScreenBrightnessDidChange : \(brightness)")
         
-        let messageDic = ["type":"status", "brightness":brightness] as [String : Any]
+        let messageDic = ["type":"sync", "brightness":brightness] as [String : Any]
         NotificationCenter.default.post(name: DeviceManager.DeviceStatusChanged, object: nil, userInfo: messageDic)
         
         if (self.status == .Connected) {
@@ -257,7 +254,7 @@ class DeviceManager : NSObject {
     
     func startAudioPlay(_ device: Device? = nil) throws {
         if let deviceInfo = device {
-            let messageDic = ["type":"modify", "audioPlay":true] as [String : Any]
+            let messageDic = ["type":"modify", "ring":true] as [String : Any]
             try sendMessage(messageDic, toDevice: deviceInfo)
         }
         else {
@@ -278,7 +275,7 @@ class DeviceManager : NSObject {
             audioPlayer!.play()
             NotificationCenter.default.addObserver(self, selector: #selector(audioSessionInterrupted), name: .AVAudioSessionInterruption, object: AVAudioSession.sharedInstance())
             
-            let messageDic = ["type":"status", "audioPlay":true] as [String : Any]
+            let messageDic = ["type":"sync", "ring":true] as [String : Any]
             NotificationCenter.default.post(name: DeviceManager.DeviceStatusChanged, object: nil, userInfo: messageDic)
             if (self.status == .Connected) {
                 for dev in devices {
@@ -290,7 +287,7 @@ class DeviceManager : NSObject {
     
     func stopAudioPlay(_ device: Device? = nil) throws {
         if let deviceInfo = device {
-            let messageDic = ["type":"modify", "audioPlay":false] as [String : Any]
+            let messageDic = ["type":"modify", "ring":false] as [String : Any]
             try sendMessage(messageDic, toDevice: deviceInfo)
         }
         else {
@@ -300,7 +297,7 @@ class DeviceManager : NSObject {
             
             NotificationCenter.default.removeObserver(self, name: .AVAudioSessionInterruption, object: AVAudioSession.sharedInstance())
             
-            let messageDic = ["type":"status", "audioPlay":false] as [String : Any]
+            let messageDic = ["type":"sync", "ring":false] as [String : Any]
             NotificationCenter.default.post(name: DeviceManager.DeviceStatusChanged, object: nil, userInfo: messageDic)
             if (self.status == .Connected) {
                 for dev in devices {
@@ -315,7 +312,7 @@ class DeviceManager : NSObject {
         print("audioSessionInterrupted: \(notification)")
         NotificationCenter.default.removeObserver(self, name: .AVAudioSessionInterruption, object: AVAudioSession.sharedInstance())
         
-        let messageDic = ["type":"status", "audioPlay":false] as [String : Any]
+        let messageDic = ["type":"sync", "ring":false] as [String : Any]
         NotificationCenter.default.post(name: DeviceManager.DeviceStatusChanged, object: nil, userInfo: messageDic)
         if (self.status == .Connected) {
             for dev in devices {
@@ -333,7 +330,7 @@ class DeviceManager : NSObject {
             audioVolume = volume
             audioPlayer?.volume = volume
             
-            let messageDic = ["type":"status", "volume":volume] as [String : Any]
+            let messageDic = ["type":"sync", "volume":volume] as [String : Any]
             NotificationCenter.default.post(name: DeviceManager.DeviceStatusChanged, object: nil, userInfo: messageDic)
             
             if (self.status == .Connected) {
@@ -369,7 +366,7 @@ extension DeviceManager : WhisperDelegate
     
     func connectionStatusDidChange(_ whisper: Whisper,
                                    _ newStatus: WhisperConnectionStatus) {
-        print("onConnection status : \(status)")
+        print("onConnection status : \(newStatus)")
         self.status = newStatus
         if status == .Disconnected {
             self.devices.removeAll()
@@ -394,8 +391,8 @@ extension DeviceManager : WhisperDelegate
 //        NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
 
         let options = WhisperSessionManagerOptions(transports: [.ICE])
-        options.stunServer = DeviceManager.stunServer
-        options.turnServer = DeviceManager.turnServer
+        options.stunHost = DeviceManager.stunServer
+        options.turnHost = DeviceManager.turnServer
         options.turnUsername = DeviceManager.turnUsername
         options.turnPassword = DeviceManager.turnPassword
         try! _ = WhisperSessionManager.getInstance(whisper: whisper, options: options, handler: didReceiveSessionRequest)
@@ -420,8 +417,7 @@ extension DeviceManager : WhisperDelegate
                                     _ friendId: String,
                                     _ newInfo: WhisperFriendInfo) {
         print("friendInfoDidChange : \(newInfo)")
-        for index in 0..<self.devices.count {
-            let device = self.devices[index]
+        for device in self.devices {
             if device.deviceId == friendId {
                 device.deviceInfo = newInfo
                 
@@ -513,7 +509,7 @@ extension DeviceManager : WhisperDelegate
                 let message = try getDeviceStatus()
                 try sendMessage(message!, toDeviceId: from)
                 
-            case "status":
+            case "status", "sync":
                 let userId = from.components(separatedBy: "@")[0]
                 NotificationCenter.default.post(name: DeviceManager.DeviceStatusChanged, object: userId, userInfo: dict)
                 
@@ -521,13 +517,13 @@ extension DeviceManager : WhisperDelegate
                 if let bulb = dict["bulb"] as? Bool {
                     try! setBulbStatus(bulb)
                 }
-                if let torchStatus = dict["torch"] as? String {
-                    try! setTorchStatus(torchStatus == "on")
+                if let torchStatus = dict["torch"] as? Bool {
+                    try! setTorchStatus(torchStatus)
                 }
                 if let brightness = dict["brightness"] as? Float {
                     try! setBrightness(brightness)
                 }
-                if let audioPlay = dict["audioPlay"] as? Bool {
+                if let audioPlay = dict["ring"] as? Bool {
                     if audioPlay {
                         try! startAudioPlay()
                     }
@@ -538,7 +534,7 @@ extension DeviceManager : WhisperDelegate
                 if let volume = dict["volume"] as? Float {
                     try! setVolume(volume)
                 }
-                if let videoPlay = dict["videoPlay"] as? Bool {
+                if let videoPlay = dict["camera"] as? Bool {
                     let deviceId = from.components(separatedBy: "@")[0]
                     if let device = devices.first(where: {$0.deviceId == deviceId}) {
                         if videoPlay {

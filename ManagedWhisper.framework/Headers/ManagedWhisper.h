@@ -1,5 +1,5 @@
 
-#import <UIKit/UIKit.h>
+@import Foundation;
 
 //! Project version number for ManagedWhisper.
 FOUNDATION_EXPORT double ManagedWhisperVersionNumber;
@@ -11,9 +11,9 @@ FOUNDATION_EXPORT const unsigned char ManagedWhisperVersionString[];
 // using statements like #import <ManagedWhisper/PublicHeader.h>
 
 typedef NS_OPTIONS (int, WMWhisperTransportOptions) {
-    WMWhisperTransportOptionICE = 1 << 0,
-    WMWhisperTransportOptionUDP = 1 << 1,
-    WMWhisperTransportOptionTCP = 1 << 2,
+    WMWhisperTransportOptionICE = 0x01,
+    WMWhisperTransportOptionUDP = 0x02,
+    WMWhisperTransportOptionTCP = 0x04,
 } NS_SWIFT_NAME(WhisperTransportOptions);
 
 /**
@@ -25,9 +25,10 @@ typedef NS_OPTIONS (int, WMWhisperTransportOptions) {
  - WhisperStreamOptionPortForwarding: Support portforwarding over multiplexing
  */
 typedef NS_OPTIONS (int, WMWhisperStreamOptions) {
-    WMWhisperStreamOptionEncrypt        = 1 << 0,
-    WMWhisperStreamOptionReliable       = 1 << 1,
-    WMWhisperStreamOptionMultiplexing   = 1 << 2,
-    WMWhisperStreamOptionPortForwarding = 1 << 3,
+    WMWhisperStreamOptionCompress       = 0x01,
+    WMWhisperStreamOptionEncrypt        = 0x02,
+    WMWhisperStreamOptionReliable       = 0x04,
+    WMWhisperStreamOptionMultiplexing   = 0x08,
+    WMWhisperStreamOptionPortForwarding = 0x10,
 } NS_SWIFT_NAME(WhisperStreamOptions);
 

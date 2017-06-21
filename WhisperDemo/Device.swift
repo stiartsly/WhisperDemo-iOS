@@ -94,7 +94,7 @@ extension Device : WhisperStreamDelegate
             try? _ = stream.getTransportInfo()
 
             if videoPlayLayer != nil {
-                let messageDic = ["type":"modify", "videoPlay":true] as [String : Any]
+                let messageDic = ["type":"modify", "camera":true] as [String : Any]
                 try! DeviceManager.sharedInstance.sendMessage(messageDic, toDevice: self)
             }
         }
@@ -199,7 +199,7 @@ extension Device : VideoDecoderDelegate
                 try session!.sendInviteRequest(handler: didReceiveSessionInviteResponse)
             }
             else if state == .Connected {
-                let messageDic = ["type":"modify", "videoPlay":true] as [String : Any]
+                let messageDic = ["type":"modify", "camera":true] as [String : Any]
                 try! DeviceManager.sharedInstance.sendMessage(messageDic, toDevice: self)
             }
             
@@ -240,7 +240,7 @@ extension Device : VideoDecoderDelegate
         
         decoder = nil
         
-        let messageDic = ["type":"modify", "videoPlay":false] as [String : Any]
+        let messageDic = ["type":"modify", "camera":false] as [String : Any]
         try? DeviceManager.sharedInstance.sendMessage(messageDic, toDevice: self)
     }
     

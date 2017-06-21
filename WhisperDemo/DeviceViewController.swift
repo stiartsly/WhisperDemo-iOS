@@ -78,23 +78,19 @@ class DeviceViewController: UITableViewController {
                 let bulbStatus = status["bulb"] as! Bool
                 self.bulbStatus.isSelected = bulbStatus
                 self.bulbSwitch.setOn(bulbStatus, animated: false)
-                
-                let torchStatus = status["torch"] as! String
-                switch torchStatus {
-                case "on":
-                    self.torchSwitch.setOn(true, animated: false)
+
+                if let torchStatus = status["torch"] as? Bool {
+                    self.torchSwitch.setOn(torchStatus, animated: false)
                     self.torchSwitch.isEnabled = true
-                case "off":
-                    self.torchSwitch.setOn(false, animated: false)
-                    self.torchSwitch.isEnabled = true
-                default:
+                }
+                else {
                     self.torchSwitch.thumbTintColor = UIColor.lightGray
                     self.torchSwitch.setOn(false, animated: false)
                     self.torchSwitch.isEnabled = false
                 }
                 
                 self.brightnessSlider.value = status["brightness"] as! Float
-                self.audioPlayButton.isSelected = status["audioPlay"] as! Bool
+                self.audioPlayButton.isSelected = status["ring"] as! Bool
                 self.volumeSlider.value = status["volume"] as! Float
             }
         }
@@ -295,26 +291,22 @@ class DeviceViewController: UITableViewController {
                     self.bulbStatus.isSelected = bulbStatus
                     self.bulbSwitch.setOn(bulbStatus, animated: false)
                 }
-                if let torchStatus = status["torch"] as? String {
-                    switch torchStatus {
-                    case "on":
-                        self.torchSwitch.setOn(true, animated: false)
-                        self.torchSwitch.isEnabled = true
-                    case "off":
-                        self.torchSwitch.setOn(false, animated: false)
-                        self.torchSwitch.isEnabled = true
-                    default:
-                        self.torchSwitch.thumbTintColor = UIColor.lightGray
-                        self.torchSwitch.setOn(false, animated: false)
-                        self.torchSwitch.isEnabled = false
-                    }
+
+                if let torchStatus = status["torch"] as? Bool {
+                    self.torchSwitch.setOn(torchStatus, animated: false)
+                    self.torchSwitch.isEnabled = true
                 }
-                
+                else if (status["type"] as! String) == "status" {
+                    self.torchSwitch.thumbTintColor = UIColor.lightGray
+                    self.torchSwitch.setOn(false, animated: false)
+                    self.torchSwitch.isEnabled = false
+                }
+
                 if let brightness = status["brightness"] as? Float {
                     self.brightnessSlider.value = brightness
                 }
                 
-                if let audioPlay = status["audioPlay"] as? Bool {
+                if let audioPlay = status["ring"] as? Bool {
                     self.audioPlayButton.isSelected = audioPlay
                 }
                 

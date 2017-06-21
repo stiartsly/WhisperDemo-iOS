@@ -958,26 +958,46 @@ SWIFT_CLASS_NAMED("WhisperSessionManagerOptions")
 /// Options can be using ICE, UDP or TCP transport protocols, or
 /// combination of the two or all.
 @property (nonatomic) WMWhisperTransportOptions transports;
-/// STUN server.
-/// Format is: server_name_or_ip[:port]
-/// The default port is 3478.
-@property (nonatomic, copy) NSString * _Nullable stunServer;
-/// TURN server.
-/// Format is: server_name_or_ip[:port]
-/// The default port is 3478.
-@property (nonatomic, copy) NSString * _Nullable turnServer;
+/// STUN server host name or IP.
+@property (nonatomic, copy) NSString * _Nullable stunHost;
+/// STUN server port.
+/// The default port is 3478
+@property (nonatomic, copy) NSString * _Nullable stunPort;
+/// TURN server host name or IP.
+@property (nonatomic, copy) NSString * _Nullable turnHost;
+/// TURN server port.
+/// The default port is 3478
+@property (nonatomic, copy) NSString * _Nullable turnPort;
 /// TURN server user name.
 @property (nonatomic, copy) NSString * _Nullable turnUsername;
 /// TRUN server password.
 @property (nonatomic, copy) NSString * _Nullable turnPassword;
-/// UDP server.
-/// Format is: server_name_or_ip:port, only valid when using UDP
-/// protocol.
-@property (nonatomic, copy) NSString * _Nullable udpServer;
-/// TCP server.
-/// Format is: server_name_or_ip:port, only valid when using TCP
-/// protocol.
-@property (nonatomic, copy) NSString * _Nullable tcpServer;
+/// UDP server hostname or ip.
+/// Only valid when using UDP protocol.
+@property (nonatomic, copy) NSString * _Nullable udpHost;
+/// UDP server port.
+/// Only valid when using UDP protocol.
+/// If set to NULL, the server will running on an random available port.
+@property (nonatomic, copy) NSString * _Nullable udpPort;
+/// UDP server external public address when running behind a NAT, and mapped to public address.
+/// Only valid when using UDP protocol behind NAT and mapped to public address.
+@property (nonatomic, copy) NSString * _Nullable udpExternalHost;
+/// UDP server external public port when running behind a NAT, and mapped to public address.
+/// Only valid when using UDP protocol behind NAT and mapped to public address.
+@property (nonatomic, copy) NSString * _Nullable udpExternalPort;
+/// TCP server hostname or IP.
+/// Only valid when using TCP protocol.
+@property (nonatomic, copy) NSString * _Nullable tcpHost;
+/// TCP server port.
+/// Only valid when using TCP protocol.
+/// If set to NULL, the server will running on an random available port.
+@property (nonatomic, copy) NSString * _Nullable tcpPort;
+/// TCP server external public address when running behind a NAT, and mapped to public address.
+/// Only valid when using TCP protocol behind NAT and mapped to public address.
+@property (nonatomic, copy) NSString * _Nullable tcpExternalHost;
+/// TCP server external public port when running behind a NAT, and mapped to public address.
+/// Only valid when using TCP protocol behind NAT and mapped to public address.
+@property (nonatomic, copy) NSString * _Nullable tcpExternalPort;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 @end
 
@@ -1231,11 +1251,11 @@ SWIFT_CLASS_NAMED("WhisperTransportInfo")
 /// Whisper underlying transport types definitions.
 typedef SWIFT_ENUM_NAMED(NSInteger, WMWhisperTransportType, "WhisperTransportType") {
 /// ICE protocol
-  WMWhisperTransportTypeICE = 0,
+  WMWhisperTransportTypeICE = 0x01,
 /// UDP transport protocol
-  WMWhisperTransportTypeUDP = 1,
+  WMWhisperTransportTypeUDP = 0x02,
 /// TCP transport protocol
-  WMWhisperTransportTypeTCP = 2,
+  WMWhisperTransportTypeTCP = 0x04,
 };
 
 
