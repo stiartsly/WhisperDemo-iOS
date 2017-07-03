@@ -312,7 +312,7 @@
                 hud.mode = MBProgressHUDModeCustomView;
                 [strongSelf performSelector:@selector(finish) withObject:weakSelf afterDelay:1];
             }
-            else if (error.code == 12) {
+            else if (error.code == 0x100000C) {
                 hud.minSize = CGSizeZero;
                 hud.mode = MBProgressHUDModeText;
                 hud.label.text = NSLocalizedString(@"已添加过该设备", nil);

@@ -799,6 +799,11 @@ SWIFT_CLASS_NAMED("WhisperSession")
 /// Close a session to friend. All resources include streams, channels,
 /// portforwardings associated with current session will be destroyed.
 - (void)close;
+/// Get remote peer id.
+///
+/// returns:
+/// The remote peer userid or userid@nodeid
+- (NSString * _Nonnull)getPeer SWIFT_WARN_UNUSED_RESULT;
 /// Send session request to the friend.
 /// \param handler A handler to receive the session response
 ///

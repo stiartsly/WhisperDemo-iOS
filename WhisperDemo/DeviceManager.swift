@@ -15,8 +15,8 @@ class DeviceManager : NSObject {
     
 // MARK: Constants
     
-    fileprivate static let appId = "7sRQjDsniyuHdZ9zsQU9DZbMLtQGLBWZ78yHWgjPpTKm"
-    fileprivate static let appKey = "6tzPPAgSACJdScX79wuzMNPQTWkRLZ4qEdhLcZU6q4B9"
+    fileprivate static let appId = "HMWL2aNJKnyjtL7K3e7fCHxFVQ9fCpSW8xvpJG3LtFWW"
+    fileprivate static let appKey = "8e9VnqPJw5NbK2QztwpyzwysT5yQ84i3vWB43wxy2BJz"
 
     fileprivate static let apiServer = "https://whisper.freeddns.org:8443/web/api"
     fileprivate static let mqttServer = "ssl://whisper.freeddns.org:8883"

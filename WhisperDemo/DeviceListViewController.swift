@@ -14,6 +14,7 @@ class DeviceListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView.isEditing = false;
         
         NotificationCenter.default.addObserver(forName: DeviceManager.DeviceListChanged, object: nil, queue: OperationQueue.main, using: {_ in
             self.tableView.reloadData()
