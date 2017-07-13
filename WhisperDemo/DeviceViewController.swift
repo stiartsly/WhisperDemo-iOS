@@ -15,7 +15,8 @@ class DeviceViewController: UITableViewController {
     var hud : MBProgressHUD?
     
     private var _observer : NSObjectProtocol?
-    private var playLayer : AVSampleBufferDisplayLayer?
+    private var videoLayer : AVSampleBufferDisplayLayer?
+    private var videoView: UIImageView?
     
     @IBOutlet weak var bulbStatus: UIButton!
     @IBOutlet weak var bulbSwitch: UISwitch!
@@ -104,7 +105,12 @@ class DeviceViewController: UITableViewController {
         self.splitViewController?.navigationController?.isNavigationBarHidden = splitViewController?.navigationController?.topViewController == splitViewController
 
         if videoPlayButton.isSelected {
-            DeviceManager.sharedInstance.stopVideoPlay(device)
+            if let currentDevice = device {
+                currentDevice.stopVideoPlay()
+            }
+            else {
+                DeviceManager.sharedInstance.stopVideoPlay()
+            }
             videoPlayButton.isSelected = false
         }
     }
@@ -176,7 +182,7 @@ class DeviceViewController: UITableViewController {
         else {
             let width = tableView.bounds.size.width;
             let height = width * 3 / 4
-            playLayer?.frame = CGRect(origin: CGPoint.zero, size: CGSize(width: width, height: height))
+            videoLayer?.frame = CGRect(origin: CGPoint.zero, size: CGSize(width: width, height: height))
             return height
         }
     }
@@ -264,19 +270,40 @@ class DeviceViewController: UITableViewController {
     
     @IBAction func videoPlayButtonClicked(_ sender: UIButton) {
         if sender.isSelected {
-            DeviceManager.sharedInstance.stopVideoPlay(device)
+            if let currentDevice = device {
+                currentDevice.stopVideoPlay()
+            }
+            else {
+                DeviceManager.sharedInstance.stopVideoPlay()
+            }
             sender.isSelected = false
         }
         else {
-            if playLayer == nil {
-                playLayer = AVSampleBufferDisplayLayer()
-                playLayer!.frame = self.videoContentView.bounds
-                playLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
-                self.videoContentView.layer.insertSublayer(playLayer!, at: 0)
+            if videoView == nil {
+                videoView = UIImageView.init(frame: self.videoContentView.bounds)
+                videoView!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                videoView!.backgroundColor = UIColor.clear
+                videoView!.contentMode = .scaleAspectFill
+                self.videoContentView.addSubview(videoView!)
+                self.videoContentView.bringSubview(toFront: self.videoPlayButton)
             }
 
-            DeviceManager.sharedInstance.startVideoPlay(playLayer!, device: device)
-            sender.isSelected = true
+            if videoLayer == nil {
+                videoLayer = AVSampleBufferDisplayLayer()
+                videoLayer!.frame = self.videoContentView.bounds
+                videoLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+                self.videoContentView.layer.insertSublayer(videoLayer!, at: 0)
+            }
+
+            if let currentDevice = device {
+                if currentDevice.startVideoPlay(videoView!, videoLayer!) {
+                    sender.isSelected = true
+                }
+            }
+            else {
+                DeviceManager.sharedInstance.startVideoPlay(videoLayer!)
+                sender.isSelected = true
+            }
         }
     }
 

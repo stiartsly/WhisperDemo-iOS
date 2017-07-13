@@ -50,6 +50,7 @@ class Device {
     }
     
     /// local play remove video
+    var videoPlayView : UIImageView?
     var videoPlayLayer : AVSampleBufferDisplayLayer?
     fileprivate var decoder : VideoDecoder?
     
@@ -68,8 +69,8 @@ class Device {
             decoder?.end()
             
             if let stream = self.stream {
-                try? session.removeStream(stream: stream)
                 self.stream = nil
+                try? session.removeStream(stream: stream)
             }
             session.close()
             self.session = nil
@@ -166,7 +167,7 @@ extension Device : WhisperStreamDelegate
 extension Device : VideoDecoderDelegate
 {
     /// start play remote video
-    func startVideoPlay(_ layer : AVSampleBufferDisplayLayer) -> Bool {
+    func startVideoPlay(_ view : UIImageView, _ layer : AVSampleBufferDisplayLayer) -> Bool {
         objc_sync_enter(self)
         defer {
             objc_sync_exit(self)
@@ -202,7 +203,8 @@ extension Device : VideoDecoderDelegate
                 let messageDic = ["type":"modify", "camera":true] as [String : Any]
                 try! DeviceManager.sharedInstance.sendMessage(messageDic, toDevice: self)
             }
-            
+
+            videoPlayView = view
             videoPlayLayer = layer
             return true
         }
@@ -223,12 +225,14 @@ extension Device : VideoDecoderDelegate
             NSLog("Start session in success")
         } else {
             NSLog("didReceiveSessionInviteResponse failed with reason: \(reason!)")
+            videoPlayView = nil
             videoPlayLayer = nil
         }
     }
     
     /// stop play remote video
     func stopVideoPlay() {
+        videoPlayView = nil
         videoPlayLayer = nil
 
         if remotePlaying {
@@ -246,7 +250,7 @@ extension Device : VideoDecoderDelegate
     
 // MARK: VideoDecoderDelegate
     
-    func videoDecoder(_ encoder: VideoDecoder!, gotSampleBuffer sampleBuffer: CMSampleBuffer!) {
+    func videoDecoder(_ decoder: VideoDecoder!, gotSampleBuffer sampleBuffer: CMSampleBuffer!) {
         if let playLayer = videoPlayLayer {
             //if playLayer.isReadyForMoreMediaData {
                 DispatchQueue.main.sync {
@@ -261,9 +265,11 @@ extension Device : VideoDecoderDelegate
             //}
         }
     }
-    
-    func videoDecoder(_ encoder: VideoDecoder!, error: String!) {
-        
+
+    func videoDecoder(_ decoder: VideoDecoder!, gotVideoImage image: UIImage!) {
+        DispatchQueue.main.sync {
+            videoPlayView?.image = image
+        }
     }
 }
 

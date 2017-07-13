@@ -7,8 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <AVFoundation/AVFoundation.h>
-#import <VideoToolbox/VideoToolbox.h>
+#import <UIKit/UIKit.h>
+#import <CoreMedia/CoreMedia.h>
+
+//#define USE_FFMPEG
 
 @protocol VideoDecoderDelegate;
 
@@ -23,7 +25,9 @@
 
 @protocol VideoDecoderDelegate
 
-- (void)videoDecoder:(VideoDecoder *)encoder gotSampleBuffer:(CMSampleBufferRef)sampleBuffer;
-- (void)videoDecoder:(VideoDecoder *)encoder error:(NSString *)error;
+@optional
+- (void)videoDecoder:(VideoDecoder *)decoder gotVideoImage:(UIImage *)image;
+- (void)videoDecoder:(VideoDecoder *)decoder gotSampleBuffer:(CMSampleBufferRef)sampleBuffer;
+- (void)videoDecoder:(VideoDecoder *)decoder error:(NSString *)error;
 
 @end

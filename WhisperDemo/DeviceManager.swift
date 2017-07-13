@@ -436,7 +436,7 @@ extension DeviceManager : WhisperDelegate
                 device.deviceInfo.presence = newPresence
                 if newPresence == "online" {
                     if let layer = device.videoPlayLayer {
-                        _ = device.startVideoPlay(layer)
+                        _ = device.startVideoPlay(device.videoPlayView!, layer)
                     }
                 }
                 else {
@@ -486,6 +486,8 @@ extension DeviceManager : WhisperDelegate
         for index in 0..<self.devices.count {
             let device = self.devices[index]
             if device.deviceId == friendId {
+                device.closeSession();
+
                 self.remotePlayingDevices.remove(device)
                 self.devices.remove(at: index)
                 
@@ -572,24 +574,14 @@ extension DeviceManager : WhisperDelegate
 // MARK: - Video methods
 extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEncoderDelegate
 {
-    func startVideoPlay(_ layer : AVSampleBufferDisplayLayer, device: Device? = nil) {
-        if let selectedDevice = device {
-            _ = selectedDevice.startVideoPlay(layer)
-        }
-        else {
-            videoPlayLayer = layer
-            startVideoCapture()
-        }
+    func startVideoPlay(_ layer : AVSampleBufferDisplayLayer) {
+        videoPlayLayer = layer
+        startVideoCapture()
     }
     
-    func stopVideoPlay(_ device: Device? = nil) {
-        if let selectedDevice = device {
-            selectedDevice.stopVideoPlay()
-        }
-        else {
-            videoPlayLayer = nil
-            checkAndStopVideoCapture()
-        }
+    func stopVideoPlay() {
+        videoPlayLayer = nil
+        checkAndStopVideoCapture()
     }
     
     func startVideoCapture() {

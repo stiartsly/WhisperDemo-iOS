@@ -182,9 +182,9 @@ extension DeviceInfoViewController {
         }
         else {
             tilte = "请输入备注名"
+            text = device?.deviceInfo.label
             selector = #selector(setDeviceLabel)
         }
-        
         
         let alertController = UIAlertController(title: tilte, message: nil, preferredStyle: .alert)
         alertController.addTextField() { textField in
