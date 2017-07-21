@@ -12,6 +12,7 @@
 		1720C43B1E9CB37B00F710F4 /* NetworkReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1720C43A1E9CB37B00F710F4 /* NetworkReachabilityManager.swift */; };
 		17383DF71E71305A00777AC6 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17383DF61E71305A00777AC6 /* Device.swift */; };
 		173AB0C41E275D4300542B1B /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173AB0C31E275D4300542B1B /* DeviceManager.swift */; };
+		178C7F851F21C626008C911A /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 178C7F821F21C626008C911A /* MBProgressHUD.m */; };
 		1797298D1E31AF62004F262D /* audio.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 1797298C1E31AF62004F262D /* audio.m4a */; };
 		179C62E31F160ED500B1E271 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 179C62DC1F160ED500B1E271 /* libavcodec.a */; };
 		179C62E41F160ED500B1E271 /* libavdevice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 179C62DD1F160ED500B1E271 /* libavdevice.a */; };
@@ -60,6 +61,10 @@
 		1720C43A1E9CB37B00F710F4 /* NetworkReachabilityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkReachabilityManager.swift; sourceTree = "<group>"; };
 		17383DF61E71305A00777AC6 /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		173AB0C31E275D4300542B1B /* DeviceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceManager.swift; sourceTree = "<group>"; };
+		178C7F801F21C626008C911A /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		178C7F811F21C626008C911A /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		178C7F821F21C626008C911A /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		178C7F831F21C626008C911A /* README.mdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.mdown; sourceTree = "<group>"; };
 		1797298C1E31AF62004F262D /* audio.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = audio.m4a; sourceTree = "<group>"; };
 		179C62761F160ED500B1E271 /* avcodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avcodec.h; sourceTree = "<group>"; };
 		179C62771F160ED500B1E271 /* avfft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avfft.h; sourceTree = "<group>"; };
@@ -212,6 +217,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		178C7F7F1F21C626008C911A /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				178C7F801F21C626008C911A /* LICENSE */,
+				178C7F811F21C626008C911A /* MBProgressHUD.h */,
+				178C7F821F21C626008C911A /* MBProgressHUD.m */,
+				178C7F831F21C626008C911A /* README.mdown */,
+			);
+			path = MBProgressHUD;
+			sourceTree = SOURCE_ROOT;
+		};
 		179C62731F160ED500B1E271 /* FFmpeg */ = {
 			isa = PBXGroup;
 			children = (
@@ -410,6 +426,7 @@
 				17C508181E139F990068A76A /* Products */,
 				605E9172420CBC98EFEE411E /* Pods */,
 				179C62731F160ED500B1E271 /* FFmpeg */,
+				178C7F7F1F21C626008C911A /* MBProgressHUD */,
 				31FE7E21A949003346032958 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -653,6 +670,7 @@
 				17383DF71E71305A00777AC6 /* Device.swift in Sources */,
 				17FBAD981E543DD000289C1E /* DeviceInfoViewController.swift in Sources */,
 				170101BF1E236F3B001507AD /* DeviceViewController.swift in Sources */,
+				178C7F851F21C626008C911A /* MBProgressHUD.m in Sources */,
 				17C508631E1BAA7D0068A76A /* MyInfoViewController.swift in Sources */,
 				17C5081B1E139F990068A76A /* AppDelegate.swift in Sources */,
 				170721081E8281CF0030AAED /* VideoEncoder.mm in Sources */,

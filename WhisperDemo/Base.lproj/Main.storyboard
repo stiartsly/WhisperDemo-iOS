@@ -50,7 +50,6 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="accessoryView" destination="AGg-fH-UJK" id="zhx-nq-o5Y"/>
-                                    <segue destination="43g-X7-7Qm" kind="showDetail" identifier="showDetail" id="w78-YQ-dje"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -398,7 +397,4 @@
         <image name="stop" width="32" height="32"/>
         <image name="user" width="24" height="24"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="w78-YQ-dje"/>
-    </inferredMetricsTieBreakers>
 </document>

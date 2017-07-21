@@ -3,6 +3,7 @@
 //
 
 
+#import "MBProgressHUD.h"
 #import "ScanViewController.h"
 #import "VideoEncoder.h"
 #import "VideoDecoder.h"

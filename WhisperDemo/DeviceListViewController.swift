@@ -7,16 +7,15 @@
 //
 
 import UIKit
-import MBProgressHUD
 
 class DeviceListViewController: UITableViewController {
-    
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.isEditing = false;
         
         NotificationCenter.default.addObserver(forName: DeviceManager.DeviceListChanged, object: nil, queue: OperationQueue.main, using: {_ in
+            self.tableView.isEditing = false;
             self.tableView.reloadData()
             
             if let hud = MBProgressHUD(for: self.view) {
@@ -39,7 +38,8 @@ class DeviceListViewController: UITableViewController {
                     else {
                         let indexPath = IndexPath(row: 0, section: 0)
                         self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-                        self.performSegue(withIdentifier: "showDetail", sender: self.tableView.cellForRow(at: indexPath))
+                        self.tableView(self.tableView, didSelectRowAt: indexPath)
+                        //self.performSegue(withIdentifier: "showDetail", sender: self.tableView.cellForRow(at: indexPath))
                     }
                 }
             }
@@ -76,21 +76,21 @@ class DeviceListViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showDetail" {
-            let controller = (segue.destination as! UINavigationController).topViewController as! DeviceViewController
-            if let indexPath = self.tableView.indexPathForSelectedRow {
-                controller.device = indexPath.row > 0 ? DeviceManager.sharedInstance.devices[indexPath.row-1] : nil
-            }
-            else {
-                controller.device = nil
-            }
-        }
-    }
-    
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == "showDetail" {
+//            let controller = (segue.destination as! UINavigationController).topViewController as! DeviceViewController
+//            if let indexPath = self.tableView.indexPathForSelectedRow {
+//                controller.device = indexPath.row > 0 ? DeviceManager.sharedInstance.devices[indexPath.row-1] : nil
+//            }
+//            else {
+//                controller.device = nil
+//            }
+//        }
+//    }
+
     @IBAction func showMyInfo(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let myInfoVC = storyboard.instantiateViewController(withIdentifier: "MyInfoViewControllerIdentity")
+        //let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let myInfoVC = storyboard!.instantiateViewController(withIdentifier: "MyInfoViewControllerIdentity")
         splitViewController?.navigationController?.show(myInfoVC, sender: nil)
     }
     
@@ -200,5 +200,83 @@ extension DeviceListViewController {
         }
         
         return true
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.row == 0 {
+            let detailVC = self.storyboard!.instantiateViewController(withIdentifier: "detailVC")
+            self.splitViewController?.showDetailViewController(detailVC, sender: nil)
+            return
+        }
+
+        let device : Device = DeviceManager.sharedInstance.devices[indexPath.row-1]
+        if device.status != nil {
+            let detailVC = self.storyboard!.instantiateViewController(withIdentifier: "detailVC")
+            let controller = (detailVC as! UINavigationController).topViewController as! DeviceViewController
+            controller.device = device
+            self.splitViewController?.showDetailViewController(detailVC, sender: nil)
+            return
+        }
+
+        let hud = MBProgressHUD(view: self.view)
+        hud.removeFromSuperViewOnHide = true;
+        self.view.addSubview(hud)
+
+        do {
+            try DeviceManager.sharedInstance.getDeviceStatus(device) { result in
+                if result != nil {
+                    hud.hide(animated: true)
+
+                    let detailVC = self.storyboard!.instantiateViewController(withIdentifier: "detailVC")
+                    let controller = (detailVC as! UINavigationController).topViewController as! DeviceViewController
+                    controller.device = device
+                    self.splitViewController?.showDetailViewController(detailVC, sender: nil)
+                }
+                else {
+                    hud.mode = .text;
+                    hud.label.text = "获取设备状态失败";
+                    hud.hide(animated: true, afterDelay: 1);
+
+                    if self.splitViewController!.isCollapsed {
+                        self.tableView.deselectRow(at: indexPath, animated: true)
+                    }
+                    else {
+                        let navigationController = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.count-1] as? UINavigationController
+                        let deviceViewController = navigationController?.viewControllers[0] as? DeviceViewController
+                        if let selectedDevice = deviceViewController?.device {
+                            let index = DeviceManager.sharedInstance.devices.index(of: selectedDevice)
+                            self.tableView.selectRow(at: IndexPath(row: index!+1, section: 0), animated: false, scrollPosition: .none)
+                        }
+                        else {
+                            self.tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: .none)
+                        }
+                    }
+                }
+            }
+
+            hud.graceTime = 0.5
+            hud.show(animated: true)
+        }
+        catch {
+            hud.mode = .text;
+            hud.label.text = "获取设备状态失败";
+            hud.show(animated: true)
+            hud.hide(animated: true, afterDelay: 1);
+
+            if self.splitViewController!.isCollapsed {
+                self.tableView.deselectRow(at: indexPath, animated: true)
+            }
+            else {
+                let navigationController = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.count-1] as? UINavigationController
+                let deviceViewController = navigationController?.viewControllers[0] as? DeviceViewController
+                if let selectedDevice = deviceViewController?.device {
+                    let index = DeviceManager.sharedInstance.devices.index(of: selectedDevice)
+                    self.tableView.selectRow(at: IndexPath(row: index!+1, section: 0), animated: false, scrollPosition: .none)
+                }
+                else {
+                    self.tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: .none)
+                }
+            }
+        }
     }
 }

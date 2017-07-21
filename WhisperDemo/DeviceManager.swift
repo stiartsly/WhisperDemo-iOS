@@ -56,6 +56,7 @@ class DeviceManager : NSObject {
     fileprivate var networkManager : NetworkReachabilityManager?
 
     fileprivate var bulbStatus = false
+    fileprivate var brightness = Float(UIScreen.main.brightness)
     fileprivate var captureDevice: AVCaptureDevice?
     fileprivate var audioPlayer : AVAudioPlayer?
     fileprivate var audioVolume : Float = 1.0
@@ -65,7 +66,10 @@ class DeviceManager : NSObject {
     fileprivate var videoPlayLayer : AVSampleBufferDisplayLayer?
     fileprivate var remotePlayingDevices = Set<Device>()
     fileprivate var encoder : VideoEncoder?
-    
+
+    public typealias MessageCompletionHandler = (_ result : [String: Any]?) -> Void
+    fileprivate var currentMessage : (device: Device, handler: MessageCompletionHandler, timer: Timer)?
+
 // MARK: - Methods
     
     override init() {
@@ -100,6 +104,11 @@ class DeviceManager : NSObject {
                     resourceValues.isExcludedFromBackup = true
                     try url.setResourceValues(resourceValues)
                 }
+//                else {
+//                    let documentDirectory: String = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] + "/whisper"
+//                    try? FileManager.default.removeItem(atPath: documentDirectory)
+//                    try! FileManager.default.copyItem(atPath: whisperDirectory, toPath: documentDirectory)
+//                }
 
                 let userDefaults = UserDefaults.standard
                 var deviceId = userDefaults.string(forKey: "deviceId")
@@ -135,12 +144,26 @@ class DeviceManager : NSObject {
             }
         }
     }
-    
-    func getDeviceStatus(_ device: Device? = nil) throws -> [String: Any]? {
+
+    func messageResponseTimeout(_ timer: Timer) {
+        guard timer == self.currentMessage?.timer else {
+            return
+        }
+
+        currentMessage?.timer.invalidate()
+        currentMessage?.handler(nil)
+        currentMessage = nil
+    }
+
+    func getDeviceStatus(_ device: Device? = nil, completion: @escaping MessageCompletionHandler) throws {
+        currentMessage?.timer.invalidate()
+        currentMessage = nil
+
         if let deviceInfo = device {
             let messageDic = ["type":"query"]
             try sendMessage(messageDic, toDevice: deviceInfo)
-            return nil
+            let timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(messageResponseTimeout(_:)), userInfo: nil, repeats: false)
+            currentMessage = (deviceInfo , completion, timer)
         }
         else {
             var selfStstus = [String : Any]()
@@ -154,7 +177,7 @@ class DeviceManager : NSObject {
                 selfStstus["torch"] = captureDevice!.torchMode == .on
             }
             
-            selfStstus["brightness"] = Float(UIScreen.main.brightness)
+            selfStstus["brightness"] = brightness
             
             if let player = audioPlayer {
                 selfStstus["ring"] = player.isPlaying
@@ -164,8 +187,9 @@ class DeviceManager : NSObject {
                 selfStstus["ring"] = false
                 selfStstus["volume"] = audioVolume
             }
-            
-            return selfStstus
+
+            selfStstus["camera"] = false
+            completion(selfStstus)
         }
     }
     
@@ -227,6 +251,7 @@ class DeviceManager : NSObject {
         }
         else {
             UIScreen.main.brightness = CGFloat(brightness)
+            self.brightness = brightness;
             
             let messageDic = ["type":"sync", "brightness":brightness] as [String : Any]
             NotificationCenter.default.post(name: DeviceManager.DeviceStatusChanged, object: nil, userInfo: messageDic)
@@ -240,7 +265,12 @@ class DeviceManager : NSObject {
     
     private func brightnessDidChanged(_ notification: Notification) {
         let brightness = Float((notification.object as! UIScreen).brightness)
+        guard fabs(brightness - self.brightness) > 0.05 else {
+            return
+        }
+
         print("UIScreenBrightnessDidChange : \(brightness)")
+        self.brightness = brightness;
         
         let messageDic = ["type":"sync", "brightness":brightness] as [String : Any]
         NotificationCenter.default.post(name: DeviceManager.DeviceStatusChanged, object: nil, userInfo: messageDic)
@@ -508,13 +538,36 @@ extension DeviceManager : WhisperDelegate
             let msgType = dict["type"] as! String
             switch msgType {
             case "query":
-                let message = try getDeviceStatus()
-                try sendMessage(message!, toDeviceId: from)
-                
-            case "status", "sync":
-                let userId = from.components(separatedBy: "@")[0]
-                NotificationCenter.default.post(name: DeviceManager.DeviceStatusChanged, object: userId, userInfo: dict)
-                
+                try getDeviceStatus() { status in
+                    try? self.sendMessage(status!, toDeviceId: from)
+                }
+
+            case "status":
+                let deviceId = from.components(separatedBy: "@")[0]
+                if let device = devices.first(where: {$0.deviceId == deviceId}) {
+                    device.status = dict
+
+                    if let curMessage = currentMessage {
+                        if curMessage.device == device  {
+                            curMessage.timer.invalidate()
+                            currentMessage = nil
+
+                            DispatchQueue.main.sync {
+                                curMessage.handler(dict)
+                            }
+                        }
+                    }
+                }
+
+            case "sync":
+                let deviceId = from.components(separatedBy: "@")[0]
+                if let device = devices.first(where: {$0.deviceId == deviceId}) {
+                    for (key, value) in dict {
+                        device.status?[key] = value
+                    }
+                }
+                NotificationCenter.default.post(name: DeviceManager.DeviceStatusChanged, object: deviceId, userInfo: dict)
+
             case "modify":
                 if let bulb = dict["bulb"] as? Bool {
                     try! setBulbStatus(bulb)
@@ -550,6 +603,7 @@ extension DeviceManager : WhisperDelegate
                         device.remotePlaying = videoPlay
                     }
                 }
+
             default:
                 print("unsupported message")
             }

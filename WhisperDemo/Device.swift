@@ -33,6 +33,8 @@ class Device {
             }
         }
     }
+
+    var status : [String: Any]?
     
 // MARK: - Video variables
     

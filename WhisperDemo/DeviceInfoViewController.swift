@@ -8,7 +8,6 @@
 
 import Foundation
 import ManagedWhisper
-import MBProgressHUD
 
 class DeviceInfoViewController : UITableViewController {
     var device : Device?

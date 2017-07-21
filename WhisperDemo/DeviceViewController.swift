@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import MBProgressHUD
 import ManagedWhisper
 
 class DeviceViewController: UITableViewController {
     var device : Device?
+    var status : [String: Any]!
     var hud : MBProgressHUD?
     
     private var _observer : NSObjectProtocol?
@@ -39,13 +39,17 @@ class DeviceViewController: UITableViewController {
         navigationItem.leftItemsSupplementBackButton = true
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "setting"), style: .plain, target: self, action: #selector(configDeviceInfo))
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "返回", style: .plain, target: self, action: nil)
-        
-        self.tableView.tableFooterView = UIView(frame: CGRect.zero)
-        self.tableView.layoutMargins = UIEdgeInsets.zero
-        
+
+        NotificationCenter.default.addObserver(self, selector: #selector(onReceivedStatus), name: DeviceManager.DeviceStatusChanged, object: nil)
+
         if let deviceInfo = self.device {
-            navigationItem.title = device?.deviceName
-            
+            navigationItem.title = deviceInfo.deviceName
+            status = deviceInfo.status!
+
+            hud = MBProgressHUD(view: self.view)
+            hud!.graceTime = 0.5
+            self.view.addSubview(hud!)
+
             _observer = NotificationCenter.default.addObserver(forName: DeviceManager.DeviceListChanged, object: nil, queue: OperationQueue.main, using: {
                 [unowned self] _ in
                 if DeviceManager.sharedInstance.status == .Connected {
@@ -57,47 +61,39 @@ class DeviceViewController: UITableViewController {
         }
         else {
             navigationItem.title = "本机"
+            try! DeviceManager.sharedInstance.getDeviceStatus() { result in
+                self.status = result
+            }
         }
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(onReceivedStatus), name: DeviceManager.DeviceStatusChanged, object: nil)
+
+        if let bulbStatus = status["bulb"] as? Bool {
+            self.bulbStatus.isSelected = bulbStatus
+            self.bulbSwitch.setOn(bulbStatus, animated: false)
+        }
+
+        if let torchStatus = status["torch"] as? Bool {
+            self.torchSwitch.setOn(torchStatus, animated: false)
+            self.torchSwitch.isEnabled = true
+        }
+
+        if let brightness = status["brightness"] as? Float {
+            self.brightnessSlider.value = brightness
+        }
+
+        if let ring = status["ring"] as? Bool {
+            self.audioPlayButton.isSelected = ring
+            self.volumeSlider.value = status["volume"] as! Float
+        }
+
+        self.tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.size.width, height: 30))
+        self.tableView.tableFooterView = UIView(frame: CGRect.zero)
+        self.tableView.layoutMargins = UIEdgeInsets.zero
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.splitViewController?.navigationController?.isNavigationBarHidden = true
         self.tableView.separatorStyle = splitViewController!.isCollapsed ? .singleLine : .none
-        
-        if self.device != nil {
-            hud = MBProgressHUD(view: self.view)
-            self.view.addSubview(hud!)
-            hud!.graceTime = 1
-            hud!.show(animated: true)
-        }
-        
-        do {
-            if let status = try DeviceManager.sharedInstance.getDeviceStatus(device)  {
-                let bulbStatus = status["bulb"] as! Bool
-                self.bulbStatus.isSelected = bulbStatus
-                self.bulbSwitch.setOn(bulbStatus, animated: false)
-
-                if let torchStatus = status["torch"] as? Bool {
-                    self.torchSwitch.setOn(torchStatus, animated: false)
-                    self.torchSwitch.isEnabled = true
-                }
-                else {
-                    self.torchSwitch.thumbTintColor = UIColor.lightGray
-                    self.torchSwitch.setOn(false, animated: false)
-                    self.torchSwitch.isEnabled = false
-                }
-                
-                self.brightnessSlider.value = status["brightness"] as! Float
-                self.audioPlayButton.isSelected = status["ring"] as! Bool
-                self.volumeSlider.value = status["volume"] as! Float
-            }
-        }
-        catch {
-            NSLog("getDeviceStatus failed")
-        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -115,6 +111,152 @@ class DeviceViewController: UITableViewController {
         }
     }
 
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        var height : CGFloat = 0.1
+
+        switch section {
+        case 0:
+            if status["bulb"] != nil {
+                height = 20
+            }
+
+        case 1:
+            if status["torch"] != nil {
+                height = 20
+            }
+
+        case 2:
+            if status["brightness"] != nil {
+                height = 20
+            }
+
+        case 3:
+            if status["ring"] != nil {
+                height = 20
+            }
+
+        case 4:
+            if status["camera"] != nil {
+                height = 20
+            }
+
+        default:
+            break
+        }
+
+        return height
+    }
+
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        var height : CGFloat = 0.1
+
+        switch section {
+        case 0:
+            if status["bulb"] != nil {
+                height = 30
+            }
+
+        case 1:
+            if status["torch"] != nil {
+                height = 30
+            }
+
+        case 2:
+            if status["brightness"] != nil {
+                height = 30
+            }
+
+        case 3:
+            if status["ring"] != nil {
+                height = 30
+            }
+
+        case 4:
+            if status["camera"] != nil {
+                height = 30
+            }
+
+        default:
+            break
+        }
+
+        return height
+    }
+
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        var title : String? = nil
+
+        switch section {
+        case 0:
+            if status["bulb"] != nil {
+                title = "示例"
+            }
+
+        case 1:
+            if status["torch"] != nil {
+                title = "手电筒"
+            }
+
+        case 2:
+            if status["brightness"] != nil {
+                title = "亮度"
+            }
+
+        case 3:
+            if status["ring"] != nil {
+                title = "声音"
+            }
+
+        case 4:
+            if status["camera"] != nil {
+                title = "摄像头"
+            }
+
+        default:
+            break
+        }
+
+        return title
+    }
+
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        var height : CGFloat = 0
+
+        switch indexPath.section {
+        case 0:
+            if status["bulb"] != nil {
+                height = 60
+            }
+
+        case 1:
+            if status["torch"] != nil {
+                height = 60
+            }
+
+        case 2:
+            if status["brightness"] != nil {
+                height = 60
+            }
+
+        case 3:
+            if status["ring"] != nil {
+                height = 60
+            }
+
+        case 4:
+            if status["camera"] != nil {
+                let width = tableView.bounds.size.width;
+                height = width * 3 / 4
+                videoLayer?.frame = CGRect(origin: CGPoint.zero, size: CGSize(width: width, height: height))
+            }
+
+        default:
+            break
+        }
+
+        return height
+    }
+
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         cell.layoutMargins = UIEdgeInsets.zero
         
@@ -122,9 +264,8 @@ class DeviceViewController: UITableViewController {
             cell.backgroundColor = UIColor.white
             cell.backgroundView = nil
         }
-        else {
+        else if cell.frame.size.height > 0 {
             let cornerRadius : CGFloat = 6.0
-            cell.backgroundColor = UIColor.clear
             let layer: CAShapeLayer = CAShapeLayer()
             let pathRef:CGMutablePath = CGMutablePath()
             let bounds: CGRect = cell.bounds.insetBy(dx: 10, dy: 0)
@@ -159,31 +300,11 @@ class DeviceViewController: UITableViewController {
                 layer.addSublayer(lineLayer)
             }
             
-            let testView: UIView = UIView(frame: bounds)
-            testView.layer.insertSublayer(layer, at: 0)
-            testView.backgroundColor = UIColor.clear
-            cell.backgroundView = testView
-        }
-    }
-    
-//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        tableView.deselectRow(at: indexPath, animated: true)
-//        if indexPath.section == 4 {
-//            let videoVC = VideoPlayViewController()
-//            videoVC.device = self.device
-//            self.splitViewController?.navigationController?.show(videoVC, sender: nil)
-//        }
-//    }
-
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section != 4 {
-            return 60
-        }
-        else {
-            let width = tableView.bounds.size.width;
-            let height = width * 3 / 4
-            videoLayer?.frame = CGRect(origin: CGPoint.zero, size: CGSize(width: width, height: height))
-            return height
+            let backgroundView: UIView = UIView(frame: bounds)
+            backgroundView.layer.insertSublayer(layer, at: 0)
+            backgroundView.backgroundColor = UIColor.clear
+            cell.backgroundView = backgroundView
+            cell.backgroundColor = UIColor.clear
         }
     }
     
@@ -322,11 +443,6 @@ class DeviceViewController: UITableViewController {
                 if let torchStatus = status["torch"] as? Bool {
                     self.torchSwitch.setOn(torchStatus, animated: false)
                     self.torchSwitch.isEnabled = true
-                }
-                else if (status["type"] as! String) == "status" {
-                    self.torchSwitch.thumbTintColor = UIColor.lightGray
-                    self.torchSwitch.setOn(false, animated: false)
-                    self.torchSwitch.isEnabled = false
                 }
 
                 if let brightness = status["brightness"] as? Float {
