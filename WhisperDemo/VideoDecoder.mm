@@ -53,7 +53,7 @@ extern "C" {
 
 - (void)dealloc
 {
-    [self end];
+    [self stop];
 
 #ifdef USE_FFMPEG
     if (pFrame) {
@@ -262,14 +262,25 @@ extern "C" {
             }
             else {
                 NSLog(@"H264 decode: CMVideoFormatDescriptionCreateFromH264ParameterSets error : %d", (int)formatCreateResult);
-                [self end];
+                [self stop];
                 [self.delegate videoDecoder:self error:@"Create video format description failed"];
             }
         }
     }
     else if ((naluType == 1 || naluType == 5) && videoFormatDescription) {
-        uint32_t dataLength32 = htonl(frameLength - 4);
-        memcpy (pFrameData, &dataLength32, sizeof(uint32_t));
+
+        unsigned char* nal_start = pFrameData;
+        do {
+            unsigned char* nal_end = avc_find_startcode(nal_start + 4, pFrameData + frameLength);
+            uint32_t nal_len = htonl(nal_end - nal_start - 4);
+            memcpy (nal_start, &nal_len, sizeof(uint32_t));
+//            uint32_t nal_len = nal_end - nal_start - 4;
+//            nal_start[0] = (uint8_t)(nal_len >> 24);
+//            nal_start[1] = (uint8_t)(nal_len >> 16);
+//            nal_start[2] = (uint8_t)(nal_len >> 8 );
+//            nal_start[3] = (uint8_t)(nal_len);
+            nal_start = nal_end;
+        } while (nal_start < pFrameData + frameLength);
         
         CMBlockBufferRef blockBuffer = NULL;
 //        OSStatus status = CMBlockBufferCreateEmpty(NULL, 0, kCMBlockBufferAlwaysCopyDataFlag, &blockBuffer);
@@ -312,7 +323,7 @@ extern "C" {
             }
             else {
                 NSLog(@"H264 decode: CMSampleBufferCreate error : %d", (int)status);
-                [self end];
+                [self stop];
                 [self.delegate videoDecoder:self error:@"Create sample buffer failed"];
             }
             
@@ -320,7 +331,7 @@ extern "C" {
         }
         else {
             NSLog(@"H264 decode: CMBlockBufferCreateWithMemoryBlock error : %d", (int)status);
-            [self end];
+            [self stop];
             [self.delegate videoDecoder:self error:@"Create block buffer failed"];
         }
     }
@@ -422,10 +433,61 @@ void decompressionSessionDecodeFrameCallback(void *decompressionOutputRefCon,
         }
     }
 }
+
+uint8_t *avc_find_startcode(uint8_t *p, uint8_t *end)
+{
+    uint8_t *out= avc_find_startcode_internal(p, end);
+    if(p<out && out<end && !out[-1]) out--;
+    return out;
+}
+
+uint8_t *avc_find_startcode_internal(uint8_t *p, uint8_t *end)
+{
+    const uint8_t *a = p + 4 - ((intptr_t)p & 3);
+
+    for (end -= 3; p < a && p < end; p++) {
+        if (p[0] == 0 && p[1] == 0 && p[2] == 1)
+            return p;
+    }
+
+    for (end -= 3; p < end; p += 4) {
+        uint32_t x = *(const uint32_t*)p;
+        //if ((x - 0x01000100) & (~x) & 0x80008000) { // little endian
+        //if ((x - 0x00010001) & (~x) & 0x00800080) { // big endian
+        if ((x - 0x01010101) & (~x) & 0x80808080) { // generic
+            if (p[1] == 0) {
+                if (p[0] == 0 && p[2] == 1)
+                    return p;
+                if (p[2] == 0 && p[3] == 1)
+                    return p+1;
+            }
+            if (p[3] == 0) {
+                if (p[2] == 0 && p[4] == 1)
+                    return p+2;
+                if (p[4] == 0 && p[5] == 1)
+                    return p+3;
+            }
+        }
+    }
+
+    for (end += 3; p < end; p++) {
+        if (p[0] == 0 && p[1] == 0 && p[2] == 1)
+            return p;
+    }
+
+    return end + 3;
+}
+
 #endif
 
 - (void)end
 {
+    dispatch_async(queue, ^{
+        [self stop];
+    });
+}
+
+- (void)stop {
     if (rtpUnpack) {
         delete rtpUnpack;
         rtpUnpack = NULL;

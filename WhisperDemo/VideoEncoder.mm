@@ -12,10 +12,23 @@
 
 static const int fps = 20;
 
+#define CROP_IMAGE 0
+
+#if CROP_IMAGE
+#import <CoreImage/CoreImage.h>
+
+static const CGFloat width = 320;
+static const CGFloat height = 240;
+#endif
+
 @implementation VideoEncoder
 {
     dispatch_queue_t queue;
     VTCompressionSessionRef encodingSession;
+#if CROP_IMAGE
+    CVPixelBufferRef renderBuffer;
+    CIContext *ciContext;
+#endif
     CRtpStream *rtp;
 }
 
@@ -132,16 +145,37 @@ void didCompressH264(void *outputCallbackRefCon, void *sourceFrameRefCon, OSStat
 - (void)encode:(CMSampleBufferRef)sampleBuffer
 {
     dispatch_sync(queue, ^{
+#if !CROP_IMAGE
         // Get the CV Image buffer
         CVImageBufferRef imageBuffer = (CVImageBufferRef)CMSampleBufferGetImageBuffer(sampleBuffer);
+#endif
         
         if (encodingSession == NULL) {
+#if CROP_IMAGE
+            // Create the compression session
+            NSDictionary* pixelBufferOptions = @{(__bridge NSString*) kCVPixelBufferPixelFormatTypeKey:@(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange),
+                                                 (__bridge NSString*) kCVPixelBufferWidthKey:@(width),
+                                                 (__bridge NSString*) kCVPixelBufferHeightKey:@(height),
+                                                 (__bridge NSString*) kCVPixelBufferOpenGLESCompatibilityKey : @YES,
+                                                 (__bridge NSString*) kCVPixelBufferIOSurfacePropertiesKey : @{}};
+            OSStatus status = VTCompressionSessionCreate(kCFAllocatorDefault,
+                                                         width,
+                                                         height,
+                                                         kCMVideoCodecType_H264,
+                                                         NULL,
+                                                         (__bridge CFDictionaryRef)pixelBufferOptions,
+                                                         NULL,
+                                                         didCompressH264,
+                                                         (__bridge void *)(self),
+                                                         &encodingSession);
+#else
             CGFloat width = CVPixelBufferGetWidth(imageBuffer) * 0.75;
             CGFloat height = CVPixelBufferGetHeight(imageBuffer) * 0.75;
             NSLog(@"Video width : %.0f, height : %.0f", width, height);
             
             // Create the compression session
             OSStatus status = VTCompressionSessionCreate(NULL, width, height, kCMVideoCodecType_H264, NULL, NULL, NULL, didCompressH264, (__bridge void *)(self),  &encodingSession);
+#endif
             if (status != 0) {
                 NSLog(@"H264 encode: VTCompressionSessionCreate error: %d", (int)status);
                 [self.delegate videoEncoder:self error:@"Unable to create a H264 compression session"];
@@ -160,6 +194,7 @@ void didCompressH264(void *outputCallbackRefCon, void *sourceFrameRefCon, OSStat
             VTSessionSetProperty(encodingSession, kVTCompressionPropertyKey_MaxKeyFrameInterval, (__bridge CFTypeRef)@(fps));
             // 设置需要的平均编码率
             VTSessionSetProperty(encodingSession, kVTCompressionPropertyKey_AverageBitRate, (__bridge CFTypeRef)@(width*height*10));
+            VTSessionSetProperty(encodingSession, kVTCompressionPropertyKey_SourceFrameCount, (__bridge CFTypeRef)@(1));
             
             // Tell the encoder to start encoding
             VTCompressionSessionPrepareToEncodeFrames(encodingSession);
@@ -167,6 +202,54 @@ void didCompressH264(void *outputCallbackRefCon, void *sourceFrameRefCon, OSStat
             rtp = new CRtpStream(didRtpStreamOut, (__bridge void *)(self));
         }
         
+#if CROP_IMAGE
+        if (renderBuffer == NULL) {
+            CVReturn result = CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, VTCompressionSessionGetPixelBufferPool(encodingSession), &renderBuffer);
+            if (result != kCVReturnSuccess) {
+                NSLog(@"H264 encode: CVPixelBufferPoolCreatePixelBuffer error : %d", result);
+                [self.delegate videoEncoder:self error:@"CVPixelBufferPoolCreatePixelBuffer failed"];
+                return;
+            }
+        }
+
+        if (ciContext == NULL) {
+            EAGLContext *glCtx = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+            ciContext = [CIContext contextWithEAGLContext:glCtx options:@{kCIContextWorkingColorSpace:[NSNull null]}];
+        }
+
+        // Get the CV Image buffer
+        CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+        CVPixelBufferLockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
+
+        CIImage *ciImage = [CIImage imageWithCVPixelBuffer:pixelBuffer];
+        CGFloat bufferWidth = CVPixelBufferGetWidth(pixelBuffer);
+        CGFloat bufferHeight = CVPixelBufferGetHeight(pixelBuffer);
+        CGFloat scaleX = width / bufferWidth, scaleY = height / bufferHeight;
+        if (scaleX > scaleY) {
+            CGFloat ty = (height - bufferHeight * scaleX) / 2;
+            CGAffineTransform transform = CGAffineTransformMakeTranslation(0, ty);
+            transform = CGAffineTransformScale(transform, scaleX, scaleX);
+            ciImage = [ciImage imageByApplyingTransform:transform];
+            ciImage = [ciImage imageByCroppingToRect:CGRectMake(0, 0, width, height)];
+        }
+        else if (scaleX < scaleY) {
+            CGFloat tx = (width - bufferWidth * scaleY) / 2;
+            CGAffineTransform transform = CGAffineTransformMakeTranslation(tx, 0);
+            transform = CGAffineTransformScale(transform, scaleY, scaleY);
+            ciImage = [ciImage imageByApplyingTransform:transform];
+            ciImage = [ciImage imageByCroppingToRect:CGRectMake(0, 0, width, height)];
+        }
+        else if (scaleX != 1) {
+            CGAffineTransform transform = CGAffineTransformMakeScale(scaleX, scaleY);
+            ciImage = [ciImage imageByApplyingTransform:transform];
+        }
+
+        CVPixelBufferLockBaseAddress(renderBuffer, 0);
+        [ciContext render:ciImage toCVPixelBuffer:renderBuffer bounds:ciImage.extent colorSpace:nil];
+        CVPixelBufferUnlockBaseAddress(renderBuffer, 0);
+        CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
+#endif
+
         // Create properties
         CMTime presentationTimeStamp = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
         CMTime duration = CMSampleBufferGetDuration(sampleBuffer);
@@ -174,7 +257,11 @@ void didCompressH264(void *outputCallbackRefCon, void *sourceFrameRefCon, OSStat
         
         // Pass it to the encoder
         OSStatus statusCode = VTCompressionSessionEncodeFrame(encodingSession,
+#if CROP_IMAGE
+                                                              renderBuffer,
+#else
                                                               imageBuffer,
+#endif
                                                               presentationTimeStamp,
                                                               duration,
                                                               NULL, NULL, &flags);
@@ -209,6 +296,13 @@ void didCompressH264(void *outputCallbackRefCon, void *sourceFrameRefCon, OSStat
         encodingSession = NULL;
     }
     
+#if CROP_IMAGE
+    if (renderBuffer != NULL) {
+        CFRelease(renderBuffer);
+        renderBuffer = NULL;
+    }
+#endif
+
     if (rtp) {
         delete rtp;
         rtp = NULL;

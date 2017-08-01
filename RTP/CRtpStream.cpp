@@ -59,22 +59,27 @@ namespace nalu {
         
         while(i < length) {
             if (CHECK_NALU(data, i)) {
-                j = i;
-                while(j < length) {
-                    if (CHECK_NALU(data, j))
-                        break;
-                }
-                
-                if (j < length)
-                    j -= 4; // find nalu, then rollback sizeof NALU size.
-                
-                nalu.length = (j - i);
-                
                 nalu.data = (uint8_t*)&data[i];
                 nalu.forbidden_bit = nalu.data[0] & 0x80; // highest bit;
                 nalu.nal_rfc_idsc  = nalu.data[0] & 0x60; // 2 bits
                 nalu.nal_unit_type = nalu.data[0] & 0x1f; // low 5 bits.
-                
+
+                if (nalu.nal_unit_type == 5 || nalu.nal_unit_type == 1) {
+                    nalu.length = length - i;
+                }
+                else {
+                    j = i;
+                    while(j < length) {
+                        if (CHECK_NALU(data, j))
+                            break;
+                    }
+
+                    if (j < length)
+                        j -= 4; // find nalu, then rollback sizeof NALU size.
+
+                    nalu.length = (j - i);
+                }
+
                 return (i - offset + nalu.length);
             }
         }
