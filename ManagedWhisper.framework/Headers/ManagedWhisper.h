@@ -10,25 +10,29 @@ FOUNDATION_EXPORT const unsigned char ManagedWhisperVersionString[];
 // In this header, you should import all the public headers of your framework
 // using statements like #import <ManagedWhisper/PublicHeader.h>
 
-typedef NS_OPTIONS (int, WMWhisperTransportOptions) {
-    WMWhisperTransportOptionICE = 0x01,
-    WMWhisperTransportOptionUDP = 0x02,
-    WMWhisperTransportOptionTCP = 0x04,
-} NS_SWIFT_NAME(WhisperTransportOptions);
-
 /**
  The stream mode options.
 
- - WhisperStreamOptionEncrypt: Enctypted mode
+ - WhisperStreamOptionPlain: Plain mode
  - WhisperStreamOptionReliable: Reliable mode
  - WhisperStreamOptionMultiplexing: Multiplexing mode
  - WhisperStreamOptionPortForwarding: Support portforwarding over multiplexing
  */
-typedef NS_OPTIONS (int, WMWhisperStreamOptions) {
-    WMWhisperStreamOptionCompress       = 0x01,
-    WMWhisperStreamOptionEncrypt        = 0x02,
-    WMWhisperStreamOptionReliable       = 0x04,
-    WMWhisperStreamOptionMultiplexing   = 0x08,
-    WMWhisperStreamOptionPortForwarding = 0x10,
+typedef NS_OPTIONS (int, WHWhisperStreamOptions) {
+    WHWhisperStreamOptionCompress       = 0x01,
+    WHWhisperStreamOptionPlain          = 0x02,
+    WHWhisperStreamOptionReliable       = 0x04,
+    WHWhisperStreamOptionMultiplexing   = 0x08,
+    WHWhisperStreamOptionPortForwarding = 0x10,
 } NS_SWIFT_NAME(WhisperStreamOptions);
 
+/**
+ Thread transport thread model
+
+ - WHTransportSharedThreadModel: Shared thread model
+ - WHTransportStandaloneThreadModel: Standalone thread model
+ */
+typedef NS_OPTIONS (int, WHTransportThreadModel) {
+    WHTransportSharedThreadModel        = 0x01,
+    WHTransportStandaloneThreadModel    = 0x02,
+} NS_SWIFT_NAME(WhisperTransportThreadModel);

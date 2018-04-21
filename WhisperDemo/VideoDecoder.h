@@ -1,11 +1,3 @@
-//
-//  VideoDecoder.h
-//  WhisperDemo
-//
-//  Created by suleyu on 2017/3/23.
-//  Copyright © 2017年 Kortide. All rights reserved.
-//
-
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <CoreMedia/CoreMedia.h>

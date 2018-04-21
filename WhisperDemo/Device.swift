@@ -1,18 +1,18 @@
-//
-//  Device.swift
-//  WhisperDemo
-//
-//  Created by suleyu on 2017/3/9.
-//  Copyright © 2017年 Kortide. All rights reserved.
-//
-
 import Foundation
 import AVFoundation
 import ManagedWhisper
 
 class Device {
+    fileprivate static let stunServer = "ws.iwhisper.io"
+    fileprivate static let turnServer = "ws.iwhisper.io"
+    fileprivate static let turnUsername = "whisper"
+    fileprivate static let turnPassword = "io2016whisper"
+
     var deviceInfo : WhisperFriendInfo
     fileprivate var semaphore : DispatchSemaphore?
+
+    var didReceiveSessionResponse: Bool = false
+    var remoteSdp: String?
     
     var deviceId : String {
         get {
@@ -124,8 +124,15 @@ extension Device : WhisperStreamDelegate
         
         do {
             if stream == nil {
+                let options = IceTransportOptions()
+                options.threadModel = TransportOptions.SharedThreadModel
+                options.stunHost = Device.stunServer
+                options.turnHost = Device.turnServer
+                options.turnUsername = Device.turnUsername
+                options.turnPassword = Device.turnPassword
+
                 if session == nil {
-                    session = try WhisperSessionManager.getInstance()!.newSession(to: self.deviceId+"@"+self.deviceId, transport: .ICE)
+                    session = try WhisperSessionManager.getInstance()!.newSession(to: self.deviceId+"@"+self.deviceId, options);
                 }
                 
                 semaphore = DispatchSemaphore(value: 0)
@@ -178,7 +185,14 @@ extension Device : VideoDecoderDelegate
         do {
             if stream == nil {
                 if session == nil {
-                    session = try WhisperSessionManager.getInstance()!.newSession(to: self.deviceId+"@"+self.deviceId, transport: .ICE)
+                    let options = IceTransportOptions()
+                    options.threadModel = TransportOptions.SharedThreadModel
+                    options.stunHost = Device.stunServer
+                    options.turnHost = Device.turnServer
+                    options.turnUsername = Device.turnUsername
+                    options.turnPassword = Device.turnPassword
+
+                    session = try WhisperSessionManager.getInstance()!.newSession(to: self.deviceId+"@"+self.deviceId, options)
                 }
                 
                 semaphore = DispatchSemaphore(value: 0)
@@ -197,6 +211,13 @@ extension Device : VideoDecoderDelegate
                 guard state == .TransportReady else {
                     return false
                 }
+
+                while !didReceiveSessionResponse {
+                    Thread.sleep(forTimeInterval: 1)
+                }
+
+                try session!.start(remoteSdp: remoteSdp!)
+                NSLog("start session success")
             }
             else if state == .TransportReady {
                 try session!.sendInviteRequest(handler: didReceiveSessionInviteResponse)
@@ -223,8 +244,8 @@ extension Device : VideoDecoderDelegate
         
         if status == 0 {
             NSLog("didReceiveSessionInviteResponse success")
-            try! session.start(remoteSdp: sdp!)
-            NSLog("Start session in success")
+            didReceiveSessionResponse = true;
+            remoteSdp = sdp;
         } else {
             NSLog("didReceiveSessionInviteResponse failed with reason: \(reason!)")
             videoPlayView = nil

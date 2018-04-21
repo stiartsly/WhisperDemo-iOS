@@ -1,11 +1,3 @@
-//
-//  AppDelegate.swift
-//  WhisperDemo
-//
-//  Created by suleyu on 2016/12/28.
-//  Copyright © 2016年 Kortide. All rights reserved.
-//
-
 import UIKit
 
 @UIApplicationMain

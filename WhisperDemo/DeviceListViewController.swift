@@ -1,12 +1,5 @@
-//
-//  DeviceListViewController.swift
-//  WhisperDemo
-//
-//  Created by suleyu on 2016/12/28.
-//  Copyright © 2016年 Kortide. All rights reserved.
-//
-
 import UIKit
+import ManagedWhisper
 
 class DeviceListViewController: UITableViewController {
 
@@ -121,11 +114,6 @@ extension DeviceListViewController {
                 cell.detailTextLabel?.text = "离线"
                 cell.detailTextLabel?.textColor = UIColor.gray
                 cell.accessoryView?.isHidden = true
-            
-            case .Connecting:
-                cell.detailTextLabel?.text = "连接中"
-                cell.detailTextLabel?.textColor = UIColor.blue
-                cell.accessoryView?.isHidden = true
                 
             default:
                 cell.detailTextLabel?.text = nil
@@ -139,7 +127,7 @@ extension DeviceListViewController {
             
             cell.textLabel?.text = device.deviceName
             cell.detailTextLabel?.text = nil
-            cell.accessoryView?.isHidden = device.deviceInfo.presence != "online"
+            cell.accessoryView?.isHidden = device.deviceInfo.status != WhisperConnectionStatus.Connected
         }
         
         return cell
@@ -194,7 +182,7 @@ extension DeviceListViewController {
             }
             
             let device = DeviceManager.sharedInstance.devices[indexPath.row-1]
-            guard device.deviceInfo.presence == "online" else {
+            guard device.deviceInfo.status == WhisperConnectionStatus.Connected else {
                 return false
             }
         }

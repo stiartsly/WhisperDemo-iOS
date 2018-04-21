@@ -1,11 +1,3 @@
-//
-//  VideoEncoder.h
-//  WhisperDemo
-//
-//  Created by suleyu on 2017/3/21.
-//  Copyright © 2017年 Kortide. All rights reserved.
-//
-
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 #import <VideoToolbox/VideoToolbox.h>

@@ -1,11 +1,3 @@
-//
-//  DeviceViewController.swift
-//  WhisperDemo
-//
-//  Created by suleyu on 2017/1/9.
-//  Copyright © 2017年 Kortide. All rights reserved.
-//
-
 import Foundation
 import ManagedWhisper
 
@@ -100,14 +92,16 @@ class DeviceViewController: UITableViewController {
         super.viewWillDisappear(animated)
         self.splitViewController?.navigationController?.isNavigationBarHidden = splitViewController?.navigationController?.topViewController == splitViewController
 
-        if videoPlayButton.isSelected {
-            if let currentDevice = device {
-                currentDevice.stopVideoPlay()
+        if let videoPlayButton = videoPlayButton {
+            if videoPlayButton.isSelected {
+                if let currentDevice = device {
+                    currentDevice.stopVideoPlay()
+                }
+                else {
+                    DeviceManager.sharedInstance.stopVideoPlay()
+                }
+                videoPlayButton.isSelected = false
             }
-            else {
-                DeviceManager.sharedInstance.stopVideoPlay()
-            }
-            videoPlayButton.isSelected = false
         }
     }
 
@@ -412,7 +406,7 @@ class DeviceViewController: UITableViewController {
             if videoLayer == nil {
                 videoLayer = AVSampleBufferDisplayLayer()
                 videoLayer!.frame = self.videoContentView.bounds
-                videoLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+                videoLayer!.videoGravity = AVLayerVideoGravity.resizeAspectFill
                 self.videoContentView.layer.insertSublayer(videoLayer!, at: 0)
             }
 

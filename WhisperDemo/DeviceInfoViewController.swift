@@ -1,11 +1,3 @@
-//
-//  DeviceInfoViewController.swift
-//  WhisperDemo
-//
-//  Created by suleyu on 2017/2/15.
-//  Copyright © 2017年 Kortide. All rights reserved.
-//
-
 import Foundation
 import ManagedWhisper
 
@@ -221,7 +213,8 @@ extension DeviceInfoViewController {
 }
 
 extension DeviceInfoViewController {
-    
+
+    @objc(setSelfName:)
     func setSelfName(_ name: String) {
         do {
             let whisper = DeviceManager.sharedInstance.whisperInst!
@@ -236,7 +229,8 @@ extension DeviceInfoViewController {
             showToast("修改名称失败")
         }
     }
-    
+
+    @objc(setSelfPhone:)
     func setSelfPhone(_ phone: String) {
         do {
             let whisper = DeviceManager.sharedInstance.whisperInst!
@@ -251,7 +245,8 @@ extension DeviceInfoViewController {
             showToast("设置电话号码失败")
         }
     }
-    
+
+    @objc(setSelfEmail:)
     func setSelfEmail(_ email: String) {
         do {
             let whisper = DeviceManager.sharedInstance.whisperInst!
@@ -266,7 +261,8 @@ extension DeviceInfoViewController {
             showToast("设置邮箱失败")
         }
     }
-    
+
+    @objc(setSelfGender:)
     func setSelfGender(_ gender: String) {
         do {
             let whisper = DeviceManager.sharedInstance.whisperInst!
@@ -281,7 +277,8 @@ extension DeviceInfoViewController {
             showToast("设置性别失败")
         }
     }
-    
+
+    @objc(setSelfRegion:)
     func setSelfRegion(_ region: String) {
         do {
             let whisper = DeviceManager.sharedInstance.whisperInst!
@@ -296,7 +293,8 @@ extension DeviceInfoViewController {
             showToast("设置区域失败")
         }
     }
-    
+
+    @objc(setSelfDescription:)
     func setSelfDescription(_ description: String) {
         do {
             let whisper = DeviceManager.sharedInstance.whisperInst!
@@ -311,7 +309,8 @@ extension DeviceInfoViewController {
             showToast("设置备注名失败")
         }
     }
-    
+
+    @objc(stDeviceLabel:)
     func setDeviceLabel(_ label: String) {
         do {
             if device!.deviceInfo.label != label {

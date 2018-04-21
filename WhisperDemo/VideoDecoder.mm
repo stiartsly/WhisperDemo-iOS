@@ -1,11 +1,3 @@
-//
-//  VideoEncoder.m
-//  WhisperDemo
-//
-//  Created by suleyu on 2017/3/23.
-//  Copyright © 2017年 Kortide. All rights reserved.
-//
-
 #import "VideoDecoder.h"
 #include "CRtpUnpack.h"
 

@@ -7,4 +7,5 @@ framework module ManagedWhisper {
 
 module ManagedWhisper.Swift {
     header "ManagedWhisper-Swift.h"
+    requires objc
 }

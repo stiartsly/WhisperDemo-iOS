@@ -1,5 +1,8 @@
+.DS_store
+DerivedData
 Podfile.lock
 Pods
+/build
 WhisperDemo.xcodeproj/xcuserdata
 WhisperDemo.xcodeproj/project.xcworkspace/xcuserdata
 WhisperDemo.xcworkspace

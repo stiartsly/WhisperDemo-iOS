@@ -1,53 +1,31 @@
-//
-//  DeviceManager.swift
-//  WhisperDemo
-//
-//  Created by suleyu on 2017/1/12.
-//  Copyright © 2017年 Kortide. All rights reserved.
-//
-
 import Foundation
 import AVFoundation
 import MediaPlayer
 import ManagedWhisper
 
 class DeviceManager : NSObject {
-    
-// MARK: Constants
-    
     fileprivate static let appId = "HMWL2aNJKnyjtL7K3e7fCHxFVQ9fCpSW8xvpJG3LtFWW"
     fileprivate static let appKey = "8e9VnqPJw5NbK2QztwpyzwysT5yQ84i3vWB43wxy2BJz"
 
-    fileprivate static let apiServer = "https://whisper.freeddns.org:8443/web/api"
-    fileprivate static let mqttServer = "ssl://whisper.freeddns.org:8883"
-    fileprivate static let stunServer = "whisper.freeddns.org"
-    fileprivate static let turnServer = "whisper.freeddns.org"
+    fileprivate static let apiServer = "https://ws.iwhisper.io/api"
+    fileprivate static let mqttServer = "ssl://mqtt.iwhisper.io:8883"
+    fileprivate static let stunServer = "ws.iwhisper.io"
+    fileprivate static let turnServer = "ws.iwhisper.io"
     fileprivate static let turnUsername = "whisper"
     fileprivate static let turnPassword = "io2016whisper"
 
-//    fileprivate static let apiServer = "https://192.168.3.182:8443/web/api"
-//    fileprivate static let mqttServer = "ssl://192.168.3.182:8883"
-//    fileprivate static let apiServer = "http://192.168.3.182:8080/web/api"
-//    fileprivate static let mqttServer = "tcp://192.168.3.182:1883"
-//    fileprivate static let stunServer = "27.115.62.114"
-//    fileprivate static let turnServer = "27.115.62.114"
-//    fileprivate static let turnUsername = "demo"
-//    fileprivate static let turnPassword = "secret"
-
-//    fileprivate static let videoFramesPreSecond : CMTimeScale = 2
-    
-// MARK: - Notifications
-    
     static let SelfInfoChanged = NSNotification.Name("kNotificationSelfInfoChanged")
     static let DeviceListChanged = NSNotification.Name("kNotificationDeviceListChanged")
     static let DeviceStatusChanged = NSNotification.Name("kNotificationDeviceStatusChanged")
     
 // MARK: - Singleton
+    @objc(sharedInstance)
     static let sharedInstance = DeviceManager()
     
 // MARK: - Variables
     
     var status = WhisperConnectionStatus.Disconnected;
+    @objc(whisperInst)
     var whisperInst: Whisper!
     var devices = [Device]()
     
@@ -145,6 +123,7 @@ class DeviceManager : NSObject {
         }
     }
 
+    @objc(messageResponseTimeout:)
     func messageResponseTimeout(_ timer: Timer) {
         guard timer == self.currentMessage?.timer else {
             return
@@ -171,7 +150,7 @@ class DeviceManager : NSObject {
             selfStstus["bulb"] = bulbStatus
             
             if captureDevice == nil {
-                captureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
+                captureDevice = AVCaptureDevice.default(for: AVMediaType.video)
             }
             if captureDevice!.hasTorch && captureDevice!.isTorchAvailable {
                 selfStstus["torch"] = captureDevice!.torchMode == .on
@@ -219,7 +198,7 @@ class DeviceManager : NSObject {
         }
         else {
             if captureDevice == nil {
-                captureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
+                captureDevice = AVCaptureDevice.default(for: AVMediaType.video)
             }
             
             try captureDevice!.lockForConfiguration()
@@ -372,7 +351,7 @@ class DeviceManager : NSObject {
     }
     
     func sendMessage(_ message: [String: Any], toDevice device: Device) throws {
-        if device.deviceInfo.presence == "online" {
+        if device.deviceInfo.status == WhisperConnectionStatus.Connected {
             try sendMessage(message, toDeviceId: device.deviceId)
         }
         else {
@@ -393,7 +372,7 @@ extension DeviceManager : WhisperDelegate
 //    func willBecomeIdle(_ whisper: Whisper) {
 //        print("onIdle")
 //    }
-    
+
     func connectionStatusDidChange(_ whisper: Whisper,
                                    _ newStatus: WhisperConnectionStatus) {
         print("onConnection status : \(newStatus)")
@@ -420,12 +399,16 @@ extension DeviceManager : WhisperDelegate
 //        }
 //        NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
 
-        let options = WhisperSessionManagerOptions(transports: [.ICE])
+        let options = IceTransportOptions()
+        options.threadModel = TransportOptions.SharedThreadModel
         options.stunHost = DeviceManager.stunServer
         options.turnHost = DeviceManager.turnServer
         options.turnUsername = DeviceManager.turnUsername
         options.turnPassword = DeviceManager.turnPassword
-        try! _ = WhisperSessionManager.getInstance(whisper: whisper, options: options, handler: didReceiveSessionRequest)
+
+        try! _ = WhisperSessionManager.getInstance(whisper: whisper, handler: didReceiveSessionRequest)
+        try! WhisperSessionManager.getInstance()!.addTransport(options)
+
     }
     
     public func selfUserInfoDidChange(_ whisper: Whisper,
@@ -439,6 +422,10 @@ extension DeviceManager : WhisperDelegate
         print("didReceiveFriendsList : \(friends)")
         for friend in friends {
             self.devices.append(Device(friend))
+
+            if friend.status == WhisperConnectionStatus.Connected {
+                friendConnectionDidChange(whisper, friend.userId!, WhisperConnectionStatus.Connected)
+            }
         }
         NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
     }
@@ -457,14 +444,15 @@ extension DeviceManager : WhisperDelegate
         }
     }
     
-    public func friendPresenceDidChange(_ whisper: Whisper,
-                                        _ friendId: String,
-                                        _ newPresence: String) {
-        print("friendPresenceDidChange")
+    public func friendConnectionDidChange(_ whisper: Whisper,
+                                          _ friendId: String,
+                                          _ newStatus: WhisperConnectionStatus) {
+
+        print("friendConnectionDidChange: \(newStatus)")
         for device in self.devices {
             if device.deviceId == friendId {
-                device.deviceInfo.presence = newPresence
-                if newPresence == "online" {
+                device.deviceInfo.status = newStatus
+                if (newStatus == WhisperConnectionStatus.Connected) {
                     if let layer = device.videoPlayLayer {
                         _ = device.startVideoPlay(device.videoPlayView!, layer)
                     }
@@ -488,9 +476,9 @@ extension DeviceManager : WhisperDelegate
                                         _ hello: String) {
         print("didReceiveFriendRequest, userId : \(userId), name : \(String(describing: userInfo.name)), hello : \(hello)")
         do {
-            try whisper.replyFriendRequest(to: userId, withStatus: 0, reason: nil, entrusted: true, expire: nil)
+            try whisper.acceptFriend(with: userId, entrusted: true, withExpire: nil)
         } catch {
-            NSLog("replyFriendRequest error : \(error.localizedDescription)")
+            NSLog("Accept friend \(userId) error : \(error.localizedDescription)")
         }
     }
     
@@ -643,7 +631,7 @@ extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEnc
             captureSession = AVCaptureSession()
             
             if captureDevice == nil {
-                captureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
+                captureDevice = AVCaptureDevice.default(for: AVMediaType.video)
             }
             
             do {
@@ -658,15 +646,15 @@ extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEnc
                 print("set frame rate failed");
             }
 
-            let videoInput = try! AVCaptureDeviceInput(device: captureDevice)
+            let videoInput = try! AVCaptureDeviceInput(device: captureDevice!)
             captureSession!.addInput(videoInput)
             
             let output = AVCaptureVideoDataOutput()
             let videoDataOutputQueue = DispatchQueue(label: "videoDataOutputQueue")
             output.setSampleBufferDelegate(self, queue: videoDataOutputQueue)
-            output.videoSettings = [kCVPixelBufferPixelFormatTypeKey as AnyHashable : kCVPixelFormatType_420YpCbCr8BiPlanarFullRange]
+            output.videoSettings = [kCVPixelBufferPixelFormatTypeKey as AnyHashable : kCVPixelFormatType_420YpCbCr8BiPlanarFullRange] as! [String : Any]
             captureSession!.addOutput(output)
-            captureConnection = output.connection(withMediaType: AVMediaTypeVideo)
+            captureConnection = output.connection(with: AVMediaType.video)
         }
         
         if !captureSession!.isRunning {
@@ -686,12 +674,12 @@ extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEnc
                 }
             }
 
-            let preset = AVCaptureSessionPreset640x480
+            let preset = AVCaptureSession.Preset.vga640x480
             if captureSession!.canSetSessionPreset(preset) {
                 captureSession!.sessionPreset = preset
             }
             else {
-                captureSession!.sessionPreset = AVCaptureSessionPresetMedium
+                captureSession!.sessionPreset = AVCaptureSession.Preset.medium
             }
             captureSession!.commitConfiguration()
 

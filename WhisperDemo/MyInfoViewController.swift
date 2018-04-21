@@ -1,11 +1,3 @@
-//
-//  MyInfoViewController.swift
-//  WhisperDemo
-//
-//  Created by suleyu on 2017/1/3.
-//  Copyright © 2017年 Kortide. All rights reserved.
-//
-
 import Foundation
 import ManagedWhisper
 import QRCode

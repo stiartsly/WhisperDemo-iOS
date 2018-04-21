@@ -535,8 +535,8 @@
 				TargetAttributes = {
 					17C508161E139F990068A76A = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 5935J43UU8;
-						LastSwiftMigration = 0820;
+						DevelopmentTeam = XGJ9J7DHP5;
+						LastSwiftMigration = 0930;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -621,7 +621,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WhisperDemo/Pods-WhisperDemo-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WhisperDemo/Pods-WhisperDemo-frameworks.sh\"";
 			showEnvVarsInLog = 0;
 		};
 		EA56DADC3FE2BAE0BAA9640B /* [CP] Copy Pods Resources */ = {
@@ -702,6 +702,7 @@
 		17C508271E139F990068A76A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -739,7 +740,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -752,6 +753,7 @@
 		17C508281E139F990068A76A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -783,7 +785,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -796,11 +798,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 83BA379AEDC5DE0C0C5309AA /* Pods-WhisperDemo.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 5935J43UU8;
+				DEVELOPMENT_TEAM = XGJ9J7DHP5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -811,14 +813,13 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/FFmpeg/lib";
-				PRODUCT_BUNDLE_IDENTIFIER = io.whisper.app.twinning;
+				PRODUCT_BUNDLE_IDENTIFIER = io.whisper.app.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "WhisperDemo/WhisperDemo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -826,11 +827,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8503E4E4167EFE9BAA2B542C /* Pods-WhisperDemo.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 5935J43UU8;
+				DEVELOPMENT_TEAM = XGJ9J7DHP5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -841,13 +842,12 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/FFmpeg/lib";
-				PRODUCT_BUNDLE_IDENTIFIER = io.whisper.app.twinning;
+				PRODUCT_BUNDLE_IDENTIFIER = io.whisper.app.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "WhisperDemo/WhisperDemo-Bridging-Header.h";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};

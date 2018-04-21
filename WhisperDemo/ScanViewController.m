@@ -1,12 +1,3 @@
-
-//
-//  ScanViewController.m
-//  WhisperDemo
-//
-//  Created by suleyu on 2017/1/3.
-//  Copyright © 2017年 Kortide. All rights reserved.
-//
-
 #import <AVFoundation/AVFoundation.h>
 #import "ScanViewController.h"
 #import "MBProgressHUD.h"
@@ -299,7 +290,7 @@
     __weak __typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0), ^{
         NSError *error = nil;
-        BOOL result = [[[DeviceManager sharedInstance] whisperInst] sendFriendRequestTo:deviceID withGreeting:@"password" error:&error];
+        BOOL result = [[[DeviceManager sharedInstance] whisperInst] addFriendWith:deviceID withGreeting:@"password" error:&error];
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong __typeof(weakSelf) strongSelf = weakSelf;
             if (strongSelf == nil) {
