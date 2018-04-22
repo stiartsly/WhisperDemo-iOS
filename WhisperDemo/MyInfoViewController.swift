@@ -17,7 +17,8 @@ class MyInfoController: UIViewController {
                 nameLabel.text = myInfo.name;
                 
                 let qrCodeWidth = qrCodeImageView.bounds.size.width * UIScreen.main.scale;
-                var qrCode = QRCode(myInfo.userId!)
+                let address = whisperInst.getAddress()
+                var qrCode = QRCode(address)
                 qrCode?.size = CGSize(width: qrCodeWidth, height: qrCodeWidth)
                 qrCodeImageView.image = qrCode?.image
 
