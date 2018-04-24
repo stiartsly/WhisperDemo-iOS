@@ -629,30 +629,52 @@ extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEnc
     func startVideoCapture() {
         if captureSession == nil {
             captureSession = AVCaptureSession()
-            
+
             if captureDevice == nil {
                 captureDevice = AVCaptureDevice.default(for: AVMediaType.video)
             }
-            
+
             do {
-                try captureDevice!.lockForConfiguration()
-                if captureDevice!.activeFormat.videoSupportedFrameRateRanges != nil {
-                    captureDevice!.activeVideoMinFrameDuration = CMTime(value: 1, timescale: 30)
-                    captureDevice!.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: 15)
+                var formatFound = false
+
+                findLoop: for format in captureDevice!.formats {
+                    for range in format.videoSupportedFrameRateRanges {
+                        if range.maxFrameRate > 30 && range.minFrameRate < 15 {
+                            print ("range.maxFrameRate:",  range.maxFrameRate ,  " minFrameRate:%d", range.minFrameRate)
+                            formatFound = true
+                            break findLoop
+                        }
+                    }
                 }
-                captureDevice!.unlockForConfiguration()
+
+                if formatFound {
+                    try captureDevice!.lockForConfiguration()
+                    captureDevice!.activeVideoMinFrameDuration = CMTime(value: 1, timescale: 15)
+                    captureDevice!.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: 30)
+                    captureDevice!.unlockForConfiguration()
+                }
             }
             catch {
-                print("set frame rate failed");
+                fatalError()
             }
 
             let videoInput = try! AVCaptureDeviceInput(device: captureDevice!)
+            guard captureSession!.canAddInput(videoInput) else {
+                fatalError()
+            }
             captureSession!.addInput(videoInput)
             
             let output = AVCaptureVideoDataOutput()
             let videoDataOutputQueue = DispatchQueue(label: "videoDataOutputQueue")
             output.setSampleBufferDelegate(self, queue: videoDataOutputQueue)
-            output.videoSettings = [kCVPixelBufferPixelFormatTypeKey as AnyHashable : kCVPixelFormatType_420YpCbCr8BiPlanarFullRange] as! [String : Any]
+
+            output.videoSettings = [kCVPixelBufferPixelFormatTypeKey as AnyHashable as! String: NSNumber(value: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)]
+            output.alwaysDiscardsLateVideoFrames = true
+
+            guard captureSession!.canAddOutput(output) else {
+                fatalError()
+            }
+
             captureSession!.addOutput(output)
             captureConnection = output.connection(with: AVMediaType.video)
         }
@@ -674,7 +696,7 @@ extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEnc
                 }
             }
 
-            let preset = AVCaptureSession.Preset.vga640x480
+            let preset = AVCaptureSession.Preset.high
             if captureSession!.canSetSessionPreset(preset) {
                 captureSession!.sessionPreset = preset
             }
@@ -682,7 +704,6 @@ extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEnc
                 captureSession!.sessionPreset = AVCaptureSession.Preset.medium
             }
             captureSession!.commitConfiguration()
-
             captureSession!.startRunning()
         }
     }
@@ -705,7 +726,7 @@ extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEnc
 
 // MARK: AVCaptureVideoDataOutputSampleBufferDelegate
     
-    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
+    func captureOutput(_ output: AVCaptureOutput,  didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         if let playLayer = videoPlayLayer {
             //if playLayer.isReadyForMoreMediaData {
                 DispatchQueue.main.sync {
@@ -719,7 +740,7 @@ extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEnc
                 }
             //}
         }
-        
+
         if self.remotePlayingDevices.count > 0 {
             if encoder == nil {
                 encoder = VideoEncoder()

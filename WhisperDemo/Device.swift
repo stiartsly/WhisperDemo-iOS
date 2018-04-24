@@ -99,6 +99,7 @@ extension Device : WhisperStreamDelegate
             if videoPlayLayer != nil {
                 let messageDic = ["type":"modify", "camera":true] as [String : Any]
                 try! DeviceManager.sharedInstance.sendMessage(messageDic, toDevice: self)
+                remotePlaying = true;
             }
         }
         else if newState == .Closed || newState == .Deactivated || newState == .Error {
@@ -213,7 +214,7 @@ extension Device : VideoDecoderDelegate
                 }
 
                 while !didReceiveSessionResponse {
-                    Thread.sleep(forTimeInterval: 1)
+                    Thread.sleep(forTimeInterval: 0.1)
                 }
 
                 try session!.start(remoteSdp: remoteSdp!)
