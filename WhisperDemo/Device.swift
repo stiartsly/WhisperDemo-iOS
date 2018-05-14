@@ -1,6 +1,8 @@
 import Foundation
 import AVFoundation
-import ManagedWhisper
+#if USE_VANILLA
+import WhisperVanilla
+#endif
 
 class Device {
     fileprivate static let stunServer = "ws.iwhisper.io"

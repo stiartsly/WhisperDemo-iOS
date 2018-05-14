@@ -1,7 +1,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "ScanViewController.h"
 #import "MBProgressHUD.h"
-#import "WhisperDemo-Swift.h"
+#import "VanillaDemo-Swift.h"
 
 @interface ScanViewController () <AVCaptureMetadataOutputObjectsDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 {

@@ -1,5 +1,10 @@
 import UIKit
-import ManagedWhisper
+#if USE_VANILLA
+import WhisperVanilla
+#elseif USE_ORCHID
+import WhisperOrcid
+#else
+#endif
 
 class DeviceListViewController: UITableViewController {
 

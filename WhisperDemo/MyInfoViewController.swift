@@ -1,6 +1,8 @@
 import Foundation
-import ManagedWhisper
 import QRCode
+#if USE_VANILLA
+import WhisperVanilla
+#endif
 
 class MyInfoController: UIViewController {
     

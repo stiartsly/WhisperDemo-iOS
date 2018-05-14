@@ -1,5 +1,7 @@
 import Foundation
-import ManagedWhisper
+#if USE_VANILLA
+import WhisperVanilla
+#endif
 
 class DeviceInfoViewController : UITableViewController {
     var device : Device?

@@ -1,7 +1,13 @@
 import Foundation
 import AVFoundation
 import MediaPlayer
-import ManagedWhisper
+#if USE_VANILLA
+import WhisperVanilla
+#elseif USE_ORCHID
+import WhisperOrchid
+#else
+//MARK: "Unknown Variant"
+#endif
 
 class DeviceManager : NSObject {
     fileprivate static let appId = "HMWL2aNJKnyjtL7K3e7fCHxFVQ9fCpSW8xvpJG3LtFWW"
@@ -614,7 +620,7 @@ extension DeviceManager : WhisperDelegate
 }
 
 // MARK: - Video methods
-extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEncoderDelegate
+extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate
 {
     func startVideoPlay(_ layer : AVSampleBufferDisplayLayer) {
         videoPlayLayer = layer
@@ -749,18 +755,18 @@ extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEnc
             encoder?.encode(sampleBuffer)
         }
     }
+}
 
-// MARK: VideoEncoderDelegate
-    
+extension DeviceManager : VideoEncoderDelegate
+{
     func videoEncoder(_ encoder: VideoEncoder!, appendBytes bytes: UnsafeRawPointer!, length: Int) {
-        //let data = Data(bytesNoCopy: UnsafeMutableRawPointer(mutating: bytes), count: length, deallocator: .none)
         let data = Data(bytes: bytes, count: length)
         for device in self.remotePlayingDevices {
             if device.state == .Connected {
                 do {
                     let result = try device.stream!.writeData(data)
                     if result.intValue != length {
-                        NSLog("writeData result: \(result), total length: \(length)")
+                        NSLog("Warning: writeData result: \(result), total length: \(length)")
                     }
                 }
                 catch {
@@ -771,6 +777,5 @@ extension DeviceManager : AVCaptureVideoDataOutputSampleBufferDelegate, VideoEnc
     }
     
     func videoEncoder(_ encoder: VideoEncoder!, error: String!) {
-        
     }
 }

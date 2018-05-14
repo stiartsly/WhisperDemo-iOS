@@ -32,11 +32,11 @@
 		17C508221E139F990068A76A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17C508211E139F990068A76A /* Assets.xcassets */; };
 		17C508251E139F990068A76A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17C508231E139F990068A76A /* LaunchScreen.storyboard */; };
 		17C5082F1E13C2AB0068A76A /* ScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 17C5082E1E13C2AB0068A76A /* ScanViewController.m */; };
-		17C508601E1B84BA0068A76A /* ManagedWhisper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17C5085F1E1B84BA0068A76A /* ManagedWhisper.framework */; };
-		17C508611E1B84C80068A76A /* ManagedWhisper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 17C5085F1E1B84BA0068A76A /* ManagedWhisper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		17C508631E1BAA7D0068A76A /* MyInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C508621E1BAA7D0068A76A /* MyInfoViewController.swift */; };
 		17C508671E1CDF140068A76A /* whisper.pem in Resources */ = {isa = PBXBuildFile; fileRef = 17C508661E1CDF140068A76A /* whisper.pem */; };
 		17FBAD981E543DD000289C1E /* DeviceInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FBAD971E543DD000289C1E /* DeviceInfoViewController.swift */; };
+		A373E3BE20A9388100471898 /* WhisperVanilla.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A373E3BC20A598DA00471898 /* WhisperVanilla.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A373E3BF20A938A100471898 /* WhisperVanilla.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A373E3BC20A598DA00471898 /* WhisperVanilla.framework */; };
 		BE24952B0AB103879E3028FC /* Pods_WhisperDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E62D6DD14EFA86FCA9C079D /* Pods_WhisperDemo.framework */; };
 /* End PBXBuildFile section */
 
@@ -47,7 +47,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				17C508611E1B84C80068A76A /* ManagedWhisper.framework in Embed Frameworks */,
+				A373E3BE20A9388100471898 /* WhisperVanilla.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -176,7 +176,7 @@
 		179FC9631E8360650049C16D /* VideoDecoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoDecoder.h; sourceTree = "<group>"; };
 		179FC9641E8360830049C16D /* VideoDecoder.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VideoDecoder.mm; sourceTree = "<group>"; };
 		17A004B51E4C0DFA0088E076 /* ScanViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScanViewController.xib; sourceTree = "<group>"; };
-		17C508171E139F990068A76A /* WhisperDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhisperDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		17C508171E139F990068A76A /* VanillaDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VanillaDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		17C5081A1E139F990068A76A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		17C5081C1E139F990068A76A /* DeviceListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceListViewController.swift; sourceTree = "<group>"; };
 		17C5081F1E139F990068A76A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -186,13 +186,13 @@
 		17C5082C1E13C2AB0068A76A /* WhisperDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WhisperDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		17C5082D1E13C2AB0068A76A /* ScanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanViewController.h; sourceTree = "<group>"; };
 		17C5082E1E13C2AB0068A76A /* ScanViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScanViewController.m; sourceTree = "<group>"; };
-		17C5085F1E1B84BA0068A76A /* ManagedWhisper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ManagedWhisper.framework; sourceTree = "<group>"; };
 		17C508621E1BAA7D0068A76A /* MyInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyInfoViewController.swift; sourceTree = "<group>"; };
 		17C508661E1CDF140068A76A /* whisper.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = whisper.pem; sourceTree = "<group>"; };
 		17FBAD971E543DD000289C1E /* DeviceInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceInfoViewController.swift; sourceTree = "<group>"; };
 		3E62D6DD14EFA86FCA9C079D /* Pods_WhisperDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WhisperDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		83BA379AEDC5DE0C0C5309AA /* Pods-WhisperDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhisperDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WhisperDemo/Pods-WhisperDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		8503E4E4167EFE9BAA2B542C /* Pods-WhisperDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhisperDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-WhisperDemo/Pods-WhisperDemo.release.xcconfig"; sourceTree = "<group>"; };
+		A373E3BC20A598DA00471898 /* WhisperVanilla.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WhisperVanilla.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,6 +200,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A373E3BF20A938A100471898 /* WhisperVanilla.framework in Frameworks */,
 				179C62ED1F160FEB00B1E271 /* libiconv.tbd in Frameworks */,
 				179C62EB1F160FDF00B1E271 /* libz.tbd in Frameworks */,
 				179C62E31F160ED500B1E271 /* libavcodec.a in Frameworks */,
@@ -209,7 +210,6 @@
 				179C62E71F160ED500B1E271 /* libavutil.a in Frameworks */,
 				179C62E81F160ED500B1E271 /* libswresample.a in Frameworks */,
 				179C62E91F160ED500B1E271 /* libswscale.a in Frameworks */,
-				17C508601E1B84BA0068A76A /* ManagedWhisper.framework in Frameworks */,
 				BE24952B0AB103879E3028FC /* Pods_WhisperDemo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -434,7 +434,7 @@
 		17C508181E139F990068A76A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				17C508171E139F990068A76A /* WhisperDemo.app */,
+				17C508171E139F990068A76A /* VanillaDemo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -480,9 +480,9 @@
 		31FE7E21A949003346032958 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A373E3BC20A598DA00471898 /* WhisperVanilla.framework */,
 				179C62EC1F160FEB00B1E271 /* libiconv.tbd */,
 				179C62EA1F160FDF00B1E271 /* libz.tbd */,
-				17C5085F1E1B84BA0068A76A /* ManagedWhisper.framework */,
 				3E62D6DD14EFA86FCA9C079D /* Pods_WhisperDemo.framework */,
 			);
 			name = Frameworks;
@@ -500,9 +500,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		17C508161E139F990068A76A /* WhisperDemo */ = {
+		17C508161E139F990068A76A /* VanillaDemo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 17C508291E139F990068A76A /* Build configuration list for PBXNativeTarget "WhisperDemo" */;
+			buildConfigurationList = 17C508291E139F990068A76A /* Build configuration list for PBXNativeTarget "VanillaDemo" */;
 			buildPhases = (
 				F7AD7CD045908BACE99BEA99 /* [CP] Check Pods Manifest.lock */,
 				17C508131E139F990068A76A /* Sources */,
@@ -518,9 +518,9 @@
 			);
 			dependencies = (
 			);
-			name = WhisperDemo;
+			name = VanillaDemo;
 			productName = WhisperDemo;
-			productReference = 17C508171E139F990068A76A /* WhisperDemo.app */;
+			productReference = 17C508171E139F990068A76A /* VanillaDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -530,7 +530,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0820;
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = Kortide;
 				TargetAttributes = {
 					17C508161E139F990068A76A = {
@@ -559,7 +559,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				17C508161E139F990068A76A /* WhisperDemo */,
+				17C508161E139F990068A76A /* VanillaDemo */,
 			);
 		};
 /* End PBXProject section */
@@ -607,7 +607,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/ManagedWhisper.framework/strip-frameworks.sh\"";
+			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/WhisperVanilla.framework/strip-frameworks.sh\"";
 		};
 		D84ACD7F31E3BE0CD19AF9D3 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -621,7 +621,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WhisperDemo/Pods-WhisperDemo-frameworks.sh\"";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WhisperDemo/Pods-WhisperDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		EA56DADC3FE2BAE0BAA9640B /* [CP] Copy Pods Resources */ = {
@@ -702,22 +702,30 @@
 		17C508271E139F990068A76A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -747,28 +755,37 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
 			};
 			name = Debug;
 		};
 		17C508281E139F990068A76A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -791,6 +808,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = arm64;
 			};
 			name = Release;
 		};
@@ -798,8 +816,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 83BA379AEDC5DE0C0C5309AA /* Pods-WhisperDemo.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUILD_VARIANTS = normal;
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = XGJ9J7DHP5;
@@ -809,17 +828,21 @@
 				);
 				GCC_GENERATE_TEST_COVERAGE_FILES = NO;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/FFmpeg/include";
-				INFOPLIST_FILE = WhisperDemo/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/WhisperDemo/Vanilla-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/FFmpeg/lib";
-				PRODUCT_BUNDLE_IDENTIFIER = io.whisper.app.demo;
+				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-D\" \"USE_VANILLA\"";
+				PRODUCT_BUNDLE_IDENTIFIER = io.whisper.vanilla.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG USE_VANILLA";
 				SWIFT_OBJC_BRIDGING_HEADER = "WhisperDemo/WhisperDemo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
+				VALID_ARCHS = arm64;
 			};
 			name = Debug;
 		};
@@ -827,8 +850,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8503E4E4167EFE9BAA2B542C /* Pods-WhisperDemo.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUILD_VARIANTS = normal;
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = XGJ9J7DHP5;
@@ -838,16 +862,20 @@
 				);
 				GCC_GENERATE_TEST_COVERAGE_FILES = NO;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/FFmpeg/include";
-				INFOPLIST_FILE = WhisperDemo/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/WhisperDemo/Vanilla-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/FFmpeg/lib";
-				PRODUCT_BUNDLE_IDENTIFIER = io.whisper.app.demo;
+				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-D\" \"USE_VANILLA\"";
+				PRODUCT_BUNDLE_IDENTIFIER = io.whisper.vanilla.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = USE_VANILLA;
 				SWIFT_OBJC_BRIDGING_HEADER = "WhisperDemo/WhisperDemo-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
+				VALID_ARCHS = arm64;
 			};
 			name = Release;
 		};
@@ -863,7 +891,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		17C508291E139F990068A76A /* Build configuration list for PBXNativeTarget "WhisperDemo" */ = {
+		17C508291E139F990068A76A /* Build configuration list for PBXNativeTarget "VanillaDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				17C5082A1E139F990068A76A /* Debug */,
