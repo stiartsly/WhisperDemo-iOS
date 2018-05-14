@@ -3,6 +3,9 @@ import QRCode
 #if USE_VANILLA
 import WhisperVanilla
 #endif
+#if USE_ORCHID
+import WhisperOrchid
+#endif
 
 class MyInfoController: UIViewController {
     

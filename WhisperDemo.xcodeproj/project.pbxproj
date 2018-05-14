@@ -35,8 +35,43 @@
 		17C508631E1BAA7D0068A76A /* MyInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C508621E1BAA7D0068A76A /* MyInfoViewController.swift */; };
 		17C508671E1CDF140068A76A /* whisper.pem in Resources */ = {isa = PBXBuildFile; fileRef = 17C508661E1CDF140068A76A /* whisper.pem */; };
 		17FBAD981E543DD000289C1E /* DeviceInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FBAD971E543DD000289C1E /* DeviceInfoViewController.swift */; };
+		2BB5F1EA00DCAB052A783F72 /* Pods_VanillaDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACF2352B57CCE3973ACEF8B0 /* Pods_VanillaDemo.framework */; };
+		51460F5BF103C9B42AF70282 /* Pods_OrchidDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA46D62420DA980F134EABA /* Pods_OrchidDemo.framework */; };
+		A326DDC720A9B79400603C9C /* Orchid-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = A326DDC520A9B79300603C9C /* Orchid-Config.plist */; };
+		A326DDC820A9B79400603C9C /* Orchid-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A326DDC620A9B79400603C9C /* Orchid-Info.plist */; };
+		A326DDCB20A9D2FB00603C9C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17C508211E139F990068A76A /* Assets.xcassets */; };
 		A373E3BE20A9388100471898 /* WhisperVanilla.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A373E3BC20A598DA00471898 /* WhisperVanilla.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A373E3BF20A938A100471898 /* WhisperVanilla.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A373E3BC20A598DA00471898 /* WhisperVanilla.framework */; };
+		A373E3C920A9730F00471898 /* Vanilla-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A373E3C820A9730F00471898 /* Vanilla-Info.plist */; };
+		A373E3CB20A973C400471898 /* Vanilla-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = A373E3CA20A973C400471898 /* Vanilla-Config.plist */; };
+		A373E3E320A9806D00471898 /* NetworkReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1720C43A1E9CB37B00F710F4 /* NetworkReachabilityManager.swift */; };
+		A373E3E420A9806D00471898 /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173AB0C31E275D4300542B1B /* DeviceManager.swift */; };
+		A373E3E520A9806D00471898 /* VideoEncoder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 170721071E8281CF0030AAED /* VideoEncoder.mm */; };
+		A373E3E620A9806D00471898 /* VideoDecoder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 179FC9641E8360830049C16D /* VideoDecoder.mm */; };
+		A373E3E720A9806D00471898 /* CRtpStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 179FC95F1E82849D0049C16D /* CRtpStream.cpp */; };
+		A373E3E820A9806D00471898 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C5081A1E139F990068A76A /* AppDelegate.swift */; };
+		A373E3E920A9806D00471898 /* DeviceListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C5081C1E139F990068A76A /* DeviceListViewController.swift */; };
+		A373E3EA20A9806D00471898 /* DeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170101BE1E236F3B001507AD /* DeviceViewController.swift */; };
+		A373E3EB20A9806D00471898 /* DeviceInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FBAD971E543DD000289C1E /* DeviceInfoViewController.swift */; };
+		A373E3EC20A9806D00471898 /* MyInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C508621E1BAA7D0068A76A /* MyInfoViewController.swift */; };
+		A373E3ED20A9806D00471898 /* ScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 17C5082E1E13C2AB0068A76A /* ScanViewController.m */; };
+		A373E3EE20A9809F00471898 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17383DF61E71305A00777AC6 /* Device.swift */; };
+		A373E3EF20A9815200471898 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 178C7F821F21C626008C911A /* MBProgressHUD.m */; };
+		A373E3F120A982C300471898 /* WhisperOrchid.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A373E3F020A982C300471898 /* WhisperOrchid.framework */; };
+		A373E3F320A9837C00471898 /* WhisperOrchid.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A373E3F020A982C300471898 /* WhisperOrchid.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A373E3F520A983F800471898 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 179C62EC1F160FEB00B1E271 /* libiconv.tbd */; };
+		A373E3F620A9840000471898 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 179C62EA1F160FDF00B1E271 /* libz.tbd */; };
+		A373E3F720A9841700471898 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 179C62DC1F160ED500B1E271 /* libavcodec.a */; };
+		A373E3F820A9841700471898 /* libavdevice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 179C62DD1F160ED500B1E271 /* libavdevice.a */; };
+		A373E3F920A9841700471898 /* libavfilter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 179C62DE1F160ED500B1E271 /* libavfilter.a */; };
+		A373E3FA20A9841700471898 /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 179C62DF1F160ED500B1E271 /* libavformat.a */; };
+		A373E3FB20A9841700471898 /* libavutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 179C62E01F160ED500B1E271 /* libavutil.a */; };
+		A373E3FC20A9841700471898 /* libswresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 179C62E11F160ED500B1E271 /* libswresample.a */; };
+		A373E3FD20A9841700471898 /* libswscale.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 179C62E21F160ED500B1E271 /* libswscale.a */; };
+		A373E40820A98E6000471898 /* ScanViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 17A004B51E4C0DFA0088E076 /* ScanViewController.xib */; };
+		A373E40920A98E6D00471898 /* audio.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 1797298C1E31AF62004F262D /* audio.m4a */; };
+		A373E40A20A98E8000471898 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17C5081E1E139F990068A76A /* Main.storyboard */; };
+		A373E40B20A98E9700471898 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17C508231E139F990068A76A /* LaunchScreen.storyboard */; };
 		BE24952B0AB103879E3028FC /* Pods_WhisperDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E62D6DD14EFA86FCA9C079D /* Pods_WhisperDemo.framework */; };
 /* End PBXBuildFile section */
 
@@ -48,6 +83,17 @@
 			dstSubfolderSpec = 10;
 			files = (
 				A373E3BE20A9388100471898 /* WhisperVanilla.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A373E3F420A9837C00471898 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A373E3F320A9837C00471898 /* WhisperOrchid.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -182,17 +228,29 @@
 		17C5081F1E139F990068A76A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		17C508211E139F990068A76A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		17C508241E139F990068A76A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		17C508261E139F990068A76A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		17C5082C1E13C2AB0068A76A /* WhisperDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WhisperDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		17C5082D1E13C2AB0068A76A /* ScanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanViewController.h; sourceTree = "<group>"; };
 		17C5082E1E13C2AB0068A76A /* ScanViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScanViewController.m; sourceTree = "<group>"; };
 		17C508621E1BAA7D0068A76A /* MyInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyInfoViewController.swift; sourceTree = "<group>"; };
 		17C508661E1CDF140068A76A /* whisper.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = whisper.pem; sourceTree = "<group>"; };
 		17FBAD971E543DD000289C1E /* DeviceInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceInfoViewController.swift; sourceTree = "<group>"; };
+		24EC57840493DE6271355E92 /* Pods-OrchidDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrchidDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-OrchidDemo/Pods-OrchidDemo.release.xcconfig"; sourceTree = "<group>"; };
+		2914AB88BAC3B93A147DAD69 /* Pods-OrchidDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrchidDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OrchidDemo/Pods-OrchidDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		3E62D6DD14EFA86FCA9C079D /* Pods_WhisperDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WhisperDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		47109EAD25F4E6FE7EB6DE20 /* Pods-VanillaDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VanillaDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-VanillaDemo/Pods-VanillaDemo.release.xcconfig"; sourceTree = "<group>"; };
 		83BA379AEDC5DE0C0C5309AA /* Pods-WhisperDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhisperDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WhisperDemo/Pods-WhisperDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		8503E4E4167EFE9BAA2B542C /* Pods-WhisperDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhisperDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-WhisperDemo/Pods-WhisperDemo.release.xcconfig"; sourceTree = "<group>"; };
+		8BA46D62420DA980F134EABA /* Pods_OrchidDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OrchidDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A326DDC520A9B79300603C9C /* Orchid-Config.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Orchid-Config.plist"; sourceTree = "<group>"; };
+		A326DDC620A9B79400603C9C /* Orchid-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Orchid-Info.plist"; sourceTree = "<group>"; };
 		A373E3BC20A598DA00471898 /* WhisperVanilla.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WhisperVanilla.framework; sourceTree = "<group>"; };
+		A373E3C820A9730F00471898 /* Vanilla-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Vanilla-Info.plist"; sourceTree = "<group>"; };
+		A373E3CA20A973C400471898 /* Vanilla-Config.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Vanilla-Config.plist"; sourceTree = "<group>"; };
+		A373E3D020A97F1000471898 /* OrchidDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OrchidDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A373E3D920A97F1200471898 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A373E3F020A982C300471898 /* WhisperOrchid.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WhisperOrchid.framework; sourceTree = "<group>"; };
+		ACF2352B57CCE3973ACEF8B0 /* Pods_VanillaDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VanillaDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3EAB82CA045C2BCF005BB87 /* Pods-VanillaDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VanillaDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VanillaDemo/Pods-VanillaDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -211,6 +269,25 @@
 				179C62E81F160ED500B1E271 /* libswresample.a in Frameworks */,
 				179C62E91F160ED500B1E271 /* libswscale.a in Frameworks */,
 				BE24952B0AB103879E3028FC /* Pods_WhisperDemo.framework in Frameworks */,
+				2BB5F1EA00DCAB052A783F72 /* Pods_VanillaDemo.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A373E3CD20A97F1000471898 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A373E3F120A982C300471898 /* WhisperOrchid.framework in Frameworks */,
+				A373E3F520A983F800471898 /* libiconv.tbd in Frameworks */,
+				A373E3F620A9840000471898 /* libz.tbd in Frameworks */,
+				A373E3F720A9841700471898 /* libavcodec.a in Frameworks */,
+				A373E3F820A9841700471898 /* libavdevice.a in Frameworks */,
+				A373E3F920A9841700471898 /* libavfilter.a in Frameworks */,
+				A373E3FA20A9841700471898 /* libavformat.a in Frameworks */,
+				A373E3FB20A9841700471898 /* libavutil.a in Frameworks */,
+				A373E3FC20A9841700471898 /* libswresample.a in Frameworks */,
+				A373E3FD20A9841700471898 /* libswscale.a in Frameworks */,
+				51460F5BF103C9B42AF70282 /* Pods_OrchidDemo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -435,6 +512,7 @@
 			isa = PBXGroup;
 			children = (
 				17C508171E139F990068A76A /* VanillaDemo.app */,
+				A373E3D020A97F1000471898 /* OrchidDemo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -442,7 +520,8 @@
 		17C508191E139F990068A76A /* WhisperDemo */ = {
 			isa = PBXGroup;
 			children = (
-				17C508651E1CDEFC0068A76A /* Support Files */,
+				A373E3E220A9801D00471898 /* Orchid Support Files */,
+				17C508651E1CDEFC0068A76A /* Vanilla Support Files */,
 				1720C43A1E9CB37B00F710F4 /* NetworkReachabilityManager.swift */,
 				173AB0C31E275D4300542B1B /* DeviceManager.swift */,
 				17383DF61E71305A00777AC6 /* Device.swift */,
@@ -466,24 +545,28 @@
 			path = WhisperDemo;
 			sourceTree = "<group>";
 		};
-		17C508651E1CDEFC0068A76A /* Support Files */ = {
+		17C508651E1CDEFC0068A76A /* Vanilla Support Files */ = {
 			isa = PBXGroup;
 			children = (
 				17C508211E139F990068A76A /* Assets.xcassets */,
+				A373E3C820A9730F00471898 /* Vanilla-Info.plist */,
+				A373E3CA20A973C400471898 /* Vanilla-Config.plist */,
 				1797298C1E31AF62004F262D /* audio.m4a */,
-				17C508261E139F990068A76A /* Info.plist */,
 				17C508661E1CDF140068A76A /* whisper.pem */,
 			);
-			name = "Support Files";
+			name = "Vanilla Support Files";
 			sourceTree = "<group>";
 		};
 		31FE7E21A949003346032958 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A373E3F020A982C300471898 /* WhisperOrchid.framework */,
 				A373E3BC20A598DA00471898 /* WhisperVanilla.framework */,
 				179C62EC1F160FEB00B1E271 /* libiconv.tbd */,
 				179C62EA1F160FDF00B1E271 /* libz.tbd */,
 				3E62D6DD14EFA86FCA9C079D /* Pods_WhisperDemo.framework */,
+				8BA46D62420DA980F134EABA /* Pods_OrchidDemo.framework */,
+				ACF2352B57CCE3973ACEF8B0 /* Pods_VanillaDemo.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -493,8 +576,22 @@
 			children = (
 				83BA379AEDC5DE0C0C5309AA /* Pods-WhisperDemo.debug.xcconfig */,
 				8503E4E4167EFE9BAA2B542C /* Pods-WhisperDemo.release.xcconfig */,
+				2914AB88BAC3B93A147DAD69 /* Pods-OrchidDemo.debug.xcconfig */,
+				24EC57840493DE6271355E92 /* Pods-OrchidDemo.release.xcconfig */,
+				C3EAB82CA045C2BCF005BB87 /* Pods-VanillaDemo.debug.xcconfig */,
+				47109EAD25F4E6FE7EB6DE20 /* Pods-VanillaDemo.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		A373E3E220A9801D00471898 /* Orchid Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				A326DDC520A9B79300603C9C /* Orchid-Config.plist */,
+				A326DDC620A9B79400603C9C /* Orchid-Info.plist */,
+				A373E3D920A97F1200471898 /* Assets.xcassets */,
+			);
+			path = "Orchid Support Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -523,13 +620,36 @@
 			productReference = 17C508171E139F990068A76A /* VanillaDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A373E3CF20A97F1000471898 /* OrchidDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A373E3DF20A97F1200471898 /* Build configuration list for PBXNativeTarget "OrchidDemo" */;
+			buildPhases = (
+				A373E40520A987CE00471898 /* [CP] Check Pods Manifest.lock */,
+				A373E3CC20A97F1000471898 /* Sources */,
+				A373E3CD20A97F1000471898 /* Frameworks */,
+				A373E3CE20A97F1000471898 /* Resources */,
+				A373E3F420A9837C00471898 /* Embed Frameworks */,
+				A373E40120A985AB00471898 /* [CP] Embed Pods Frameworks */,
+				A373E40220A985E900471898 /* [CP] Copy Pods Resources */,
+				A373E40320A9864C00471898 /* Strip Frameworks */,
+				A373E40420A9868700471898 /* Report warning for TODO & FIXME comments */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OrchidDemo;
+			productName = OrchidDemo;
+			productReference = A373E3D020A97F1000471898 /* OrchidDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		17C5080F1E139F990068A76A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0820;
+				LastSwiftUpdateCheck = 0930;
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = Kortide;
 				TargetAttributes = {
@@ -543,6 +663,11 @@
 								enabled = 1;
 							};
 						};
+					};
+					A373E3CF20A97F1000471898 = {
+						CreatedOnToolsVersion = 9.3.1;
+						DevelopmentTeam = XGJ9J7DHP5;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -560,6 +685,7 @@
 			projectRoot = "";
 			targets = (
 				17C508161E139F990068A76A /* VanillaDemo */,
+				A373E3CF20A97F1000471898 /* OrchidDemo */,
 			);
 		};
 /* End PBXProject section */
@@ -569,12 +695,28 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A373E3CB20A973C400471898 /* Vanilla-Config.plist in Resources */,
+				A373E3C920A9730F00471898 /* Vanilla-Info.plist in Resources */,
 				17C508251E139F990068A76A /* LaunchScreen.storyboard in Resources */,
 				17C508671E1CDF140068A76A /* whisper.pem in Resources */,
 				1797298D1E31AF62004F262D /* audio.m4a in Resources */,
 				17A004B61E4C0DFA0088E076 /* ScanViewController.xib in Resources */,
 				17C508221E139F990068A76A /* Assets.xcassets in Resources */,
 				17C508201E139F990068A76A /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A373E3CE20A97F1000471898 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A326DDC720A9B79400603C9C /* Orchid-Config.plist in Resources */,
+				A326DDC820A9B79400603C9C /* Orchid-Info.plist in Resources */,
+				A373E40B20A98E9700471898 /* LaunchScreen.storyboard in Resources */,
+				A373E40A20A98E8000471898 /* Main.storyboard in Resources */,
+				A373E40920A98E6D00471898 /* audio.m4a in Resources */,
+				A373E40820A98E6000471898 /* ScanViewController.xib in Resources */,
+				A326DDCB20A9D2FB00603C9C /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -594,6 +736,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "TAGS=\"TODO:|FIXME:\"\necho \"searching ${SRCROOT} for ${TAGS}\"\nfind \"${SRCROOT}\" \\( -name \"*.cpp\" \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$\" | perl -p -e \"s/($TAGS)/ warning: \\$1/\"";
+			showEnvVarsInLog = 0;
 		};
 		170E4F061E964CE300CDB706 /* Strip Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -608,6 +751,79 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/WhisperVanilla.framework/strip-frameworks.sh\"";
+			showEnvVarsInLog = 0;
+		};
+		A373E40120A985AB00471898 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OrchidDemo/Pods-OrchidDemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A373E40220A985E900471898 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OrchidDemo/Pods-OrchidDemo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A373E40320A9864C00471898 /* Strip Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Strip Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/WhisperOrchid.framework/strip-frameworks.sh\"";
+		};
+		A373E40420A9868700471898 /* Report warning for TODO & FIXME comments */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Report warning for TODO & FIXME comments";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "TAGS=\"TODO:|FIXME:\"\necho \"searching ${SRCROOT} for ${TAGS}\"\nfind \"${SRCROOT}\" \\( -name \"*.cpp\" \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$\" | perl -p -e \"s/($TAGS)/ warning: \\$1/\"";
+		};
+		A373E40520A987CE00471898 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 		};
 		D84ACD7F31E3BE0CD19AF9D3 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -621,7 +837,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WhisperDemo/Pods-WhisperDemo-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-VanillaDemo/Pods-VanillaDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		EA56DADC3FE2BAE0BAA9640B /* [CP] Copy Pods Resources */ = {
@@ -636,7 +852,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WhisperDemo/Pods-WhisperDemo-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-VanillaDemo/Pods-VanillaDemo-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F7AD7CD045908BACE99BEA99 /* [CP] Check Pods Manifest.lock */ = {
@@ -665,6 +881,7 @@
 				173AB0C41E275D4300542B1B /* DeviceManager.swift in Sources */,
 				179FC9621E82849D0049C16D /* CRtpStream.cpp in Sources */,
 				17C5082F1E13C2AB0068A76A /* ScanViewController.m in Sources */,
+				170721081E8281CF0030AAED /* VideoEncoder.mm in Sources */,
 				179FC9651E8360830049C16D /* VideoDecoder.mm in Sources */,
 				1720C43B1E9CB37B00F710F4 /* NetworkReachabilityManager.swift in Sources */,
 				17383DF71E71305A00777AC6 /* Device.swift in Sources */,
@@ -673,7 +890,26 @@
 				178C7F851F21C626008C911A /* MBProgressHUD.m in Sources */,
 				17C508631E1BAA7D0068A76A /* MyInfoViewController.swift in Sources */,
 				17C5081B1E139F990068A76A /* AppDelegate.swift in Sources */,
-				170721081E8281CF0030AAED /* VideoEncoder.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A373E3CC20A97F1000471898 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A373E3E920A9806D00471898 /* DeviceListViewController.swift in Sources */,
+				A373E3E420A9806D00471898 /* DeviceManager.swift in Sources */,
+				A373E3E720A9806D00471898 /* CRtpStream.cpp in Sources */,
+				A373E3ED20A9806D00471898 /* ScanViewController.m in Sources */,
+				A373E3E320A9806D00471898 /* NetworkReachabilityManager.swift in Sources */,
+				A373E3EE20A9809F00471898 /* Device.swift in Sources */,
+				A373E3E520A9806D00471898 /* VideoEncoder.mm in Sources */,
+				A373E3E620A9806D00471898 /* VideoDecoder.mm in Sources */,
+				A373E3E820A9806D00471898 /* AppDelegate.swift in Sources */,
+				A373E3EF20A9815200471898 /* MBProgressHUD.m in Sources */,
+				A373E3EA20A9806D00471898 /* DeviceViewController.swift in Sources */,
+				A373E3EB20A9806D00471898 /* DeviceInfoViewController.swift in Sources */,
+				A373E3EC20A9806D00471898 /* MyInfoViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -752,6 +988,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -805,6 +1042,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -814,7 +1052,7 @@
 		};
 		17C5082A1E139F990068A76A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 83BA379AEDC5DE0C0C5309AA /* Pods-WhisperDemo.debug.xcconfig */;
+			baseConfigurationReference = C3EAB82CA045C2BCF005BB87 /* Pods-VanillaDemo.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -832,7 +1070,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/FFmpeg/lib";
-				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-D\" \"USE_VANILLA\"";
+				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\"";
 				PRODUCT_BUNDLE_IDENTIFIER = io.whisper.vanilla.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -848,7 +1086,7 @@
 		};
 		17C5082B1E139F990068A76A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8503E4E4167EFE9BAA2B542C /* Pods-WhisperDemo.release.xcconfig */;
+			baseConfigurationReference = 47109EAD25F4E6FE7EB6DE20 /* Pods-VanillaDemo.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -866,7 +1104,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/FFmpeg/lib";
-				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-D\" \"USE_VANILLA\"";
+				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\"";
 				PRODUCT_BUNDLE_IDENTIFIER = io.whisper.vanilla.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -876,6 +1114,76 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "WhisperDemo/WhisperDemo-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				VALID_ARCHS = arm64;
+			};
+			name = Release;
+		};
+		A373E3E020A97F1200471898 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2914AB88BAC3B93A147DAD69 /* Pods-OrchidDemo.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XGJ9J7DHP5;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "$(SRCROOT)/WhisperDemo/Orchid Support Files/Orchid-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FFmpeg/lib",
+				);
+				PODS_ROOT = "${SRCROOT}/Pods";
+				PRODUCT_BUNDLE_IDENTIFIER = io.whisper.orchid.demo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG USE_ORCHID";
+				SWIFT_OBJC_BRIDGING_HEADER = "WhisperDemo/WhisperDemo-Bridging-Header.h";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A373E3E120A97F1200471898 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 24EC57840493DE6271355E92 /* Pods-OrchidDemo.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XGJ9J7DHP5;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "$(SRCROOT)/WhisperDemo/Orchid Support Files/Orchid-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FFmpeg/lib",
+				);
+				PODS_ROOT = "${SRCROOT}/Pods";
+				PRODUCT_BUNDLE_IDENTIFIER = io.whisper.orchid.demo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = USE_ORCHID;
+				SWIFT_OBJC_BRIDGING_HEADER = "WhisperDemo/WhisperDemo-Bridging-Header.h";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -896,6 +1204,15 @@
 			buildConfigurations = (
 				17C5082A1E139F990068A76A /* Debug */,
 				17C5082B1E139F990068A76A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A373E3DF20A97F1200471898 /* Build configuration list for PBXNativeTarget "OrchidDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A373E3E020A97F1200471898 /* Debug */,
+				A373E3E120A97F1200471898 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

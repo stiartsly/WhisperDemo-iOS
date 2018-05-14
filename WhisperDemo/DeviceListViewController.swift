@@ -2,7 +2,7 @@ import UIKit
 #if USE_VANILLA
 import WhisperVanilla
 #elseif USE_ORCHID
-import WhisperOrcid
+import WhisperOrchid
 #else
 #endif
 

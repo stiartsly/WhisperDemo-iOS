@@ -3,13 +3,11 @@ import AVFoundation
 #if USE_VANILLA
 import WhisperVanilla
 #endif
+#if USE_ORCHID
+import WhisperOrchid
+#endif
 
 class Device {
-    fileprivate static let stunServer = "ws.iwhisper.io"
-    fileprivate static let turnServer = "ws.iwhisper.io"
-    fileprivate static let turnUsername = "whisper"
-    fileprivate static let turnPassword = "io2016whisper"
-
     var deviceInfo : WhisperFriendInfo
     fileprivate var semaphore : DispatchSemaphore?
 
@@ -56,7 +54,7 @@ class Device {
     /// local play remove video
     var videoPlayView : UIImageView?
     var videoPlayLayer : AVSampleBufferDisplayLayer?
-    fileprivate var decoder : VideoDecoder?
+    fileprivate var decoder: VideoDecoder?
     
 // MARK: - Methods
     
@@ -127,16 +125,28 @@ extension Device : WhisperStreamDelegate
         
         do {
             if stream == nil {
+
+#if USE_VANILLA
+                let plistPath = Bundle.main.path(forResource: "Vanilla-Config", ofType: "plist")
+                let info = NSDictionary(contentsOfFile: plistPath!) as! [String: String]
+
                 let options = IceTransportOptions()
                 options.threadModel = TransportOptions.SharedThreadModel
-                options.stunHost = Device.stunServer
-                options.turnHost = Device.turnServer
-                options.turnUsername = Device.turnUsername
-                options.turnPassword = Device.turnPassword
+                options.stunHost = info["StunServer"]!
+                options.turnHost = info["TurnServer"]!
+                options.turnUsername = info["TurnUserName"]!
+                options.turnPassword = info["TurnPassword"]!
 
                 if session == nil {
                     session = try WhisperSessionManager.getInstance()!.newSession(to: self.deviceId+"@"+self.deviceId, options);
                 }
+#elseif USE_ORCHID
+                if session == nil {
+                    session = try WhisperSessionManager.getInstance()!.newSession(to: self.deviceId);
+                }
+#else
+//MARK: unknown variant.
+#endif
                 
                 semaphore = DispatchSemaphore(value: 0)
                 defer {
@@ -188,14 +198,23 @@ extension Device : VideoDecoderDelegate
         do {
             if stream == nil {
                 if session == nil {
+#if USE_VANILLA
+                    let plistPath = Bundle.main.path(forResource: "Vanilla-Config", ofType: "plist")
+                    let info = NSDictionary(contentsOfFile: plistPath!) as! [String: String]
+
                     let options = IceTransportOptions()
                     options.threadModel = TransportOptions.SharedThreadModel
-                    options.stunHost = Device.stunServer
-                    options.turnHost = Device.turnServer
-                    options.turnUsername = Device.turnUsername
-                    options.turnPassword = Device.turnPassword
+                    options.stunHost = info["StunServer"]!
+                    options.turnHost = info["TurnServer"]!
+                    options.turnUsername = info["TurnUserName"]!
+                    options.turnPassword = info["TurnPassword"]!
 
                     session = try WhisperSessionManager.getInstance()!.newSession(to: self.deviceId+"@"+self.deviceId, options)
+#elseif USE_ORCHID
+                    session = try WhisperSessionManager.getInstance()!.newSession(to: self.deviceId)
+#else
+//MARK: unknown variant.
+#endif
                 }
                 
                 semaphore = DispatchSemaphore(value: 0)

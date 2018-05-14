@@ -1,7 +1,13 @@
 #import <AVFoundation/AVFoundation.h>
 #import "ScanViewController.h"
 #import "MBProgressHUD.h"
+#ifdef USE_VANILLA
 #import "VanillaDemo-Swift.h"
+#endif
+#ifdef USE_ORCHID
+#import "OrchidDemo-Swift.h"
+#endif
+#import "OrchidDemo-Swift.h"
 
 @interface ScanViewController () <AVCaptureMetadataOutputObjectsDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 {
@@ -271,7 +277,7 @@
                                             repeats:YES];
 }
 
--(void)scanComplete:(NSString*)deviceID
+-(void)scanComplete:(NSString*)deviceAddress
 {
     MBProgressHUD *hud = [MBProgressHUD HUDForView:self.view];
     if (hud) {
@@ -290,7 +296,7 @@
     __weak __typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0), ^{
         NSError *error = nil;
-        BOOL result = [[[DeviceManager sharedInstance] whisperInst] addFriendWith:deviceID withGreeting:@"password" error:&error];
+        BOOL result = [[[DeviceManager sharedInstance] whisperInst] addFriendWith:deviceAddress withGreeting:@"password" error:&error];
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong __typeof(weakSelf) strongSelf = weakSelf;
             if (strongSelf == nil) {

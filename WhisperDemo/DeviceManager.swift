@@ -3,23 +3,12 @@ import AVFoundation
 import MediaPlayer
 #if USE_VANILLA
 import WhisperVanilla
-#elseif USE_ORCHID
+#endif
+#if USE_ORCHID
 import WhisperOrchid
-#else
-//MARK: "Unknown Variant"
 #endif
 
 class DeviceManager : NSObject {
-    fileprivate static let appId = "HMWL2aNJKnyjtL7K3e7fCHxFVQ9fCpSW8xvpJG3LtFWW"
-    fileprivate static let appKey = "8e9VnqPJw5NbK2QztwpyzwysT5yQ84i3vWB43wxy2BJz"
-
-    fileprivate static let apiServer = "https://ws.iwhisper.io/api"
-    fileprivate static let mqttServer = "ssl://mqtt.iwhisper.io:8883"
-    fileprivate static let stunServer = "ws.iwhisper.io"
-    fileprivate static let turnServer = "ws.iwhisper.io"
-    fileprivate static let turnUsername = "whisper"
-    fileprivate static let turnPassword = "io2016whisper"
-
     static let SelfInfoChanged = NSNotification.Name("kNotificationSelfInfoChanged")
     static let DeviceListChanged = NSNotification.Name("kNotificationDeviceListChanged")
     static let DeviceStatusChanged = NSNotification.Name("kNotificationDeviceStatusChanged")
@@ -29,14 +18,12 @@ class DeviceManager : NSObject {
     static let sharedInstance = DeviceManager()
     
 // MARK: - Variables
-    
     var status = WhisperConnectionStatus.Disconnected;
     @objc(whisperInst)
     var whisperInst: Whisper!
     var devices = [Device]()
     
 // MARK: - Private variables
-    
     fileprivate var networkManager : NetworkReachabilityManager?
 
     fileprivate var bulbStatus = false
@@ -49,7 +36,7 @@ class DeviceManager : NSObject {
     fileprivate var captureConnection : AVCaptureConnection?
     fileprivate var videoPlayLayer : AVSampleBufferDisplayLayer?
     fileprivate var remotePlayingDevices = Set<Device>()
-    fileprivate var encoder : VideoEncoder?
+    fileprivate var encoder: VideoEncoder?
 
     public typealias MessageCompletionHandler = (_ result : [String: Any]?) -> Void
     fileprivate var currentMessage : (device: Device, handler: MessageCompletionHandler, timer: Timer)?
@@ -59,12 +46,16 @@ class DeviceManager : NSObject {
     override init() {
         Whisper.setLogLevel(.Debug)
     }
-    
+
+#if USE_VANILLA
     func start() {
         if whisperInst == nil {
             do {
+                let plistPath = Bundle.main.path(forResource: "Vanilla-Config", ofType: "plist")
+                let info = NSDictionary(contentsOfFile: plistPath!) as! [String: String]
+
                 if networkManager == nil {
-                    let url = URL(string: DeviceManager.apiServer)
+                    let url = URL(string: info["ApiServer"]!)
                     networkManager = NetworkReachabilityManager(host: url!.host!)
                 }
 
@@ -103,15 +94,14 @@ class DeviceManager : NSObject {
                 }
 
                 let options = WhisperOptions()
-                options.setAppId(DeviceManager.appId, andKey: DeviceManager.appKey)
-                options.apiServerUrl = DeviceManager.apiServer
-                options.mqttServerUri = DeviceManager.mqttServer
+                options.setAppId(info["AppId"]!, andKey: info["AppKey"]!)
+                options.apiServerUrl = info["ApiServer"]!
+                options.mqttServerUri = info["MqttServer"]!
                 options.trustStore = Bundle.main.path(forResource: "whisper", ofType: "pem")
                 options.persistentLocation = whisperDirectory
                 options.deviceId = deviceId
                 options.connectTimeout = 5
                 
-//                try? FileManager.default.removeItem(atPath: whisperDirectory + "/.whisper")
                 try whisperInst = Whisper.getInstance(options: options, delegate: self)
                 print("Whisper instance created")
                 
@@ -128,6 +118,75 @@ class DeviceManager : NSObject {
             }
         }
     }
+#endif
+
+#if USE_ORCHID
+    func start() {
+        if whisperInst == nil {
+            do {
+                if networkManager == nil {
+                    let url = URL(string: "https://apache.org")
+                    networkManager = NetworkReachabilityManager(host: url!.host!)
+                }
+
+                guard networkManager!.isReachable else {
+                    print("network is not reachable")
+                    networkManager?.listener = { [weak self] newStatus in
+                        if newStatus == .reachable(.ethernetOrWiFi) || newStatus == .reachable(.wwan) {
+                            self?.start()
+                        }
+                    }
+                    networkManager?.startListening()
+                    return
+                }
+
+                let whisperDirectory: String = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0] + "/whisper"
+                if !FileManager.default.fileExists(atPath: whisperDirectory) {
+                    var url = URL(fileURLWithPath: whisperDirectory)
+                    try! FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+
+                    var resourceValues = URLResourceValues()
+                    resourceValues.isExcludedFromBackup = true
+                    try! url.setResourceValues(resourceValues)
+                }
+
+                let plistPath = Bundle.main.path(forResource: "Orchid-Config", ofType: "plist")
+                let info = NSDictionary(contentsOfFile: plistPath!) as! [String:Any]
+                //let bootstraps = NSArray(object: info["bootstraps"]!)
+                let bootstraps = NSMutableArray(array: info["bootstraps"]! as! [Any])
+
+                let options = WhisperOptions()
+                options.bootstrapNodes = [BootstrapNode]()
+
+                for bootstrap in bootstraps {
+                    let bootstrapNode = BootstrapNode()
+                    bootstrapNode.ipv4 = (bootstrap as! [String:String])["ipv4"]
+                    bootstrapNode.port = (bootstrap as! [String:String])["port"]
+                    bootstrapNode.publicKey = (bootstrap as! [String:String])["public_key"]
+                    options.bootstrapNodes?.append(bootstrapNode)
+                }
+
+                options.udpEnabled = info["udp_enabled"] as! Bool
+                options.persistentLocation = whisperDirectory
+
+                try whisperInst = Whisper.getInstance(options: options, delegate: self)
+                print("whisper instance created")
+
+                networkManager = nil
+
+                try! whisperInst.start(iterateInterval: 1000)
+                print("Whisper started, waiting for ready")
+
+                NotificationCenter.default.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: OperationQueue.main, using: didEnterBackground)
+                NotificationCenter.default.addObserver(forName: .UIScreenBrightnessDidChange, object: nil, queue: OperationQueue.main, using: brightnessDidChanged)
+            }
+            catch {
+                NSLog("Start whisper instance error : \(error.localizedDescription)")
+            }
+        }
+    }
+#endif
+
 
     @objc(messageResponseTimeout:)
     func messageResponseTimeout(_ timer: Timer) {
@@ -324,7 +383,6 @@ class DeviceManager : NSObject {
     
     @objc private func audioSessionInterrupted(_ notification:Notification)
     {
-        print("audioSessionInterrupted: \(notification)")
         NotificationCenter.default.removeObserver(self, name: .AVAudioSessionInterruption, object: AVAudioSession.sharedInstance())
         
         let messageDic = ["type":"sync", "ring":false] as [String : Any]
@@ -375,13 +433,8 @@ class DeviceManager : NSObject {
 // MARK: - WhisperDelegate
 extension DeviceManager : WhisperDelegate
 {
-//    func willBecomeIdle(_ whisper: Whisper) {
-//        print("onIdle")
-//    }
-
     func connectionStatusDidChange(_ whisper: Whisper,
                                    _ newStatus: WhisperConnectionStatus) {
-        print("onConnection status : \(newStatus)")
         self.status = newStatus
         if status == .Disconnected {
             self.devices.removeAll()
@@ -392,40 +445,36 @@ extension DeviceManager : WhisperDelegate
     }
     
     public func didBecomeReady(_ whisper: Whisper) {
-        print("didBecomeReady")
         let myInfo = try! whisper.getSelfUserInfo()
         if myInfo.name?.isEmpty ?? true {
             myInfo.name = UIDevice.current.name
             try? whisper.setSelfUserInfo(myInfo)
         }
-        
-//        let friends = try! whisper.getFriends()
-//        for friend in friends {
-//            self.devices.append(Device(friend))
-//        }
-//        NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
+
+        try! _ = WhisperSessionManager.getInstance(whisper: whisper, handler: didReceiveSessionRequest)
+
+#if USE_VANILLA
+        let plistPath = Bundle.main.path(forResource: "Vanilla-Config", ofType: "plist")
+        let info = NSDictionary(contentsOfFile: plistPath!) as! [String: String]
 
         let options = IceTransportOptions()
         options.threadModel = TransportOptions.SharedThreadModel
-        options.stunHost = DeviceManager.stunServer
-        options.turnHost = DeviceManager.turnServer
-        options.turnUsername = DeviceManager.turnUsername
-        options.turnPassword = DeviceManager.turnPassword
+        options.stunHost = info["StunServer"]!
+        options.turnHost = info["TurnServer"]!
+        options.turnUsername = info["TurnUserName"]!
+        options.turnPassword = info["TurnPassword"]!
 
-        try! _ = WhisperSessionManager.getInstance(whisper: whisper, handler: didReceiveSessionRequest)
         try! WhisperSessionManager.getInstance()!.addTransport(options)
-
+#endif
     }
     
     public func selfUserInfoDidChange(_ whisper: Whisper,
                                       _ newInfo: WhisperUserInfo) {
-        print("selfUserInfoDidChange : \(newInfo)")
         NotificationCenter.default.post(name: DeviceManager.SelfInfoChanged, object: nil)
     }
     
     public func didReceiveFriendsList(_ whisper: Whisper,
                                       _ friends: [WhisperFriendInfo]) {
-        print("didReceiveFriendsList : \(friends)")
         for friend in friends {
             self.devices.append(Device(friend))
 
@@ -439,7 +488,6 @@ extension DeviceManager : WhisperDelegate
     public func friendInfoDidChange(_ whisper: Whisper,
                                     _ friendId: String,
                                     _ newInfo: WhisperFriendInfo) {
-        print("friendInfoDidChange : \(newInfo)")
         for device in self.devices {
             if device.deviceId == friendId {
                 device.deviceInfo = newInfo
@@ -453,8 +501,6 @@ extension DeviceManager : WhisperDelegate
     public func friendConnectionDidChange(_ whisper: Whisper,
                                           _ friendId: String,
                                           _ newStatus: WhisperConnectionStatus) {
-
-        print("friendConnectionDidChange: \(newStatus)")
         for device in self.devices {
             if device.deviceId == friendId {
                 device.deviceInfo.status = newStatus
@@ -482,31 +528,26 @@ extension DeviceManager : WhisperDelegate
                                         _ hello: String) {
         print("didReceiveFriendRequest, userId : \(userId), name : \(String(describing: userInfo.name)), hello : \(hello)")
         do {
+#if USE_VANILLA
             try whisper.acceptFriend(with: userId, entrusted: true, withExpire: nil)
+#elseif USE_ORCHID
+            try whisper.acceptFriend(with: userId)
+#else
+//MARK: unknown variant.
+#endif
         } catch {
             NSLog("Accept friend \(userId) error : \(error.localizedDescription)")
         }
     }
     
-    public func didReceiveFriendResponse(_ whisper: Whisper,
-                                         _ userId: String,
-                                         _ status: Int,
-                                         _ reason: String?,
-                                         _ entrusted: Bool,
-                                         _ expire: String?) {
-        print("didReceiveFriendResponse, userId : \(userId)")
-    }
-    
     public func newFriendAdded(_ whisper: Whisper,
                                _ newFriend: WhisperFriendInfo) {
-        print("newFriendAdded : \(newFriend)")
         self.devices.append(Device(newFriend))
         NotificationCenter.default.post(name: DeviceManager.DeviceListChanged, object: nil)
     }
     
     public func friendRemoved(_ whisper: Whisper,
                               _ friendId: String) {
-        print("friendRemoved, userId : \(friendId)")
         for index in 0..<self.devices.count {
             let device = self.devices[index]
             if device.deviceId == friendId {
@@ -524,7 +565,6 @@ extension DeviceManager : WhisperDelegate
     public func didReceiveFriendMessage(_ whisper: Whisper,
                                         _ from: String,
                                         _ message: String) {
-        print("didReceiveFriendMessage : \(message)")
         do {
             let data = message.data(using: .utf8)
             let decoded = try JSONSerialization.jsonObject(with: data!, options: [])
@@ -604,12 +644,6 @@ extension DeviceManager : WhisperDelegate
         } catch {
             print(error.localizedDescription)
         }
-    }
-    
-    public func didReceiveFriendInviteRequest(_ whisper: Whisper,
-                                              _ from: String,
-                                              _ data: String) {
-        print("didReceiveFriendInviteRequest")
     }
     
     public func didReceiveSessionRequest(whisper: Whisper, from: String, sdp: String) {
