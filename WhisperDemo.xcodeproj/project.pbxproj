@@ -33,17 +33,17 @@
 		17C508251E139F990068A76A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17C508231E139F990068A76A /* LaunchScreen.storyboard */; };
 		17C5082F1E13C2AB0068A76A /* ScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 17C5082E1E13C2AB0068A76A /* ScanViewController.m */; };
 		17C508631E1BAA7D0068A76A /* MyInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C508621E1BAA7D0068A76A /* MyInfoViewController.swift */; };
-		17C508671E1CDF140068A76A /* whisper.pem in Resources */ = {isa = PBXBuildFile; fileRef = 17C508661E1CDF140068A76A /* whisper.pem */; };
 		17FBAD981E543DD000289C1E /* DeviceInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FBAD971E543DD000289C1E /* DeviceInfoViewController.swift */; };
 		2BB5F1EA00DCAB052A783F72 /* Pods_VanillaDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACF2352B57CCE3973ACEF8B0 /* Pods_VanillaDemo.framework */; };
 		51460F5BF103C9B42AF70282 /* Pods_OrchidDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA46D62420DA980F134EABA /* Pods_OrchidDemo.framework */; };
-		A326DDC720A9B79400603C9C /* Orchid-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = A326DDC520A9B79300603C9C /* Orchid-Config.plist */; };
-		A326DDC820A9B79400603C9C /* Orchid-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A326DDC620A9B79400603C9C /* Orchid-Info.plist */; };
 		A326DDCB20A9D2FB00603C9C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17C508211E139F990068A76A /* Assets.xcassets */; };
+		A326DDD720AA61B800603C9C /* whisper.pem in Resources */ = {isa = PBXBuildFile; fileRef = A326DDD420AA61B800603C9C /* whisper.pem */; };
+		A326DDDA20AA622700603C9C /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A326DDD820AA622700603C9C /* Info.plist */; };
+		A326DDDB20AA622700603C9C /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = A326DDD920AA622700603C9C /* Config.plist */; };
+		A326DDE020AA62BA00603C9C /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = A326DDDD20AA623400603C9C /* Config.plist */; };
+		A326DDE120AA62BA00603C9C /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A326DDDC20AA623400603C9C /* Info.plist */; };
 		A373E3BE20A9388100471898 /* WhisperVanilla.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A373E3BC20A598DA00471898 /* WhisperVanilla.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A373E3BF20A938A100471898 /* WhisperVanilla.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A373E3BC20A598DA00471898 /* WhisperVanilla.framework */; };
-		A373E3C920A9730F00471898 /* Vanilla-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A373E3C820A9730F00471898 /* Vanilla-Info.plist */; };
-		A373E3CB20A973C400471898 /* Vanilla-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = A373E3CA20A973C400471898 /* Vanilla-Config.plist */; };
 		A373E3E320A9806D00471898 /* NetworkReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1720C43A1E9CB37B00F710F4 /* NetworkReachabilityManager.swift */; };
 		A373E3E420A9806D00471898 /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173AB0C31E275D4300542B1B /* DeviceManager.swift */; };
 		A373E3E520A9806D00471898 /* VideoEncoder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 170721071E8281CF0030AAED /* VideoEncoder.mm */; };
@@ -232,7 +232,6 @@
 		17C5082D1E13C2AB0068A76A /* ScanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanViewController.h; sourceTree = "<group>"; };
 		17C5082E1E13C2AB0068A76A /* ScanViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScanViewController.m; sourceTree = "<group>"; };
 		17C508621E1BAA7D0068A76A /* MyInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyInfoViewController.swift; sourceTree = "<group>"; };
-		17C508661E1CDF140068A76A /* whisper.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = whisper.pem; sourceTree = "<group>"; };
 		17FBAD971E543DD000289C1E /* DeviceInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceInfoViewController.swift; sourceTree = "<group>"; };
 		24EC57840493DE6271355E92 /* Pods-OrchidDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrchidDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-OrchidDemo/Pods-OrchidDemo.release.xcconfig"; sourceTree = "<group>"; };
 		2914AB88BAC3B93A147DAD69 /* Pods-OrchidDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrchidDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OrchidDemo/Pods-OrchidDemo.debug.xcconfig"; sourceTree = "<group>"; };
@@ -241,13 +240,13 @@
 		83BA379AEDC5DE0C0C5309AA /* Pods-WhisperDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhisperDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WhisperDemo/Pods-WhisperDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		8503E4E4167EFE9BAA2B542C /* Pods-WhisperDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhisperDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-WhisperDemo/Pods-WhisperDemo.release.xcconfig"; sourceTree = "<group>"; };
 		8BA46D62420DA980F134EABA /* Pods_OrchidDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OrchidDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A326DDC520A9B79300603C9C /* Orchid-Config.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Orchid-Config.plist"; sourceTree = "<group>"; };
-		A326DDC620A9B79400603C9C /* Orchid-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Orchid-Info.plist"; sourceTree = "<group>"; };
+		A326DDD420AA61B800603C9C /* whisper.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = whisper.pem; path = VanillaResources/whisper.pem; sourceTree = "<group>"; };
+		A326DDD820AA622700603C9C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = VanillaResources/Info.plist; sourceTree = "<group>"; };
+		A326DDD920AA622700603C9C /* Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Config.plist; path = VanillaResources/Config.plist; sourceTree = "<group>"; };
+		A326DDDC20AA623400603C9C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = OrchidResources/Info.plist; sourceTree = "<group>"; };
+		A326DDDD20AA623400603C9C /* Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Config.plist; path = OrchidResources/Config.plist; sourceTree = "<group>"; };
 		A373E3BC20A598DA00471898 /* WhisperVanilla.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WhisperVanilla.framework; sourceTree = "<group>"; };
-		A373E3C820A9730F00471898 /* Vanilla-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Vanilla-Info.plist"; sourceTree = "<group>"; };
-		A373E3CA20A973C400471898 /* Vanilla-Config.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Vanilla-Config.plist"; sourceTree = "<group>"; };
 		A373E3D020A97F1000471898 /* OrchidDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OrchidDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A373E3D920A97F1200471898 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A373E3F020A982C300471898 /* WhisperOrchid.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WhisperOrchid.framework; sourceTree = "<group>"; };
 		ACF2352B57CCE3973ACEF8B0 /* Pods_VanillaDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VanillaDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3EAB82CA045C2BCF005BB87 /* Pods-VanillaDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VanillaDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VanillaDemo/Pods-VanillaDemo.debug.xcconfig"; sourceTree = "<group>"; };
@@ -520,8 +519,10 @@
 		17C508191E139F990068A76A /* WhisperDemo */ = {
 			isa = PBXGroup;
 			children = (
-				A373E3E220A9801D00471898 /* Orchid Support Files */,
-				17C508651E1CDEFC0068A76A /* Vanilla Support Files */,
+				17C508211E139F990068A76A /* Assets.xcassets */,
+				1797298C1E31AF62004F262D /* audio.m4a */,
+				A326DDD120AA615900603C9C /* Orchid Resources */,
+				A326DDD020AA614A00603C9C /* Vanilla Resources */,
 				1720C43A1E9CB37B00F710F4 /* NetworkReachabilityManager.swift */,
 				173AB0C31E275D4300542B1B /* DeviceManager.swift */,
 				17383DF61E71305A00777AC6 /* Device.swift */,
@@ -543,18 +544,6 @@
 				17C5082C1E13C2AB0068A76A /* WhisperDemo-Bridging-Header.h */,
 			);
 			path = WhisperDemo;
-			sourceTree = "<group>";
-		};
-		17C508651E1CDEFC0068A76A /* Vanilla Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				17C508211E139F990068A76A /* Assets.xcassets */,
-				A373E3C820A9730F00471898 /* Vanilla-Info.plist */,
-				A373E3CA20A973C400471898 /* Vanilla-Config.plist */,
-				1797298C1E31AF62004F262D /* audio.m4a */,
-				17C508661E1CDF140068A76A /* whisper.pem */,
-			);
-			name = "Vanilla Support Files";
 			sourceTree = "<group>";
 		};
 		31FE7E21A949003346032958 /* Frameworks */ = {
@@ -584,14 +573,23 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		A373E3E220A9801D00471898 /* Orchid Support Files */ = {
+		A326DDD020AA614A00603C9C /* Vanilla Resources */ = {
 			isa = PBXGroup;
 			children = (
-				A326DDC520A9B79300603C9C /* Orchid-Config.plist */,
-				A326DDC620A9B79400603C9C /* Orchid-Info.plist */,
-				A373E3D920A97F1200471898 /* Assets.xcassets */,
+				A326DDD920AA622700603C9C /* Config.plist */,
+				A326DDD820AA622700603C9C /* Info.plist */,
+				A326DDD420AA61B800603C9C /* whisper.pem */,
 			);
-			path = "Orchid Support Files";
+			name = "Vanilla Resources";
+			sourceTree = "<group>";
+		};
+		A326DDD120AA615900603C9C /* Orchid Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A326DDDD20AA623400603C9C /* Config.plist */,
+				A326DDDC20AA623400603C9C /* Info.plist */,
+			);
+			name = "Orchid Resources";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -695,13 +693,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A373E3CB20A973C400471898 /* Vanilla-Config.plist in Resources */,
-				A373E3C920A9730F00471898 /* Vanilla-Info.plist in Resources */,
 				17C508251E139F990068A76A /* LaunchScreen.storyboard in Resources */,
-				17C508671E1CDF140068A76A /* whisper.pem in Resources */,
+				A326DDD720AA61B800603C9C /* whisper.pem in Resources */,
+				A326DDDB20AA622700603C9C /* Config.plist in Resources */,
 				1797298D1E31AF62004F262D /* audio.m4a in Resources */,
 				17A004B61E4C0DFA0088E076 /* ScanViewController.xib in Resources */,
 				17C508221E139F990068A76A /* Assets.xcassets in Resources */,
+				A326DDDA20AA622700603C9C /* Info.plist in Resources */,
 				17C508201E139F990068A76A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -710,8 +708,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A326DDC720A9B79400603C9C /* Orchid-Config.plist in Resources */,
-				A326DDC820A9B79400603C9C /* Orchid-Info.plist in Resources */,
+				A326DDE020AA62BA00603C9C /* Config.plist in Resources */,
+				A326DDE120AA62BA00603C9C /* Info.plist in Resources */,
 				A373E40B20A98E9700471898 /* LaunchScreen.storyboard in Resources */,
 				A373E40A20A98E8000471898 /* Main.storyboard in Resources */,
 				A373E40920A98E6D00471898 /* audio.m4a in Resources */,
@@ -1066,10 +1064,16 @@
 				);
 				GCC_GENERATE_TEST_COVERAGE_FILES = NO;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/FFmpeg/include";
-				INFOPLIST_FILE = "$(SRCROOT)/WhisperDemo/Vanilla-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/WhisperDemo/VanillaResources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/FFmpeg/lib";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-iquote",
+					"\"$PODS_CONFIGURATION_BUILD_DIR/QRCode/QRCode.framework/Headers\"",
+					"-DUSE_VANILLA",
+				);
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\"";
 				PRODUCT_BUNDLE_IDENTIFIER = io.whisper.vanilla.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1100,10 +1104,16 @@
 				);
 				GCC_GENERATE_TEST_COVERAGE_FILES = NO;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/FFmpeg/include";
-				INFOPLIST_FILE = "$(SRCROOT)/WhisperDemo/Vanilla-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/WhisperDemo/VanillaResources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/FFmpeg/lib";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-iquote",
+					"\"$PODS_CONFIGURATION_BUILD_DIR/QRCode/QRCode.framework/Headers\"",
+					"-DUSE_VANILLA",
+				);
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\"";
 				PRODUCT_BUNDLE_IDENTIFIER = io.whisper.vanilla.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1135,12 +1145,18 @@
 					"$(PROJECT_DIR)",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = "$(SRCROOT)/WhisperDemo/Orchid Support Files/Orchid-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/WhisperDemo/OrchidResources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/FFmpeg/lib",
+				);
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-iquote",
+					"\"$PODS_CONFIGURATION_BUILD_DIR/QRCode/QRCode.framework/Headers\"",
+					"-DUSE_ORCHID",
 				);
 				PODS_ROOT = "${SRCROOT}/Pods";
 				PRODUCT_BUNDLE_IDENTIFIER = io.whisper.orchid.demo;
@@ -1149,6 +1165,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "WhisperDemo/WhisperDemo-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USE_VARIANT = ORCHID;
 			};
 			name = Debug;
 		};
@@ -1170,12 +1187,18 @@
 					"$(PROJECT_DIR)",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = "$(SRCROOT)/WhisperDemo/Orchid Support Files/Orchid-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/WhisperDemo/OrchidResources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/FFmpeg/lib",
+				);
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-iquote",
+					"\"$PODS_CONFIGURATION_BUILD_DIR/QRCode/QRCode.framework/Headers\"",
+					"-DUSE_ORCHID",
 				);
 				PODS_ROOT = "${SRCROOT}/Pods";
 				PRODUCT_BUNDLE_IDENTIFIER = io.whisper.orchid.demo;
@@ -1184,6 +1207,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "WhisperDemo/WhisperDemo-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USE_VARIANT = ORCHID;
 			};
 			name = Release;
 		};

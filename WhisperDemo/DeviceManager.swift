@@ -51,7 +51,7 @@ class DeviceManager : NSObject {
     func start() {
         if whisperInst == nil {
             do {
-                let plistPath = Bundle.main.path(forResource: "Vanilla-Config", ofType: "plist")
+                let plistPath = Bundle.main.path(forResource: "Config", ofType: "plist")
                 let info = NSDictionary(contentsOfFile: plistPath!) as! [String: String]
 
                 if networkManager == nil {
@@ -150,7 +150,7 @@ class DeviceManager : NSObject {
                     try! url.setResourceValues(resourceValues)
                 }
 
-                let plistPath = Bundle.main.path(forResource: "Orchid-Config", ofType: "plist")
+                let plistPath = Bundle.main.path(forResource: "Config", ofType: "plist")
                 let info = NSDictionary(contentsOfFile: plistPath!) as! [String:Any]
                 //let bootstraps = NSArray(object: info["bootstraps"]!)
                 let bootstraps = NSMutableArray(array: info["bootstraps"]! as! [Any])
@@ -454,7 +454,7 @@ extension DeviceManager : WhisperDelegate
         try! _ = WhisperSessionManager.getInstance(whisper: whisper, handler: didReceiveSessionRequest)
 
 #if USE_VANILLA
-        let plistPath = Bundle.main.path(forResource: "Vanilla-Config", ofType: "plist")
+        let plistPath = Bundle.main.path(forResource: "Config", ofType: "plist")
         let info = NSDictionary(contentsOfFile: plistPath!) as! [String: String]
 
         let options = IceTransportOptions()

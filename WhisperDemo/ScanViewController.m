@@ -7,7 +7,6 @@
 #ifdef USE_ORCHID
 #import "OrchidDemo-Swift.h"
 #endif
-#import "OrchidDemo-Swift.h"
 
 @interface ScanViewController () <AVCaptureMetadataOutputObjectsDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 {

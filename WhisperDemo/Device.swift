@@ -127,7 +127,7 @@ extension Device : WhisperStreamDelegate
             if stream == nil {
 
 #if USE_VANILLA
-                let plistPath = Bundle.main.path(forResource: "Vanilla-Config", ofType: "plist")
+                let plistPath = Bundle.main.path(forResource: "Config", ofType: "plist")
                 let info = NSDictionary(contentsOfFile: plistPath!) as! [String: String]
 
                 let options = IceTransportOptions()
@@ -199,7 +199,7 @@ extension Device : VideoDecoderDelegate
             if stream == nil {
                 if session == nil {
 #if USE_VANILLA
-                    let plistPath = Bundle.main.path(forResource: "Vanilla-Config", ofType: "plist")
+                    let plistPath = Bundle.main.path(forResource: "Config", ofType: "plist")
                     let info = NSDictionary(contentsOfFile: plistPath!) as! [String: String]
 
                     let options = IceTransportOptions()
