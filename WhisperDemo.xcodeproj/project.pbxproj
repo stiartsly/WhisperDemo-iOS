@@ -29,19 +29,21 @@
 		17C5081B1E139F990068A76A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C5081A1E139F990068A76A /* AppDelegate.swift */; };
 		17C5081D1E139F990068A76A /* DeviceListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C5081C1E139F990068A76A /* DeviceListViewController.swift */; };
 		17C508201E139F990068A76A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17C5081E1E139F990068A76A /* Main.storyboard */; };
-		17C508221E139F990068A76A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17C508211E139F990068A76A /* Assets.xcassets */; };
 		17C508251E139F990068A76A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17C508231E139F990068A76A /* LaunchScreen.storyboard */; };
 		17C5082F1E13C2AB0068A76A /* ScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 17C5082E1E13C2AB0068A76A /* ScanViewController.m */; };
 		17C508631E1BAA7D0068A76A /* MyInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C508621E1BAA7D0068A76A /* MyInfoViewController.swift */; };
 		17FBAD981E543DD000289C1E /* DeviceInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FBAD971E543DD000289C1E /* DeviceInfoViewController.swift */; };
 		2BB5F1EA00DCAB052A783F72 /* Pods_VanillaDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACF2352B57CCE3973ACEF8B0 /* Pods_VanillaDemo.framework */; };
 		51460F5BF103C9B42AF70282 /* Pods_OrchidDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA46D62420DA980F134EABA /* Pods_OrchidDemo.framework */; };
-		A326DDCB20A9D2FB00603C9C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17C508211E139F990068A76A /* Assets.xcassets */; };
 		A326DDD720AA61B800603C9C /* whisper.pem in Resources */ = {isa = PBXBuildFile; fileRef = A326DDD420AA61B800603C9C /* whisper.pem */; };
 		A326DDDA20AA622700603C9C /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A326DDD820AA622700603C9C /* Info.plist */; };
 		A326DDDB20AA622700603C9C /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = A326DDD920AA622700603C9C /* Config.plist */; };
 		A326DDE020AA62BA00603C9C /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = A326DDDD20AA623400603C9C /* Config.plist */; };
 		A326DDE120AA62BA00603C9C /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A326DDDC20AA623400603C9C /* Info.plist */; };
+		A326DDE520AABCC100603C9C /* WhisperOrchid.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A373E3F020A982C300471898 /* WhisperOrchid.framework */; };
+		A326DDE620AABCD100603C9C /* WhisperOrchid.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A373E3F020A982C300471898 /* WhisperOrchid.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A326DDE820AB195D00603C9C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A326DDE720AB195D00603C9C /* Assets.xcassets */; };
+		A326DDEA20AB197900603C9C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A326DDE920AB197900603C9C /* Assets.xcassets */; };
 		A373E3BE20A9388100471898 /* WhisperVanilla.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A373E3BC20A598DA00471898 /* WhisperVanilla.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A373E3BF20A938A100471898 /* WhisperVanilla.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A373E3BC20A598DA00471898 /* WhisperVanilla.framework */; };
 		A373E3E320A9806D00471898 /* NetworkReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1720C43A1E9CB37B00F710F4 /* NetworkReachabilityManager.swift */; };
@@ -57,8 +59,6 @@
 		A373E3ED20A9806D00471898 /* ScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 17C5082E1E13C2AB0068A76A /* ScanViewController.m */; };
 		A373E3EE20A9809F00471898 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17383DF61E71305A00777AC6 /* Device.swift */; };
 		A373E3EF20A9815200471898 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 178C7F821F21C626008C911A /* MBProgressHUD.m */; };
-		A373E3F120A982C300471898 /* WhisperOrchid.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A373E3F020A982C300471898 /* WhisperOrchid.framework */; };
-		A373E3F320A9837C00471898 /* WhisperOrchid.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A373E3F020A982C300471898 /* WhisperOrchid.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A373E3F520A983F800471898 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 179C62EC1F160FEB00B1E271 /* libiconv.tbd */; };
 		A373E3F620A9840000471898 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 179C62EA1F160FDF00B1E271 /* libz.tbd */; };
 		A373E3F720A9841700471898 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 179C62DC1F160ED500B1E271 /* libavcodec.a */; };
@@ -72,7 +72,6 @@
 		A373E40920A98E6D00471898 /* audio.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 1797298C1E31AF62004F262D /* audio.m4a */; };
 		A373E40A20A98E8000471898 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17C5081E1E139F990068A76A /* Main.storyboard */; };
 		A373E40B20A98E9700471898 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17C508231E139F990068A76A /* LaunchScreen.storyboard */; };
-		BE24952B0AB103879E3028FC /* Pods_WhisperDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E62D6DD14EFA86FCA9C079D /* Pods_WhisperDemo.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -93,7 +92,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				A373E3F320A9837C00471898 /* WhisperOrchid.framework in Embed Frameworks */,
+				A326DDE620AABCD100603C9C /* WhisperOrchid.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -226,7 +225,6 @@
 		17C5081A1E139F990068A76A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		17C5081C1E139F990068A76A /* DeviceListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceListViewController.swift; sourceTree = "<group>"; };
 		17C5081F1E139F990068A76A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		17C508211E139F990068A76A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		17C508241E139F990068A76A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		17C5082C1E13C2AB0068A76A /* WhisperDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WhisperDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		17C5082D1E13C2AB0068A76A /* ScanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanViewController.h; sourceTree = "<group>"; };
@@ -235,7 +233,6 @@
 		17FBAD971E543DD000289C1E /* DeviceInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceInfoViewController.swift; sourceTree = "<group>"; };
 		24EC57840493DE6271355E92 /* Pods-OrchidDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrchidDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-OrchidDemo/Pods-OrchidDemo.release.xcconfig"; sourceTree = "<group>"; };
 		2914AB88BAC3B93A147DAD69 /* Pods-OrchidDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrchidDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OrchidDemo/Pods-OrchidDemo.debug.xcconfig"; sourceTree = "<group>"; };
-		3E62D6DD14EFA86FCA9C079D /* Pods_WhisperDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WhisperDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		47109EAD25F4E6FE7EB6DE20 /* Pods-VanillaDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VanillaDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-VanillaDemo/Pods-VanillaDemo.release.xcconfig"; sourceTree = "<group>"; };
 		83BA379AEDC5DE0C0C5309AA /* Pods-WhisperDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhisperDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WhisperDemo/Pods-WhisperDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		8503E4E4167EFE9BAA2B542C /* Pods-WhisperDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhisperDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-WhisperDemo/Pods-WhisperDemo.release.xcconfig"; sourceTree = "<group>"; };
@@ -245,6 +242,8 @@
 		A326DDD920AA622700603C9C /* Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Config.plist; path = VanillaResources/Config.plist; sourceTree = "<group>"; };
 		A326DDDC20AA623400603C9C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = OrchidResources/Info.plist; sourceTree = "<group>"; };
 		A326DDDD20AA623400603C9C /* Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Config.plist; path = OrchidResources/Config.plist; sourceTree = "<group>"; };
+		A326DDE720AB195D00603C9C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A326DDE920AB197900603C9C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = VanillaResources/Assets.xcassets; sourceTree = "<group>"; };
 		A373E3BC20A598DA00471898 /* WhisperVanilla.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WhisperVanilla.framework; sourceTree = "<group>"; };
 		A373E3D020A97F1000471898 /* OrchidDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OrchidDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A373E3F020A982C300471898 /* WhisperOrchid.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WhisperOrchid.framework; sourceTree = "<group>"; };
@@ -267,7 +266,6 @@
 				179C62E71F160ED500B1E271 /* libavutil.a in Frameworks */,
 				179C62E81F160ED500B1E271 /* libswresample.a in Frameworks */,
 				179C62E91F160ED500B1E271 /* libswscale.a in Frameworks */,
-				BE24952B0AB103879E3028FC /* Pods_WhisperDemo.framework in Frameworks */,
 				2BB5F1EA00DCAB052A783F72 /* Pods_VanillaDemo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -276,7 +274,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A373E3F120A982C300471898 /* WhisperOrchid.framework in Frameworks */,
+				A326DDE520AABCC100603C9C /* WhisperOrchid.framework in Frameworks */,
 				A373E3F520A983F800471898 /* libiconv.tbd in Frameworks */,
 				A373E3F620A9840000471898 /* libz.tbd in Frameworks */,
 				A373E3F720A9841700471898 /* libavcodec.a in Frameworks */,
@@ -519,7 +517,6 @@
 		17C508191E139F990068A76A /* WhisperDemo */ = {
 			isa = PBXGroup;
 			children = (
-				17C508211E139F990068A76A /* Assets.xcassets */,
 				1797298C1E31AF62004F262D /* audio.m4a */,
 				A326DDD120AA615900603C9C /* Orchid Resources */,
 				A326DDD020AA614A00603C9C /* Vanilla Resources */,
@@ -553,7 +550,6 @@
 				A373E3BC20A598DA00471898 /* WhisperVanilla.framework */,
 				179C62EC1F160FEB00B1E271 /* libiconv.tbd */,
 				179C62EA1F160FDF00B1E271 /* libz.tbd */,
-				3E62D6DD14EFA86FCA9C079D /* Pods_WhisperDemo.framework */,
 				8BA46D62420DA980F134EABA /* Pods_OrchidDemo.framework */,
 				ACF2352B57CCE3973ACEF8B0 /* Pods_VanillaDemo.framework */,
 			);
@@ -576,6 +572,7 @@
 		A326DDD020AA614A00603C9C /* Vanilla Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A326DDE920AB197900603C9C /* Assets.xcassets */,
 				A326DDD920AA622700603C9C /* Config.plist */,
 				A326DDD820AA622700603C9C /* Info.plist */,
 				A326DDD420AA61B800603C9C /* whisper.pem */,
@@ -586,6 +583,7 @@
 		A326DDD120AA615900603C9C /* Orchid Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A326DDE720AB195D00603C9C /* Assets.xcassets */,
 				A326DDDD20AA623400603C9C /* Config.plist */,
 				A326DDDC20AA623400603C9C /* Info.plist */,
 			);
@@ -693,12 +691,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A326DDEA20AB197900603C9C /* Assets.xcassets in Resources */,
 				17C508251E139F990068A76A /* LaunchScreen.storyboard in Resources */,
 				A326DDD720AA61B800603C9C /* whisper.pem in Resources */,
 				A326DDDB20AA622700603C9C /* Config.plist in Resources */,
 				1797298D1E31AF62004F262D /* audio.m4a in Resources */,
 				17A004B61E4C0DFA0088E076 /* ScanViewController.xib in Resources */,
-				17C508221E139F990068A76A /* Assets.xcassets in Resources */,
 				A326DDDA20AA622700603C9C /* Info.plist in Resources */,
 				17C508201E139F990068A76A /* Main.storyboard in Resources */,
 			);
@@ -708,13 +706,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A326DDE820AB195D00603C9C /* Assets.xcassets in Resources */,
 				A326DDE020AA62BA00603C9C /* Config.plist in Resources */,
 				A326DDE120AA62BA00603C9C /* Info.plist in Resources */,
 				A373E40B20A98E9700471898 /* LaunchScreen.storyboard in Resources */,
 				A373E40A20A98E8000471898 /* Main.storyboard in Resources */,
 				A373E40920A98E6D00471898 /* audio.m4a in Resources */,
 				A373E40820A98E6000471898 /* ScanViewController.xib in Resources */,
-				A326DDCB20A9D2FB00603C9C /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -822,6 +820,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
 		};
 		D84ACD7F31E3BE0CD19AF9D3 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -985,6 +984,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "-fembed-bitcode-marker";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -1039,6 +1039,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CFLAGS = "-fembed-bitcode";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
