@@ -42,7 +42,6 @@
 		A326DDE120AA62BA00603C9C /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A326DDDC20AA623400603C9C /* Info.plist */; };
 		A326DDE520AABCC100603C9C /* WhisperOrchid.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A373E3F020A982C300471898 /* WhisperOrchid.framework */; };
 		A326DDE620AABCD100603C9C /* WhisperOrchid.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A373E3F020A982C300471898 /* WhisperOrchid.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		A326DDE820AB195D00603C9C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A326DDE720AB195D00603C9C /* Assets.xcassets */; };
 		A326DDEA20AB197900603C9C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A326DDE920AB197900603C9C /* Assets.xcassets */; };
 		A373E3BE20A9388100471898 /* WhisperVanilla.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A373E3BC20A598DA00471898 /* WhisperVanilla.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A373E3BF20A938A100471898 /* WhisperVanilla.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A373E3BC20A598DA00471898 /* WhisperVanilla.framework */; };
@@ -72,6 +71,7 @@
 		A373E40920A98E6D00471898 /* audio.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 1797298C1E31AF62004F262D /* audio.m4a */; };
 		A373E40A20A98E8000471898 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17C5081E1E139F990068A76A /* Main.storyboard */; };
 		A373E40B20A98E9700471898 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17C508231E139F990068A76A /* LaunchScreen.storyboard */; };
+		A389F1C020AC2E6F003EC188 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A389F1BF20AC2E6F003EC188 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -242,11 +242,11 @@
 		A326DDD920AA622700603C9C /* Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Config.plist; path = VanillaResources/Config.plist; sourceTree = "<group>"; };
 		A326DDDC20AA623400603C9C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = OrchidResources/Info.plist; sourceTree = "<group>"; };
 		A326DDDD20AA623400603C9C /* Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Config.plist; path = OrchidResources/Config.plist; sourceTree = "<group>"; };
-		A326DDE720AB195D00603C9C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A326DDE920AB197900603C9C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = VanillaResources/Assets.xcassets; sourceTree = "<group>"; };
 		A373E3BC20A598DA00471898 /* WhisperVanilla.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WhisperVanilla.framework; sourceTree = "<group>"; };
 		A373E3D020A97F1000471898 /* OrchidDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OrchidDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A373E3F020A982C300471898 /* WhisperOrchid.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WhisperOrchid.framework; sourceTree = "<group>"; };
+		A389F1BF20AC2E6F003EC188 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = OrchidResources/Assets.xcassets; sourceTree = "<group>"; };
 		ACF2352B57CCE3973ACEF8B0 /* Pods_VanillaDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VanillaDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3EAB82CA045C2BCF005BB87 /* Pods-VanillaDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VanillaDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VanillaDemo/Pods-VanillaDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -583,7 +583,7 @@
 		A326DDD120AA615900603C9C /* Orchid Resources */ = {
 			isa = PBXGroup;
 			children = (
-				A326DDE720AB195D00603C9C /* Assets.xcassets */,
+				A389F1BF20AC2E6F003EC188 /* Assets.xcassets */,
 				A326DDDD20AA623400603C9C /* Config.plist */,
 				A326DDDC20AA623400603C9C /* Info.plist */,
 			);
@@ -706,7 +706,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A326DDE820AB195D00603C9C /* Assets.xcassets in Resources */,
+				A389F1C020AC2E6F003EC188 /* Assets.xcassets in Resources */,
 				A326DDE020AA62BA00603C9C /* Config.plist in Resources */,
 				A326DDE120AA62BA00603C9C /* Info.plist in Resources */,
 				A373E40B20A98E9700471898 /* LaunchScreen.storyboard in Resources */,
@@ -1141,6 +1141,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XGJ9J7DHP5;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1183,6 +1184,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XGJ9J7DHP5;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
